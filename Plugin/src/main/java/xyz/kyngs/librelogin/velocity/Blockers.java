@@ -72,8 +72,7 @@ public class Blockers {
                 || authorizationProvider.isAwaiting2FA(event.getPlayer())) {
             event.getPlayer()
                     .disconnect(
-                            event.getServerKickReason()
-                                    .orElse(Component.text("Limbo not running")));
+                            event.getServerKickReason().orElse(Component.text("Limbo nie działa")));
         }
     }
 }

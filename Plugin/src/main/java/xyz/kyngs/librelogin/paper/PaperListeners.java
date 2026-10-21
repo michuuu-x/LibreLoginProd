@@ -12,7 +12,6 @@ import com.github.benmanes.caffeine.cache.Cache;
 import com.github.benmanes.caffeine.cache.Caffeine;
 import com.github.retrooper.packetevents.PacketEvents;
 import com.github.retrooper.packetevents.event.PacketReceiveEvent;
-import com.github.retrooper.packetevents.manager.server.ServerVersion;
 import com.github.retrooper.packetevents.protocol.packettype.PacketType;
 import com.github.retrooper.packetevents.util.reflection.Reflection;
 import com.github.retrooper.packetevents.wrapper.login.client.WrapperLoginClientEncryptionResponse;
@@ -26,7 +25,6 @@ import java.lang.reflect.Method;
 import java.net.*;
 import java.nio.charset.StandardCharsets;
 import java.security.*;
-import java.util.Optional;
 import java.util.Random;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
@@ -47,31 +45,14 @@ import xyz.kyngs.librelogin.common.config.ConfigurationKeys;
 import xyz.kyngs.librelogin.common.config.MessageKeys;
 import xyz.kyngs.librelogin.common.listener.AuthenticListeners;
 import xyz.kyngs.librelogin.common.util.GeneralUtil;
-import xyz.kyngs.librelogin.paper.protocol.ClientPublicKey;
 import xyz.kyngs.librelogin.paper.protocol.EncryptionUtil;
 import xyz.kyngs.librelogin.paper.protocol.ProtocolUtil;
 
 public class PaperListeners extends AuthenticListeners<PaperLibreLogin, Player, World>
         implements Listener {
 
-    private static final String ENCRYPTION_CLASS_NAME = "MinecraftEncryption";
-    private static final Class<?> ENCRYPTION_CLASS;
+    // net.minecraft.network.Connection#setEncryptionKey(SecretKey)
     private static Method encryptMethod;
-    private static Method cipherMethod;
-    private static final boolean IS_DEOBFUSCATION_NEEDED =
-            getServerVersion().isOlderThan(ServerVersion.V_1_21_11);
-
-    static {
-        if (IS_DEOBFUSCATION_NEEDED) {
-            try {
-                ENCRYPTION_CLASS = Class.forName("net.minecraft.util." + ENCRYPTION_CLASS_NAME);
-            } catch (ClassNotFoundException e) {
-                throw new RuntimeException(e);
-            }
-        } else {
-            ENCRYPTION_CLASS = null;
-        }
-    }
 
     private final KeyPair keyPair = EncryptionUtil.generateKeyPair();
     private final Random random = new SecureRandom();
@@ -127,7 +108,7 @@ public class PaperListeners extends AuthenticListeners<PaperLibreLogin, Player, 
 
         var data = readOnlyUserCache.getIfPresent(puuid);
         if (data == null && !plugin.fromFloodgate(player.getName())) {
-            player.kick(Component.text("Internal error, please try again later."));
+            player.kick(Component.text("Wewnętrzny błąd, spróbuj ponownie później."));
             return;
         }
 
@@ -176,8 +157,8 @@ public class PaperListeners extends AuthenticListeners<PaperLibreLogin, Player, 
                                     plugin.getPlayerForUUID(puuid)
                                             .kick(
                                                     Component.text(
-                                                            "Internal error, please try again"
-                                                                    + " later.")));
+                                                            "Wewnętrzny błąd, spróbuj ponownie"
+                                                                    + " później.")));
             return;
         }
 
@@ -218,7 +199,11 @@ public class PaperListeners extends AuthenticListeners<PaperLibreLogin, Player, 
             return;
         }
 
-        var loc = choosenWorld.getSpawnLocation();
+        var loc = plugin.getLocationStorage().get(PaperLocationStorage.Type.LOGIN);
+        if (loc == null) {
+            loc = choosenWorld.getSpawnLocation();
+        }
+
         joinedWhileDead.put(puuid, loc);
         event.setSpawnLocation(loc);
     }
@@ -246,9 +231,9 @@ public class PaperListeners extends AuthenticListeners<PaperLibreLogin, Player, 
 
         plugin.getLogger()
                 .debug(
-                        "Packet received "
+                        "Odebrano pakiet "
                                 + type
-                                + " from "
+                                + " od "
                                 + user.getName()
                                 + " ("
                                 + user.getAddress().toString()
@@ -269,24 +254,6 @@ public class PaperListeners extends AuthenticListeners<PaperLibreLogin, Player, 
             }
             var username = packet.getUsername();
 
-            Optional<ClientPublicKey> clientKey;
-
-            if (getServerVersion().isNewerThanOrEquals(ServerVersion.V_1_19_3)) {
-                clientKey = Optional.empty();
-            } else {
-                var signature = packet.getSignatureData();
-
-                clientKey =
-                        signature.map(
-                                data -> {
-                                    var expires = data.getTimestamp();
-                                    var key = data.getPublicKey();
-                                    var signatureData = data.getSignature();
-
-                                    return new ClientPublicKey(expires, key, signatureData);
-                                });
-            }
-
             if (Bukkit.getPlayer(username) != null) {
                 kickPlayer(
                         plugin.getMessages().getMessage(MessageKeys.KICK_ALREADY_CONNECTED.key()),
@@ -297,8 +264,7 @@ public class PaperListeners extends AuthenticListeners<PaperLibreLogin, Player, 
             if (plugin.fromFloodgate(username)) {
                 // Floodgate player, do not handle, only retransmit the packet. The UUID will be set
                 // by Floodgate
-                receiveFakeStartPacket(
-                        username, clientKey.orElse(null), event.getChannel(), UUID.randomUUID());
+                receiveFakeStartPacket(username, event.getChannel(), UUID.randomUUID());
                 return;
             }
             var preLoginResult = onPreLogin(username, user.getAddress().getAddress());
@@ -319,10 +285,7 @@ public class PaperListeners extends AuthenticListeners<PaperLibreLogin, Player, 
                         encryptionDataCache.put(
                                 sessionKey,
                                 new EncryptionData(
-                                        username,
-                                        token,
-                                        clientKey.orElse(null),
-                                        preLoginResult.user().getUuid()));
+                                        username, token, preLoginResult.user().getUuid()));
 
                         PacketEvents.getAPI()
                                 .getProtocolManager()
@@ -330,22 +293,19 @@ public class PaperListeners extends AuthenticListeners<PaperLibreLogin, Player, 
                     } catch (Exception e) {
                         plugin.getLogger()
                                 .error(
-                                        "Failed to send encryption begin packet for player "
+                                        "Nie udało się wysłać pakietu rozpoczęcia szyfrowania dla"
+                                                + " gracza "
                                                 + username
-                                                + "! Kicking player.");
+                                                + "! Wyrzucanie gracza.");
                         e.printStackTrace();
-                        kickPlayer("Internal error", user);
+                        kickPlayer("Wewnętrzny błąd", user);
                     }
                 }
                 default -> {
                     // The original event has been cancelled, so we need to send a fake start
                     // packet. It should be safe to set a random UUID as it will be replaced by the
                     // real one later
-                    receiveFakeStartPacket(
-                            username,
-                            clientKey.orElse(null),
-                            event.getChannel(),
-                            UUID.randomUUID());
+                    receiveFakeStartPacket(username, event.getChannel(), UUID.randomUUID());
                 }
             }
         } else {
@@ -355,14 +315,15 @@ public class PaperListeners extends AuthenticListeners<PaperLibreLogin, Player, 
             var data = encryptionDataCache.getIfPresent(user.getAddress().toString());
 
             if (data == null) {
-                kickPlayer("Illegal encryption state", user);
+                kickPlayer("Niedozwolony stan szyfrowania", user);
                 return;
             }
 
             var expectedToken = data.token().clone();
 
-            if (!verifyNonce(packet, data.publicKey(), expectedToken)) {
-                kickPlayer("Invalid nonce", user);
+            if (!verifyNonce(packet, expectedToken)) {
+                kickPlayer("Nieprawidłowy nonce", user);
+                return;
             }
 
             // Verify session
@@ -373,7 +334,7 @@ public class PaperListeners extends AuthenticListeners<PaperLibreLogin, Player, 
             try {
                 loginKey = EncryptionUtil.decryptSharedKey(privateKey, sharedSecret);
             } catch (GeneralSecurityException securityEx) {
-                kickPlayer("Cannot decrypt shared secret", user);
+                kickPlayer("Nie można odszyfrować wspólnego sekretu", user);
                 return;
             }
 
@@ -382,7 +343,7 @@ public class PaperListeners extends AuthenticListeners<PaperLibreLogin, Player, 
                     return;
                 }
             } catch (Exception e) {
-                kickPlayer("Cannot decrypt shared secret", user);
+                kickPlayer("Nie można odszyfrować wspólnego sekretu", user);
                 return;
             }
 
@@ -392,17 +353,16 @@ public class PaperListeners extends AuthenticListeners<PaperLibreLogin, Player, 
 
             try {
                 if (hasJoined(username, serverId, address.getAddress())) {
-                    receiveFakeStartPacket(
-                            username, data.publicKey(), event.getChannel(), data.uuid());
+                    receiveFakeStartPacket(username, event.getChannel(), data.uuid());
                 } else {
-                    kickPlayer("Invalid session", user);
+                    kickPlayer("Nieprawidłowa sesja", user);
                 }
             } catch (IOException e) {
                 if (e instanceof SocketTimeoutException) {
                     plugin.getLogger()
-                            .warn("Session verification timed out (5 seconds) for " + username);
+                            .warn("Przekroczono czas weryfikacji sesji (5 sekund) dla " + username);
                 }
-                kickPlayer("Cannot verify session", user);
+                kickPlayer("Nie można zweryfikować sesji", user);
             }
         }
     }
@@ -427,27 +387,10 @@ public class PaperListeners extends AuthenticListeners<PaperLibreLogin, Player, 
      *
      * @author games647 and FastLogin contributors
      */
-    private void receiveFakeStartPacket(
-            String username, ClientPublicKey clientKey, Object channel, UUID uuid) {
-        WrapperLoginClientLoginStart startPacket;
-        if (getServerVersion().isNewerThanOrEquals(ServerVersion.V_1_20)) {
-            startPacket =
-                    new WrapperLoginClientLoginStart(
-                            getServerVersion().toClientVersion(),
-                            username,
-                            clientKey == null ? null : clientKey.toSignatureData(),
-                            uuid);
-        } else if (getServerVersion().isNewerThanOrEquals(ServerVersion.V_1_19)) {
-            startPacket =
-                    new WrapperLoginClientLoginStart(
-                            getServerVersion().toClientVersion(),
-                            username,
-                            clientKey == null ? null : clientKey.toSignatureData());
-        } else {
-            startPacket =
-                    new WrapperLoginClientLoginStart(
-                            getServerVersion().toClientVersion(), username);
-        }
+    private void receiveFakeStartPacket(String username, Object channel, UUID uuid) {
+        var startPacket =
+                new WrapperLoginClientLoginStart(
+                        getServerVersion().toClientVersion(), username, null, uuid);
         PacketEvents.getAPI().getProtocolManager().receivePacketSilently(channel, startPacket);
     }
 
@@ -490,49 +433,17 @@ public class PaperListeners extends AuthenticListeners<PaperLibreLogin, Player, 
             Class<?> networkManagerClass =
                     SpigotReflectionUtil.getNetworkManagers().get(0).getClass();
 
-            // Try to get the old (pre MC 1.16.4) encryption method
             encryptMethod =
-                    Reflection.getMethod(networkManagerClass, "setupEncryption", SecretKey.class);
-
-            if (encryptMethod == null) {
-                // Try to get the new encryption method
-                encryptMethod =
-                        Reflection.getMethod(
-                                networkManagerClass, "setEncryptionKey", SecretKey.class);
-            }
-
-            if (encryptMethod == null) {
-                // Get the 1.16.4-1.21.0 encryption method
-                encryptMethod =
-                        Reflection.getMethod(
-                                networkManagerClass,
-                                "setEncryptionKey",
-                                Cipher.class,
-                                Cipher.class);
-
-                // Get the needed Cipher helper method (used to generate ciphers from login key)
-                cipherMethod = Reflection.getMethod(ENCRYPTION_CLASS, "a", int.class, Key.class);
-            }
+                    Reflection.getMethod(networkManagerClass, "setEncryptionKey", SecretKey.class);
         }
 
         try {
             Object networkManager = ProtocolUtil.findNetworkManager(channel);
 
-            // If cipherMethod is null - use old encryption (pre MC 1.16.4), otherwise use the new
-            // cipher one
-            if (cipherMethod == null) {
-                // Encrypt/decrypt packet flow, this behaviour is expected by the client
-                encryptMethod.invoke(networkManager, loginKey);
-            } else {
-                // Create ciphers from login key
-                Object decryptionCipher = cipherMethod.invoke(null, Cipher.DECRYPT_MODE, loginKey);
-                Object encryptionCipher = cipherMethod.invoke(null, Cipher.ENCRYPT_MODE, loginKey);
-
-                // Encrypt/decrypt packet flow, this behaviour is expected by the client
-                encryptMethod.invoke(networkManager, decryptionCipher, encryptionCipher);
-            }
+            // Encrypt/decrypt packet flow, this behaviour is expected by the client
+            encryptMethod.invoke(networkManager, loginKey);
         } catch (Exception ex) {
-            kickPlayer("Couldn't enable encryption", user);
+            kickPlayer("Nie udało się włączyć szyfrowania", user);
             ex.printStackTrace();
             return false;
         }
@@ -561,39 +472,12 @@ public class PaperListeners extends AuthenticListeners<PaperLibreLogin, Player, 
     /**
      * @author games647 and FastLogin contributors
      */
-    private boolean verifyNonce(
-            WrapperLoginClientEncryptionResponse packet,
-            ClientPublicKey clientPublicKey,
-            byte[] expectedToken) {
+    private boolean verifyNonce(WrapperLoginClientEncryptionResponse packet, byte[] expectedToken) {
         try {
-            if (getServerVersion().isNewerThanOrEquals(ServerVersion.V_1_19)
-                    && !getServerVersion().isNewerThanOrEquals(ServerVersion.V_1_19_3)) {
-                if (clientPublicKey == null) {
-                    return EncryptionUtil.verifyNonce(
-                            expectedToken,
-                            keyPair.getPrivate(),
-                            packet.getEncryptedVerifyToken().get());
-                } else {
-                    PublicKey publicKey = clientPublicKey.key();
-                    var optSignature = packet.getSaltSignature();
-                    if (optSignature.isEmpty()) {
-                        return false;
-                    }
-                    var signature = optSignature.get();
-
-                    return EncryptionUtil.verifySignedNonce(
-                            expectedToken,
-                            publicKey,
-                            signature.getSalt(),
-                            signature.getSignature());
-                }
-            } else {
-                byte[] nonce = packet.getEncryptedVerifyToken().get();
-                return EncryptionUtil.verifyNonce(expectedToken, keyPair.getPrivate(), nonce);
-            }
+            byte[] nonce = packet.getEncryptedVerifyToken().get();
+            return EncryptionUtil.verifyNonce(expectedToken, keyPair.getPrivate(), nonce);
         } catch (NoSuchAlgorithmException
                 | InvalidKeyException
-                | SignatureException
                 | NoSuchPaddingException
                 | IllegalBlockSizeException
                 | BadPaddingException signatureEx) {

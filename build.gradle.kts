@@ -1,20 +1,20 @@
-import org.cadixdev.gradle.licenser.LicenseProperties
+import net.minecraftforge.licenser.LicenseProperties
 
 plugins {
-    id("org.cadixdev.licenser") version "0.6.1"
-    id("com.diffplug.spotless") version "7.2.1"
+    id("net.minecraftforge.licenser") version "1.2.0"
+    id("com.diffplug.spotless") version "8.10.4"
 }
 
 defaultTasks("updateLicenses", "shadowJar")
 
-version = "0.25.10"
+version = "0.25.12"
 
 subprojects {
     version = rootProject.version
     group = "xyz.kyngs.librelogin"
 
     apply {
-        plugin("org.cadixdev.licenser")
+        plugin("net.minecraftforge.licenser")
         plugin("com.diffplug.spotless")
     }
 
@@ -45,6 +45,8 @@ subprojects {
 
     spotless {
         java {
+            // Blossom 2.x puts its generated sources (LF line endings) into the main source set
+            targetExclude("**/build/generated/**")
             googleJavaFormat()
                 .aosp()
                 .reflowLongStrings()

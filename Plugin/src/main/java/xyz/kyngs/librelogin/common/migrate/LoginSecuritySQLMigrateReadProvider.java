@@ -46,7 +46,7 @@ public class LoginSecuritySQLMigrateReadProvider extends SQLMigrateReadProvider 
                             hashed = CryptoUtil.convertFromBCryptRaw(rawPassword);
                         } else {
                             logger.warn(
-                                    "User %s has invalid algorithm %s, omitting"
+                                    "Użytkownik %s ma nieprawidłowy algorytm %s, pomijanie"
                                             .formatted(lastNickname, hashingAlgorithm));
                             continue;
                         }

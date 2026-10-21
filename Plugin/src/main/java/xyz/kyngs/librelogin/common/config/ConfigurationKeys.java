@@ -31,17 +31,17 @@ public class ConfigurationKeys {
                             "reg",
                             "resetpassword",
                             "confirmpasswordreset"),
-                    "Commands that are allowed while the user is not authorized.",
+                    "Komendy dozwolone, gdy użytkownik nie jest uwierzytelniony.",
                     ConfigurateHelper::getStringList);
 
     public static final ConfigurationKey<List<String>> LIMBO =
             new ConfigurationKey<>(
                     "limbo",
                     List.of("limbo0", "limbo1"),
-                    "The authentication servers/worlds, players should be sent to, when not"
-                        + " authenticated. On Paper, players will be spawned on the world spawn."
-                        + " THIS SERVERS MUST BE REGISTERED IN THE PROXY CONFIG. IN CASE OF PAPER,"
-                        + " THE WORLDS MUST EXIST.",
+                    "Serwery/światy uwierzytelniania, na które trafiają gracze, gdy nie są"
+                        + " uwierzytelnieni. Na Paperze gracze pojawią się na spawnie świata. TE"
+                        + " SERWERY MUSZĄ BYĆ ZAREJESTROWANE W KONFIGURACJI PROXY. W PRZYPADKU"
+                        + " PAPERA ŚWIATY MUSZĄ ISTNIEĆ.",
                     ConfigurateHelper::getStringList);
 
     public static final Multimap<String, String> LOBBY_DEFAULT = HashMultimap.create();
@@ -49,13 +49,13 @@ public class ConfigurationKeys {
             new ConfigurationKey<>(
                     "lobby",
                     LOBBY_DEFAULT,
-                    """
-!!WHEN USING PAPER, PUT ALL WORLDS UNDER "root"!!
-On Paper, players will be spawned on the world spawn.
+"""
+!!PRZY UŻYCIU PAPERA UMIEŚĆ WSZYSTKIE ŚWIATY W SEKCJI "root"!!
+Na Paperze gracze pojawią się na spawnie świata.
 
-The servers/worlds player should be sent to when they are authenticated. THE SERVERS MUST BE REGISTERED IN THE PROXY CONFIG. IN CASE OF PAPER, THE WORLDS MUST EXIST.
-The configuration allows configuring forced hosts; the servers/worlds in "root" are used when players do not connect from a forced host. Use § instead of dots.
-See: https://github.com/Navio1430/LibreLoginProd/wiki/Configuring-Servers
+Serwery/światy, na które powinni trafiać gracze po uwierzytelnieniu. SERWERY MUSZĄ BYĆ ZAREJESTROWANE W KONFIGURACJI PROXY. W PRZYPADKU PAPERA ŚWIATY MUSZĄ ISTNIEĆ.
+Konfiguracja pozwala na ustawienie forced hostów; serwery/światy w sekcji "root" są używane, gdy gracze nie łączą się z forced hosta. Użyj § zamiast kropek.
+Zobacz: https://github.com/Navio1430/LibreLoginProd/wiki/Configuring-Servers
 """,
                     ConfigurateHelper::getServerMap);
 
@@ -68,9 +68,9 @@ See: https://github.com/Navio1430/LibreLoginProd/wiki/Configuring-Servers
             new ConfigurationKey<>(
                     "ignore-max-players-from-backend-ping",
                     false,
-                    """
-By default, when choosing available lobby/limbos LibreLogin will rule out all the servers which are full.
-Sometimes this may not work as expected. In such case, you can enable this option, which will ignore the max players field obtained by pinging the backend server.
+"""
+Domyślnie, wybierając dostępne lobby/limbo, LibreLogin pomija wszystkie serwery, które są pełne.
+Czasami może to nie działać zgodnie z oczekiwaniami. W takim przypadku możesz włączyć tę opcję, która sprawi, że pole maksymalnej liczby graczy uzyskane przez pingowanie serwera backendowego będzie ignorowane.
 """,
                     ConfigurateHelper::getBoolean);
 
@@ -78,12 +78,12 @@ Sometimes this may not work as expected. In such case, you can enable this optio
             new ConfigurationKey<>(
                     "default-crypto-provider",
                     "BCrypt-2A",
-                    """
-The default crypto provider. This is used for hashing passwords. Available Providers:
-SHA-256 - Older, not recommended. Kept for compatibility reasons.
-SHA-512 - More safer than SHA-256, but still not recommended. Kept for compatibility reasons.
-BCrypt-2A - Newer, more safe, recommended
-Argon-2ID - Newest, should be safer than BCrypt-2A, however, it can slow down the server.
+"""
+Domyślny dostawca szyfrowania. Służy do hashowania haseł. Dostępni dostawcy:
+SHA-256 - Starszy, niezalecany. Zachowany ze względu na kompatybilność.
+SHA-512 - Bezpieczniejszy niż SHA-256, ale nadal niezalecany. Zachowany ze względu na kompatybilność.
+BCrypt-2A - Nowszy, bezpieczniejszy, zalecany
+Argon-2ID - Najnowszy, powinien być bezpieczniejszy niż BCrypt-2A, jednak może spowalniać serwer.
 """,
                     ConfigurateHelper::getString);
 
@@ -91,11 +91,11 @@ Argon-2ID - Newest, should be safer than BCrypt-2A, however, it can slow down th
             new ConfigurationKey<>(
                     "profile-conflict-resolution-strategy",
                     "BLOCK",
-                    """
-Sets the strategy for resolving profile conflicts. Available strategies:
-BLOCK - Kick both players with the message key "kick-name-mismatch". An admin must resolve the conflict manually.
-USE_OFFLINE - Use the offline profile. When both of the players attempt to join, they will be provided with a login screen and will be able to login with the offline player's password. The online player will have to change their nickname to a available one in order to recover their account. Beware, that there's a 30 days cool down for changing nicknames.
-OVERWRITE - Overwrite the offline profile's data with the online profile's data. This will irreversibly delete the offline player's data. !!USE WITH CAUTION; PLAYERS CAN AND WILL ABUSE THIS!!
+"""
+Ustawia strategię rozwiązywania konfliktów profili. Dostępne strategie:
+BLOCK - Wyrzuca obu graczy z wiadomością z klucza "kick-name-mismatch". Administrator musi rozwiązać konflikt ręcznie.
+USE_OFFLINE - Używa profilu offline. Gdy obaj gracze spróbują dołączyć, zobaczą ekran logowania i będą mogli zalogować się hasłem gracza offline. Gracz online będzie musiał zmienić nick na dostępny, aby odzyskać swoje konto. Uwaga: zmiana nicku jest ograniczona 30-dniowym czasem oczekiwania.
+OVERWRITE - Nadpisuje dane profilu offline danymi profilu online. Spowoduje to nieodwracalne usunięcie danych gracza offline. !!UŻYWAĆ OSTROŻNIE; GRACZE MOGĄ I BĘDĄ TO NADUŻYWAĆ!!
 """,
                     (helper, key) ->
                             ProfileConflictResolutionStrategy.valueOf(
@@ -107,44 +107,65 @@ OVERWRITE - Overwrite the offline profile's data with the online profile's data.
             new ConfigurationKey<>(
                     "max-login-attempts",
                     -1,
-                    "Kick the player, if the password was incorrect more or equal times. -1 means"
-                            + " disabled",
+                    "Wyrzuca gracza, jeśli hasło było nieprawidłowe tyle razy lub więcej. -1"
+                            + " oznacza wyłączone",
                     ConfigurateHelper::getInt);
 
     public static final ConfigurationKey<Integer> MILLISECONDS_TO_EXPIRE_LOGIN_ATTEMPTS =
             new ConfigurationKey<>(
                     "milliseconds-to-refresh-login-attempts",
                     10000,
-                    "Time to reset login attempts. The amount of time the player should have waited"
-                        + " for their login attempts to expire. On every rejoin, login attempts are"
-                        + " reset.",
+                    "Czas resetowania prób logowania. Czas, który gracz powinien odczekać, aby jego"
+                            + " próby logowania wygasły. Przy każdym ponownym dołączeniu próby"
+                            + " logowania są resetowane.",
                     ConfigurateHelper::getInt);
 
     public static final ConfigurationKey<Boolean> USE_TITLES =
             new ConfigurationKey<>(
                     "use-titles",
                     true,
-                    "Whether or not to use titles when player is awaiting authentication.",
+                    "Czy używać tytułów, gdy gracz oczekuje na uwierzytelnienie oraz po"
+                            + " pomyślnym zalogowaniu lub rejestracji.",
                     ConfigurateHelper::getBoolean);
+
+    public static final ConfigurationKey<String> LOGIN_SOUND =
+            new ConfigurationKey<>(
+                    "login-sound",
+                    "entity.player.levelup",
+                    "Dźwięk odtwarzany graczowi po pomyślnym zalogowaniu komendą /login. Podaj"
+                            + " nazwę dźwięku, np. entity.player.levelup lub"
+                            + " minecraft:entity.experience_orb.pickup. Ustaw na pustą wartość"
+                            + " \"\", aby wyłączyć.",
+                    ConfigurateHelper::getString);
+
+    public static final ConfigurationKey<String> REGISTER_SOUND =
+            new ConfigurationKey<>(
+                    "register-sound",
+                    "ui.toast.challenge_complete",
+                    "Dźwięk odtwarzany graczowi po pomyślnej rejestracji komendą /register. Podaj"
+                            + " nazwę dźwięku, np. ui.toast.challenge_complete lub"
+                            + " minecraft:entity.player.levelup. Ustaw na pustą wartość \"\","
+                            + " aby wyłączyć.",
+                    ConfigurateHelper::getString);
 
     public static final ConfigurationKey<Boolean> USE_ACTION_BAR =
             new ConfigurationKey<>(
                     "use-action-bar",
                     false,
-                    "Whether or not to use action bar when player is awaiting authentication.",
+                    "Czy używać action bara, gdy gracz oczekuje na uwierzytelnienie.",
                     ConfigurateHelper::getBoolean);
 
     public static final ConfigurationKey<String> NEW_UUID_CREATOR =
             new ConfigurationKey<>(
                     "new-uuid-creator",
                     "CRACKED",
-                    """
-Sets which method should be used for creating fixed UUID when a new player is created.
-See the wiki for further information: https://github.com/Navio1430/LibreLoginProd/wiki/UUID-Creators
-Available Creators:
-RANDOM - Generates a random UUID
-CRACKED - Generates a UUID based on the player's name, the same method as if the server was in offline mode
-MOJANG - If the player exists in the Mojang's database, it will be used. Otherwise, CRACKED will be used.
+"""
+Określa, jakiej metody użyć do tworzenia stałego UUID podczas tworzenia nowego gracza.
+Więcej informacji znajdziesz na wiki: https://github.com/Navio1430/LibreLoginProd/wiki/UUID-Creators
+Dostępne metody:
+RANDOM - Generuje losowy UUID
+CRACKED - Generuje UUID na podstawie nazwy gracza, tą samą metodą, jakiej używa serwer w trybie offline
+MOJANG - Jeśli gracz istnieje w bazie danych Mojang, zostanie użyty jego UUID. W przeciwnym razie zostanie użyty CRACKED.
 """,
                     ConfigurateHelper::getString);
 
@@ -152,10 +173,10 @@ MOJANG - If the player exists in the Mojang's database, it will be used. Otherwi
             new ConfigurationKey<>(
                     "ip-limit",
                     -1,
-                    """
-Sets the maximum amount of accounts that can be registered from the same IP address.
-Set to zero or less to disable.
-!!THIS IS NOT RECOMMENDED!! Due to the lack of IPv4 addresses, sometimes even entire villages share the same IP address.
+"""
+Ustawia maksymalną liczbę kont, które można zarejestrować z tego samego adresu IP.
+Ustaw na zero lub mniej, aby wyłączyć.
+!!NIE JEST TO ZALECANE!! Z powodu niedoboru adresów IPv4 czasami nawet całe wsie dzielą ten sam adres IP.
 """,
                     ConfigurateHelper::getInt);
 
@@ -164,8 +185,8 @@ Set to zero or less to disable.
                     "auto-register",
                     false,
                     """
-                    Should we automatically register all players with a premium nickname?
-                    !!CRACKED PLAYERS WILL NOT BE ABLE TO REGISTER PREMIUM USERNAMES!!
+                    Czy automatycznie rejestrować wszystkich graczy z nickiem premium?
+                    !!GRACZE NON-PREMIUM (CRACKED) NIE BĘDĄ MOGLI ZAREJESTROWAĆ NAZW UŻYTKOWNIKÓW PREMIUM!!
                     """,
                     ConfigurateHelper::getBoolean);
 
@@ -173,11 +194,11 @@ Set to zero or less to disable.
             new ConfigurationKey<>(
                     "milliseconds-to-refresh-notification",
                     10000,
-                    """
-This specifies how often players should be notified when not authenticated. Set to negative to disable.
-This includes (but is not limited to):
-- Message in chat
-- Title
+"""
+Określa, jak często gracze mają być powiadamiani, gdy nie są uwierzytelnieni. Ustaw na wartość ujemną, aby wyłączyć.
+Obejmuje to (między innymi):
+- Wiadomość na czacie
+- Tytuł
 """,
                     ConfigurateHelper::getInt);
 
@@ -185,64 +206,65 @@ This includes (but is not limited to):
             new ConfigurationKey<>(
                     "seconds-to-authorize",
                     -1,
-                    "Sets the login/register time limit in seconds. Set to negative to disable.",
+                    "Ustawia limit czasu na logowanie/rejestrację w sekundach. Ustaw na wartość"
+                            + " ujemną, aby wyłączyć.",
                     ConfigurateHelper::getInt);
 
     public static final ConfigurationKey<?> DATABASE =
             ConfigurationKey.getComment(
-                    "database", "This section is used for MySQL database configuration.");
+                    "database", "Ta sekcja służy do konfiguracji bazy danych MySQL.");
 
     public static final ConfigurationKey<String> DATABASE_TYPE =
             new ConfigurationKey<>(
                     "database.type",
                     "librelogin-sqlite",
-                    """
-The type of the database. Built-in types:
-librelogin-mysql - MySQL database, you must fill out the mysql section below.
-librelogin-postgresql - PostgreSQL database, you must fill out the postgresql section below.
-librelogin-sqlite - SQLite database, default file is "database.db", you can change it in the sqlite section below.
+"""
+Typ bazy danych. Wbudowane typy:
+librelogin-mysql - Baza danych MySQL, musisz uzupełnić sekcję mysql poniżej.
+librelogin-postgresql - Baza danych PostgreSQL, musisz uzupełnić sekcję postgresql poniżej.
+librelogin-sqlite - Baza danych SQLite, domyślny plik to "database.db", możesz go zmienić w sekcji sqlite poniżej.
 """,
                     ConfigurateHelper::getString);
 
     public static final ConfigurationKey<?> MIGRATION =
             ConfigurationKey.getComment(
                     "migration",
-                    """
-This is used for migrating the database from other plugins.
-Please see the wiki for further information: https://github.com/Navio1430/LibreLoginProd/wiki/Database-Migration
+"""
+Ta sekcja służy do migracji bazy danych z innych wtyczek.
+Więcej informacji znajdziesz na wiki: https://github.com/Navio1430/LibreLoginProd/wiki/Database-Migration
 """);
 
     public static final ConfigurationKey<Boolean> MIGRATION_ON_NEXT_STARTUP =
             new ConfigurationKey<>(
                     "migration.on-next-startup",
                     false,
-                    "Migrate the database on the next startup.",
+                    "Zmigruj bazę danych przy następnym uruchomieniu.",
                     ConfigurateHelper::getBoolean);
 
     public static final ConfigurationKey<String> MIGRATION_TYPE =
             new ConfigurationKey<>(
                     "migration.type",
                     "authme-sqlite",
-                    """
-The type of the migration. Available Types:
-jpremium-mysql - Can convert from MySQL JPremium SHA256, SHA512 and BCrypt
-authme-mysql - Can convert from MySQL AuthMe BCrypt and SHA256
-authme-sqlite - Can convert from SQLite AuthMe BCrypt and SHA256
-authme-postgresql - Can convert from PostgreSQL AuthMe BCrypt and SHA256
-aegis-mysql - Can convert from MySQL Aegis BCrypt
-dba-mysql - Can convert from MySQL DynamicBungeeAuth, which was configured to use SHA-512
-nlogin-sqlite - Can convert from SQLite NLogin SHA512
-nlogin-mysql - Can convert from MySQL NLogin SHA512
-loginsecurity-mysql - Can convert from MySQL LoginSecurity BCrypt
-loginsecurity-sqlite - Can convert from SQLite LoginSecurity BCrypt
-fastlogin-sqlite - Can convert from SQLite FastLogin, !!YOU MUST RUN CONVERSION FROM AUTHME FIRST!!
-fastlogin-mysql - Can convert from MySQL FastLogin, !!YOU MUST RUN CONVERSION FROM AUTHME FIRST!!
-limboauth-mysql - Can convert from MySQL LimboAuth BCrypt and SHA256
-authy-mysql - Can convert from MySQL Authy SHA256
-authy-sqlite - Can convert from SQLite Authy SHA256
-logit-mysql - Can convert from MySQL LogIt SHA256
-librelogin-mysql - Can convert from MySQL LibreLogin, useful for migrating to a different database
-librelogin-sqlite - Can convert from SQLite LibreLogin, useful for migrating to a different database
+"""
+Typ migracji. Dostępne typy:
+jpremium-mysql - Może konwertować z MySQL JPremium (SHA256, SHA512 i BCrypt)
+authme-mysql - Może konwertować z MySQL AuthMe (BCrypt i SHA256)
+authme-sqlite - Może konwertować z SQLite AuthMe (BCrypt i SHA256)
+authme-postgresql - Może konwertować z PostgreSQL AuthMe (BCrypt i SHA256)
+aegis-mysql - Może konwertować z MySQL Aegis (BCrypt)
+dba-mysql - Może konwertować z MySQL DynamicBungeeAuth skonfigurowanego do używania SHA-512
+nlogin-sqlite - Może konwertować z SQLite NLogin (SHA512)
+nlogin-mysql - Może konwertować z MySQL NLogin (SHA512)
+loginsecurity-mysql - Może konwertować z MySQL LoginSecurity (BCrypt)
+loginsecurity-sqlite - Może konwertować z SQLite LoginSecurity (BCrypt)
+fastlogin-sqlite - Może konwertować z SQLite FastLogin, !!NAJPIERW MUSISZ PRZEPROWADZIĆ KONWERSJĘ Z AUTHME!!
+fastlogin-mysql - Może konwertować z MySQL FastLogin, !!NAJPIERW MUSISZ PRZEPROWADZIĆ KONWERSJĘ Z AUTHME!!
+limboauth-mysql - Może konwertować z MySQL LimboAuth (BCrypt i SHA256)
+authy-mysql - Może konwertować z MySQL Authy (SHA256)
+authy-sqlite - Może konwertować z SQLite Authy (SHA256)
+logit-mysql - Może konwertować z MySQL LogIt (SHA256)
+librelogin-mysql - Może konwertować z MySQL LibreLogin, przydatne przy migracji do innej bazy danych
+librelogin-sqlite - Może konwertować z SQLite LibreLogin, przydatne przy migracji do innej bazy danych
 """,
                     ConfigurateHelper::getString);
 
@@ -250,33 +272,33 @@ librelogin-sqlite - Can convert from SQLite LibreLogin, useful for migrating to 
             new ConfigurationKey<>(
                     "migration.old-database.mysql.table",
                     "user-data",
-                    "The table of the old database.",
+                    "Tabela starej bazy danych.",
                     ConfigurateHelper::getString);
 
     public static final ConfigurationKey<String> MIGRATION_POSTGRESQL_OLD_DATABASE_TABLE =
             new ConfigurationKey<>(
                     "migration.old-database.postgresql.table",
                     "user-data",
-                    "The table of the old database.",
+                    "Tabela starej bazy danych.",
                     ConfigurateHelper::getString);
 
     public static final ConfigurationKey<?> TOTP =
             ConfigurationKey.getComment(
                     "totp",
-                    """
-This section is used for 2FA configuration.
-!! YOU MUST HAVE PROTOCOLIZE INSTALLED FOR THIS TO WORK !!
+"""
+Ta sekcja służy do konfiguracji 2FA.
+!! ABY TO DZIAŁAŁO, MUSISZ MIEĆ ZAINSTALOWANY PROTOCOLIZE !!
 
-You can find more information on the wiki: https://github.com/Navio1430/LibreLoginProd/wiki/2FA
+Więcej informacji znajdziesz na wiki: https://github.com/Navio1430/LibreLoginProd/wiki/2FA
 """);
 
     public static final ConfigurationKey<Boolean> TOTP_ENABLED =
             new ConfigurationKey<>(
                     "totp.enabled",
                     true,
-                    """
-Should we enable TOTP-Based Two-Factor Authentication? If you don't know what this is, this is the 2FA used in applications like Google Authenticator etc.
-I heavily suggest you to read this wiki page: https://github.com/Navio1430/LibreLoginProd/wiki/2FA
+"""
+Czy włączyć uwierzytelnianie dwuskładnikowe oparte na TOTP? Jeśli nie wiesz, co to jest, jest to 2FA używane w aplikacjach takich jak Google Authenticator itp.
+Gorąco zalecamy przeczytanie tej strony wiki: https://github.com/Navio1430/LibreLoginProd/wiki/2FA
 """,
                     ConfigurateHelper::getBoolean);
 
@@ -284,136 +306,137 @@ I heavily suggest you to read this wiki page: https://github.com/Navio1430/Libre
             new ConfigurationKey<>(
                     "totp.label",
                     "LibreLogin Network",
-                    "The label to be displayed in the 2FA app. Change this to your network name.",
+                    "Etykieta wyświetlana w aplikacji 2FA. Zmień ją na nazwę swojej sieci.",
                     ConfigurateHelper::getString);
 
     public static final ConfigurationKey<Integer> MINIMUM_PASSWORD_LENGTH =
             new ConfigurationKey<>(
                     "minimum-password-length",
                     -1,
-                    "The minimum length of a password. Set to negative to disable.",
+                    "Minimalna długość hasła. Ustaw na wartość ujemną, aby wyłączyć.",
                     ConfigurateHelper::getInt);
 
     public static final ConfigurationKey<Integer> MINIMUM_USERNAME_LENGTH =
             new ConfigurationKey<>(
                     "minimum-username-length",
                     -1,
-                    "The minimum length the player's name can have. Only applies to new players,"
-                            + " set to 0 or lower to disable.",
+                    "Minimalna długość nazwy gracza. Dotyczy tylko nowych graczy, ustaw na 0 lub"
+                            + " mniej, aby wyłączyć.",
                     ConfigurateHelper::getInt);
 
     public static final ConfigurationKey<Long> SESSION_TIMEOUT =
             new ConfigurationKey<>(
                     "session-timeout",
                     0L,
-                    "Defines a time in seconds after a player's session expires. Default value is"
-                        + " one week (604800 seconds). Set to zero or less to disable sessions.",
+                    "Określa czas w sekundach, po którym sesja gracza wygasa. Wartość domyślna to"
+                        + " jeden tydzień (604800 sekund). Ustaw na zero lub mniej, aby wyłączyć"
+                        + " sesje.",
                     ConfigurateHelper::getLong);
 
     public static final ConfigurationKey<Boolean> PING_SERVERS =
             new ConfigurationKey<>(
                     "ping-servers",
                     false,
-                    "!!THIS OPTION IS IRRELEVANT WHEN USING PAPER!! Should we ping servers to check"
-                        + " if they are online, and get their player count? If you disable this,"
-                        + " the pinging servers message will still appear in the console, even"
-                        + " though the servers will not be pinged.",
+                    "!!TA OPCJA NIE MA ZNACZENIA PRZY UŻYCIU PAPERA!! Czy pingować serwery, aby"
+                        + " sprawdzić, czy są online, i pobrać liczbę graczy? Jeśli to wyłączysz,"
+                        + " komunikat o pingowaniu serwerów nadal pojawi się w konsoli, mimo że"
+                        + " serwery nie będą pingowane.",
                     ConfigurateHelper::getBoolean);
 
     public static final ConfigurationKey<Boolean> REMEMBER_LAST_SERVER =
             new ConfigurationKey<>(
                     "remember-last-server",
                     false,
-                    "Should we remember the last server/world a player was on? This is not"
-                            + " recommended for large networks.",
+                    "Czy zapamiętywać ostatni serwer/świat, na którym był gracz? Nie jest to"
+                            + " zalecane w przypadku dużych sieci.",
                     ConfigurateHelper::getBoolean);
 
     public static final ConfigurationKey<Boolean> DEBUG =
             new ConfigurationKey<>(
                     "debug",
                     false,
-                    "Should we enable debug mode? This will print out debug messages to the"
-                            + " console.",
+                    "Czy włączyć tryb debugowania? Spowoduje to wypisywanie komunikatów"
+                            + " debugowania w konsoli.",
                     ConfigurateHelper::getBoolean);
 
     public static final ConfigurationKey<Boolean> FALLBACK =
             new ConfigurationKey<>(
                     "fallback",
                     false,
-                    "!!THIS OPTION IS IRRELEVANT WHEN USING PAPER!! Should we fallback players to"
-                            + " lobby servers if the server they are on shutdowns? If set to false,"
-                            + " they will be kicked.",
+                    "!!TA OPCJA NIE MA ZNACZENIA PRZY UŻYCIU PAPERA!! Czy przenosić graczy na"
+                            + " serwery lobby, jeśli serwer, na którym się znajdują, zostanie"
+                            + " wyłączony? Jeśli ustawione na false, zostaną wyrzuceni.",
                     ConfigurateHelper::getBoolean);
 
     public static final ConfigurationKey<Integer> TOTP_DELAY =
             new ConfigurationKey<>(
                     "totp.delay",
                     1000,
-                    "The delay in milliseconds until player is given a map to scan the QR code."
-                            + " Increase this value if the map disappears too quickly.",
+                    "Opóźnienie w milisekundach, po którym gracz otrzymuje mapę z kodem QR do"
+                            + " zeskanowania. Zwiększ tę wartość, jeśli mapa znika zbyt szybko.",
                     ConfigurateHelper::getInt);
 
     public static final ConfigurationKey<Boolean> MAIL_ENABLED =
             new ConfigurationKey<>(
                     "mail.enabled",
                     false,
-                    "Should we enable the email password recovery feature?",
+                    "Czy włączyć funkcję odzyskiwania hasła przez e-mail?",
                     ConfigurateHelper::getBoolean);
     public static final ConfigurationKey<String> MAIL_HOST =
             new ConfigurationKey<>(
                     "mail.host",
                     "smtp.gmail.com",
-                    "The host of the SMTP server.",
+                    "Host serwera SMTP.",
                     ConfigurateHelper::getString);
     public static final ConfigurationKey<Integer> MAIL_PORT =
             new ConfigurationKey<>(
-                    "mail.port", 587, "The port of the SMTP server.", ConfigurateHelper::getInt);
+                    "mail.port", 587, "Port serwera SMTP.", ConfigurateHelper::getInt);
     public static final ConfigurationKey<String> MAIL_USERNAME =
             new ConfigurationKey<>(
                     "mail.username",
                     "username",
-                    "The username used to login to the SMTP server.",
+                    "Nazwa użytkownika używana do logowania do serwera SMTP.",
                     ConfigurateHelper::getString);
     public static final ConfigurationKey<String> MAIL_PASSWORD =
             new ConfigurationKey<>(
                     "mail.password",
                     "password",
-                    "The password used to login to the SMTP server. We highly recommend you use a"
-                            + " unique one-time password for this.",
+                    "Hasło używane do logowania do serwera SMTP. Zdecydowanie zalecamy użycie w"
+                            + " tym celu unikalnego, jednorazowego hasła.",
                     ConfigurateHelper::getString);
     public static final ConfigurationKey<String> MAIL_SENDER =
             new ConfigurationKey<>(
                     "mail.sender",
                     "LibreLogin Network",
-                    "The sender of the email.",
+                    "Nadawca e-maila.",
                     ConfigurateHelper::getString);
     public static final ConfigurationKey<String> MAIL_EMAIL =
             new ConfigurationKey<>(
                     "mail.email",
                     "email@something.com",
-                    "The email to use as a sender in the From field.",
+                    "Adres e-mail używany jako nadawca w polu Od.",
                     ConfigurateHelper::getString);
 
     private static final ConfigurationKey<?> MAIL =
             ConfigurationKey.getComment(
                     "mail",
                     """
-                    This section is used for configuring the email password recovery feature.
+                    Ta sekcja służy do konfiguracji funkcji odzyskiwania hasła przez e-mail.
                     """);
     public static final ConfigurationKey<Boolean> ALLOW_PROXY_CONNECTIONS =
             new ConfigurationKey<>(
                     "allow-proxy-connections",
                     true,
-                    """
-!!!THIS ONLY AFFECTS PAPER!!!
-Verifies whether the IP the players had used when authenticating to Mojang matches the IP they are connecting from. Disabling this may break LibreLogin if the server is running under a reverse proxy/VPN.
+"""
+!!!TO DOTYCZY TYLKO PAPERA!!!
+Sprawdza, czy adres IP, którego gracze używali podczas uwierzytelniania w Mojang, zgadza się z adresem IP, z którego się łączą. Wyłączenie tego może zepsuć działanie LibreLogin, jeśli serwer działa za reverse proxy/VPN.
 """,
                     ConfigurateHelper::getBoolean);
     public static final ConfigurationKey<String> LIMBO_PORT_RANGE =
             new ConfigurationKey<>(
                     "limbo-port-range",
                     "30000-40000",
-                    "!!THIS OPTION IS IRRELEVANT WHEN USING PAPER!! Defines port(s) that limbo"
-                            + " server can be bounded to.",
+                    "!!TA OPCJA NIE MA ZNACZENIA PRZY UŻYCIU PAPERA!! Określa port(y), do których"
+                            + " może zostać przypisany serwer limbo.",
                     ConfigurateHelper::getString);
 }

@@ -8,23 +8,13 @@ package xyz.kyngs.librelogin.paper.protocol;
 
 import com.google.common.hash.Hasher;
 import com.google.common.hash.Hashing;
-import com.google.common.io.Resources;
-import com.google.common.primitives.Longs;
-import java.io.IOException;
 import java.math.BigInteger;
-import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
 import java.security.*;
-import java.security.spec.InvalidKeySpecException;
-import java.security.spec.X509EncodedKeySpec;
-import java.time.Instant;
 import java.util.Arrays;
-import java.util.Base64;
 import java.util.Random;
-import java.util.UUID;
 import javax.crypto.*;
 import javax.crypto.spec.SecretKeySpec;
-import xyz.kyngs.librelogin.paper.PaperBootstrap;
 
 /**
  * Encryption and decryption minecraft util for connection between servers and paid Minecraft
@@ -38,21 +28,6 @@ public final class EncryptionUtil {
     public static final String KEY_PAIR_ALGORITHM = "RSA";
 
     private static final int RSA_LENGTH = 1_024;
-
-    private static final PublicKey MOJANG_SESSION_KEY;
-    private static final int LINE_LENGTH = 76;
-    private static final Base64.Encoder KEY_ENCODER =
-            Base64.getMimeEncoder(LINE_LENGTH, "\n".getBytes(StandardCharsets.UTF_8));
-    private static final int MILLISECOND_SIZE = 8;
-    private static final int UUID_SIZE = 2 * MILLISECOND_SIZE;
-
-    static {
-        try {
-            MOJANG_SESSION_KEY = loadMojangSessionKey();
-        } catch (IOException | NoSuchAlgorithmException | InvalidKeySpecException ex) {
-            throw new RuntimeException("Failed to load Mojang session key", ex);
-        }
-    }
 
     private EncryptionUtil() {
         throw new RuntimeException("No instantiation of utility classes allowed");
@@ -118,40 +93,6 @@ public final class EncryptionUtil {
         return new SecretKeySpec(decrypt(privateKey, sharedKey), "AES");
     }
 
-    public static boolean verifyClientKey(
-            ClientPublicKey clientKey, Instant verifyTimestamp, UUID premiumId)
-            throws NoSuchAlgorithmException, InvalidKeyException, SignatureException {
-        if (clientKey.expired(verifyTimestamp)) {
-            return false;
-        }
-
-        Signature verifier = Signature.getInstance("SHA1withRSA");
-        // key of the signer
-        verifier.initVerify(MOJANG_SESSION_KEY);
-        verifier.update(toSignable(clientKey, premiumId));
-        return verifier.verify(clientKey.signature());
-    }
-
-    private static byte[] toSignable(ClientPublicKey clientPublicKey, UUID ownerPremiumId) {
-        if (ownerPremiumId == null) {
-            long expiry = clientPublicKey.expire().toEpochMilli();
-            String encoded = KEY_ENCODER.encodeToString(clientPublicKey.key().getEncoded());
-            return (expiry
-                            + "-----BEGIN RSA PUBLIC KEY-----\n"
-                            + encoded
-                            + "\n-----END RSA PUBLIC KEY-----\n")
-                    .getBytes(StandardCharsets.US_ASCII);
-        }
-
-        byte[] keyData = clientPublicKey.key().getEncoded();
-        return ByteBuffer.allocate(keyData.length + UUID_SIZE + MILLISECOND_SIZE)
-                .putLong(ownerPremiumId.getMostSignificantBits())
-                .putLong(ownerPremiumId.getLeastSignificantBits())
-                .putLong(clientPublicKey.expire().toEpochMilli())
-                .put(keyData)
-                .array();
-    }
-
     public static boolean verifyNonce(
             byte[] expected, PrivateKey decryptionKey, byte[] encryptedNonce)
             throws NoSuchPaddingException,
@@ -161,28 +102,6 @@ public final class EncryptionUtil {
                     InvalidKeyException {
         byte[] decryptedNonce = decrypt(decryptionKey, encryptedNonce);
         return Arrays.equals(expected, decryptedNonce);
-    }
-
-    public static boolean verifySignedNonce(
-            byte[] nonce, PublicKey clientKey, long signatureSalt, byte[] signature)
-            throws NoSuchAlgorithmException, InvalidKeyException, SignatureException {
-        Signature verifier = Signature.getInstance("SHA256withRSA");
-        // key of the signer
-        verifier.initVerify(clientKey);
-
-        verifier.update(nonce);
-        verifier.update(Longs.toByteArray(signatureSalt));
-        return verifier.verify(signature);
-    }
-
-    private static PublicKey loadMojangSessionKey()
-            throws IOException, NoSuchAlgorithmException, InvalidKeySpecException {
-        var keyUrl =
-                PaperBootstrap.class.getClassLoader().getResource("yggdrasil_session_pubkey.der");
-        var keyData = Resources.toByteArray(keyUrl);
-        var keySpec = new X509EncodedKeySpec(keyData);
-
-        return KeyFactory.getInstance("RSA").generatePublic(keySpec);
     }
 
     private static byte[] decrypt(PrivateKey key, byte[] data)

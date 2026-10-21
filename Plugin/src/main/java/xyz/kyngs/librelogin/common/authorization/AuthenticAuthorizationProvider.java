@@ -17,6 +17,9 @@ import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.TimeUnit;
 import net.kyori.adventure.audience.Audience;
+import net.kyori.adventure.key.InvalidKeyException;
+import net.kyori.adventure.key.Key;
+import net.kyori.adventure.sound.Sound;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.title.Title;
 import xyz.kyngs.librelogin.api.authorization.AuthorizationProvider;
@@ -26,6 +29,7 @@ import xyz.kyngs.librelogin.api.totp.TOTPData;
 import xyz.kyngs.librelogin.common.AuthenticHandler;
 import xyz.kyngs.librelogin.common.AuthenticLibreLogin;
 import xyz.kyngs.librelogin.common.config.ConfigurationKeys;
+import xyz.kyngs.librelogin.common.config.key.ConfigurationKey;
 import xyz.kyngs.librelogin.common.event.events.AuthenticAuthenticatedEvent;
 
 public class AuthenticAuthorizationProvider<P, S> extends AuthenticHandler<P, S>
@@ -96,11 +100,60 @@ public class AuthenticAuthorizationProvider<P, S> extends AuthenticHandler<P, S>
 
         audience.clearTitle();
         audience.sendActionBar(Component.empty());
+        if (reason == AuthenticatedEvent.AuthenticationReason.LOGIN) {
+            showSuccessTitle(audience, "title-logged-in", "sub-title-logged-in");
+            playSuccessSound(audience, ConfigurationKeys.LOGIN_SOUND);
+        } else if (reason == AuthenticatedEvent.AuthenticationReason.REGISTER) {
+            showSuccessTitle(audience, "title-registered", "sub-title-registered");
+            playSuccessSound(audience, ConfigurationKeys.REGISTER_SOUND);
+        }
         plugin.getEventProvider()
                 .fire(
                         plugin.getEventTypes().authenticated,
                         new AuthenticAuthenticatedEvent<>(user, player, plugin, reason));
         plugin.authorize(player, user, audience);
+    }
+
+    /**
+     * Shows a short title with a subtitle confirming a successful authentication. Does nothing if
+     * titles are disabled or both messages are set to a single space.
+     */
+    public void showSuccessTitle(Audience audience, String titleKey, String subTitleKey) {
+        if (!plugin.getConfiguration().get(ConfigurationKeys.USE_TITLES)) return;
+
+        var titleDisabled = plugin.getMessages().isEmpty(titleKey);
+        var subTitleDisabled = plugin.getMessages().isEmpty(subTitleKey);
+        if (titleDisabled && subTitleDisabled) return;
+
+        //noinspection UnstableApiUsage
+        audience.showTitle(
+                Title.title(
+                        titleDisabled
+                                ? Component.empty()
+                                : plugin.getMessages().getMessage(titleKey),
+                        subTitleDisabled
+                                ? Component.empty()
+                                : plugin.getMessages().getMessage(subTitleKey),
+                        Title.Times.times(
+                                Duration.ofMillis(500),
+                                Duration.ofMillis(2500),
+                                Duration.ofMillis(500))));
+    }
+
+    /**
+     * Plays the configured sound confirming a successful authentication. Does nothing if the
+     * configured value is blank.
+     */
+    private void playSuccessSound(Audience audience, ConfigurationKey<String> soundKey) {
+        var name = plugin.getConfiguration().get(soundKey);
+        if (name == null || name.isBlank()) return;
+
+        try {
+            audience.playSound(Sound.sound(Key.key(name.trim()), Sound.Source.MASTER, 1f, 1f));
+        } catch (InvalidKeyException e) {
+            plugin.getLogger()
+                    .warn("Nieprawidłowa nazwa dźwięku w konfiguracji: \"" + name + "\"!");
+        }
     }
 
     @Override
@@ -184,7 +237,7 @@ public class AuthenticAuthorizationProvider<P, S> extends AuthenticHandler<P, S>
                                 .getMessage(registered ? "title-login" : "title-register"),
                         plugin.getMessages()
                                 .getMessage(registered ? "sub-title-login" : "sub-title-register"),
-                        Title.Times.of(
+                        Title.Times.times(
                                 Duration.ofMillis(0),
                                 Duration.ofMillis(toRefresh > 0 ? (long) (toRefresh * 1.1) : 10000),
                                 Duration.ofMillis(0))));

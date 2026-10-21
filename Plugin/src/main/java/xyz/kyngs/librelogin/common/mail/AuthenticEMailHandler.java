@@ -69,11 +69,11 @@ public class AuthenticEMailHandler implements EmailHandler {
     public void sendTestMail(String email) {
         sendEmail(
                 email,
-                "LibreLogin test mail",
+                "Testowy e-mail LibreLogin",
                 """
-                Congratulations! You have successfully configured email sending in LibreLogin!<br>
-                Now, your users can reset their passwords.<br>
-                <i>If you have no idea what this means, block the sender.</i>
+                Gratulacje! Wysyłanie e-maili w LibreLogin zostało skonfigurowane poprawnie!<br>
+                Teraz Twoi użytkownicy mogą resetować swoje hasła.<br>
+                <i>Jeśli nie masz pojęcia, co to oznacza, zablokuj nadawcę.</i>
                 """);
     }
 

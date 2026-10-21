@@ -57,7 +57,9 @@ public class AegisSQLMigrateReadProvider extends SQLMigrateReadProvider {
                                     password = CryptoUtil.convertFromBCryptRaw(passwordRaw);
                                 } else {
                                     logger.error(
-                                            "User " + nickname + " has an invalid password hash");
+                                            "Użytkownik "
+                                                    + nickname
+                                                    + " ma nieprawidłowy hash hasła");
                                 }
                             }
 
@@ -82,7 +84,8 @@ public class AegisSQLMigrateReadProvider extends SQLMigrateReadProvider {
                                             null));
 
                         } catch (Exception e) {
-                            logger.error("Failed to read user from Aegis db, omitting");
+                            logger.error(
+                                    "Nie udało się odczytać użytkownika z bazy Aegis, pomijanie");
                         }
                     }
 

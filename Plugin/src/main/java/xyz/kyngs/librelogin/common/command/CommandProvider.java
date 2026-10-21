@@ -96,8 +96,8 @@ public class CommandProvider<P, S> extends AuthenticHandler<P, S> {
                         var logger = plugin.getLogger();
 
                         logger.error(
-                                "An unexpected exception occurred while performing command, please"
-                                        + " attach the stacktrace below and report this issue.");
+                                "Wystąpił nieoczekiwany wyjątek podczas wykonywania komendy, dołącz"
+                                        + " poniższy stacktrace i zgłoś ten problem.");
 
                         t.printStackTrace();
 
@@ -119,6 +119,7 @@ public class CommandProvider<P, S> extends AuthenticHandler<P, S> {
         manager.registerCommand(new PremiumDisableCommand<>(plugin));
         manager.registerCommand(new ChangePasswordCommand<>(plugin));
         manager.registerCommand(new LibreLoginCommand<>(plugin));
+        plugin.registerPlatformCommands(manager);
 
         if (plugin.getTOTPProvider() != null) {
             manager.registerCommand(new TwoFactorAuthCommand<>(plugin));

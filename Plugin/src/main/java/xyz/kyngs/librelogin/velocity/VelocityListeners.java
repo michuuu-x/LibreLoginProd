@@ -129,11 +129,12 @@ public class VelocityListeners
                     return; // Player is coming from Floodgate
                 }
             } catch (Exception e) {
-                plugin.getLogger().warn("Failed to check if player is coming from Floodgate.");
+                plugin.getLogger()
+                        .warn("Nie udało się sprawdzić, czy gracz łączy się przez Floodgate.");
                 e.printStackTrace();
                 event.setResult(
                         PreLoginEvent.PreLoginComponentResult.denied(
-                                Component.text("Internal LibreLogin error")));
+                                Component.text("Wewnętrzny błąd LibreLogin")));
                 return;
             }
         }

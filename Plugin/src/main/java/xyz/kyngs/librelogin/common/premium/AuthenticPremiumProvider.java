@@ -67,36 +67,35 @@ public class AuthenticPremiumProvider implements PremiumProvider {
                                             == PremiumException.Issue.SERVER_EXCEPTION) {
                                         plugin.getLogger()
                                                 .warn(
-                                                        "Got a server exception while fetching"
-                                                            + " premium user. Falling back to an"
-                                                            + " alternative API. Player's"
-                                                            + " information's might not be"
-                                                            + " up-to-date.",
+                                                        "Wystąpił błąd serwera podczas pobierania"
+                                                            + " użytkownika premium. Przełączanie"
+                                                            + " na alternatywne API. Informacje o"
+                                                            + " graczu mogą być nieaktualne.",
                                                         e);
                                     } else if (e.getIssue() == PremiumException.Issue.THROTTLED) {
                                         plugin.getLogger()
                                                 .warn(
-                                                        "Your IP has been rate limited while"
-                                                            + " fetching premium user. Falling back"
-                                                            + " to an alternative API. Player's"
-                                                            + " information's might not be"
-                                                            + " up-to-date.",
+                                                        "Twój adres IP został ograniczony (rate"
+                                                            + " limit) podczas pobierania"
+                                                            + " użytkownika premium. Przełączanie"
+                                                            + " na alternatywne API. Informacje o"
+                                                            + " graczu mogą być nieaktualne.",
                                                         e);
                                     } else {
                                         plugin.getLogger()
                                                 .warn(
-                                                        "Got unexpected exception while fetching"
-                                                            + " premium user. Falling back to an"
-                                                            + " alternative API. Player's"
-                                                            + " information's might not be"
-                                                            + " up-to-date.",
+                                                        "Wystąpił nieoczekiwany wyjątek podczas"
+                                                            + " pobierania użytkownika premium."
+                                                            + " Przełączanie na alternatywne API."
+                                                            + " Informacje o graczu mogą być"
+                                                            + " nieaktualne.",
                                                         e);
                                     }
                                 } catch (RuntimeException e) {
                                     plugin.getLogger()
                                             .debug(
-                                                    "Unexpected exception while fetching premium"
-                                                            + " user "
+                                                    "Nieoczekiwany wyjątek podczas pobierania"
+                                                            + " użytkownika premium "
                                                             + finalName,
                                                     e);
                                     if (i == fetchers.size() - 1) {
@@ -260,7 +259,9 @@ public class AuthenticPremiumProvider implements PremiumProvider {
                                 GeneralUtil.readInput(connection.getErrorStream()));
             }
         } catch (SocketTimeoutException te) {
-            throw new PremiumException(PremiumException.Issue.THROTTLED, "Minetools API timed out");
+            throw new PremiumException(
+                    PremiumException.Issue.THROTTLED,
+                    "Przekroczono czas oczekiwania API Minetools");
         } catch (IOException e) {
             throw new PremiumException(PremiumException.Issue.SERVER_EXCEPTION, e);
         }
@@ -321,7 +322,8 @@ public class AuthenticPremiumProvider implements PremiumProvider {
                                 GeneralUtil.readInput(connection.getErrorStream()));
             };
         } catch (SocketTimeoutException te) {
-            throw new PremiumException(PremiumException.Issue.THROTTLED, "Mojang API timed out");
+            throw new PremiumException(
+                    PremiumException.Issue.THROTTLED, "Przekroczono czas oczekiwania API Mojang");
         } catch (IOException e) {
             throw new PremiumException(PremiumException.Issue.UNDEFINED, e);
         }

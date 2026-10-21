@@ -245,7 +245,7 @@ public class LibreLoginCommand<P> extends StaffCommand<P> {
                                     user.getUuid().toString(),
                                     "%premium_uuid%",
                                     user.getPremiumUUID() == null
-                                            ? "N/A"
+                                            ? "brak"
                                             : user.getPremiumUUID().toString(),
                                     "%last_seen%",
                                     DATE_TIME_FORMATTER.format(
@@ -254,14 +254,14 @@ public class LibreLoginCommand<P> extends StaffCommand<P> {
                                     DATE_TIME_FORMATTER.format(
                                             user.getJoinDate().toLocalDateTime()),
                                     "%2fa%",
-                                    user.getSecret() != null ? "Enabled" : "Disabled",
+                                    user.getSecret() != null ? "Włączone" : "Wyłączone",
                                     "%email%",
-                                    user.getEmail() == null ? "N/A" : user.getEmail(),
+                                    user.getEmail() == null ? "brak" : user.getEmail(),
                                     "%ip%",
-                                    user.getIp() == null ? "N/A" : user.getIp(),
+                                    user.getIp() == null ? "brak" : user.getIp(),
                                     "%last_authenticated%",
                                     user.getLastAuthentication() == null
-                                            ? "N/A"
+                                            ? "brak"
                                             : DATE_TIME_FORMATTER.format(
                                                     user.getLastAuthentication()
                                                             .toLocalDateTime())));
@@ -275,7 +275,7 @@ public class LibreLoginCommand<P> extends StaffCommand<P> {
         if (onlyValid && id != null && !id.reliable()) {
             plugin.getLogger()
                     .warn(
-                            "Data retrieved from premium provider is not reliable for user %s, can not safely enable premium login. \nPlease verify the correct capitalization using site such as NameMC and then enable it manually using the /librelogin user premium command."
+                            "Dane pobrane od dostawcy premium nie są wiarygodne dla użytkownika %s, nie można bezpiecznie włączyć logowania premium. \nSprawdź poprawną wielkość liter za pomocą strony takiej jak NameMC, a następnie włącz je ręcznie komendą /librelogin user premium."
                                     .formatted(user.getLastNickname()));
             throw new InvalidCommandArgument(plugin.getMessages().getMessage("error-not-paid"));
         }

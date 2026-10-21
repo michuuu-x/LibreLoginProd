@@ -49,16 +49,16 @@ public class HoconPluginConfiguration {
                         plugin.getDataFolder(),
                         "config.conf",
                         defaultKeys,
-                        """
-  !!THIS FILE IS WRITTEN IN THE HOCON FORMAT!!
-  The hocon format is very similar to JSON, but it has some extra features.
-  You can find more information about the format on the sponge wiki:
+"""
+  !!TEN PLIK JEST ZAPISANY W FORMACIE HOCON!!
+  Format HOCON jest bardzo podobny do JSON, ale ma kilka dodatkowych funkcji.
+  Więcej informacji o tym formacie znajdziesz na wiki Sponge:
   https://docs.spongepowered.org/stable/en/server/getting-started/configuration/hocon.html
   ----------------------------------------------------------------------------------------
-  LibreLogin Configuration
+  Konfiguracja LibreLogin
   ----------------------------------------------------------------------------------------
-  This is the configuration file for LibreLogin.
-  You can find more information about LibreLogin on the github page:
+  To jest plik konfiguracyjny wtyczki LibreLogin.
+  Więcej informacji o LibreLogin znajdziesz na stronie GitHub:
   https://github.com/Navio1430/LibreLoginProd
 """,
                         logger,
@@ -75,7 +75,7 @@ public class HoconPluginConfiguration {
 
         if (!adept.isNewlyCreated()
                 && plugin.getCryptoProvider(helperAdept.get(DEFAULT_CRYPTO_PROVIDER)) == null) {
-            throw new CorruptedConfigurationException("Crypto provider not found");
+            throw new CorruptedConfigurationException("Nie znaleziono dostawcy szyfrowania");
         }
 
         helper = helperAdept;

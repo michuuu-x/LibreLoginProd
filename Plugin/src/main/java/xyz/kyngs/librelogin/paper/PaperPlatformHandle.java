@@ -6,9 +6,6 @@
 
 package xyz.kyngs.librelogin.paper;
 
-import static xyz.kyngs.librelogin.paper.protocol.ProtocolUtil.getServerVersion;
-
-import com.github.retrooper.packetevents.manager.server.ServerVersion;
 import com.google.common.base.MoreObjects;
 import java.io.File;
 import java.util.Arrays;
@@ -43,7 +40,7 @@ public class PaperPlatformHandle implements PlatformHandle<Player, World> {
     @Override
     public CompletableFuture<Throwable> movePlayer(Player player, World to) {
         return player.teleportAsync(to.getSpawnLocation())
-                .thenApply(success -> success ? null : new RuntimeException("Unknown cause"));
+                .thenApply(success -> success ? null : new RuntimeException("Nieznana przyczyna"));
     }
 
     @Override
@@ -61,9 +58,9 @@ public class PaperPlatformHandle implements PlatformHandle<Player, World> {
         var exists = file.exists();
 
         if (exists) {
-            plugin.getLogger().info("Found world file for " + name + ", loading...");
+            plugin.getLogger().info("Znaleziono plik świata " + name + ", wczytywanie...");
         } else {
-            plugin.getLogger().info("World file for " + name + " not found, creating...");
+            plugin.getLogger().info("Nie znaleziono pliku świata " + name + ", tworzenie...");
         }
 
         var creator = new WorldCreator(name);
@@ -77,15 +74,8 @@ public class PaperPlatformHandle implements PlatformHandle<Player, World> {
         if (limbo) {
             world.setSpawnLocation(
                     new Location(world, 0.5, world.getHighestBlockYAt(0, 0) + 1, 0.5));
-            if (getServerVersion().isOlderThan(ServerVersion.V_1_21_9))
-                world.setKeepSpawnInMemory(true);
-            if (getServerVersion().isOlderThan(ServerVersion.V_1_21_11)) {
-                world.setGameRule(GameRule.DO_DAYLIGHT_CYCLE, false);
-                world.setGameRule(GameRule.DO_INSOMNIA, false);
-            } else {
-                world.setGameRule(GameRules.ADVANCE_TIME, false);
-                world.setGameRule(GameRules.SPAWN_PHANTOMS, false);
-            }
+            world.setGameRule(GameRules.ADVANCE_TIME, false);
+            world.setGameRule(GameRules.SPAWN_PHANTOMS, false);
         }
 
         return world;

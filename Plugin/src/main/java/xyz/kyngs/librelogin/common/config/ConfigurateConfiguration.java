@@ -40,7 +40,7 @@ public class ConfigurateConfiguration {
         if (!file.exists()) {
             newlyCreated = true;
             if (!file.createNewFile())
-                throw new IOException("Could not create configuration file!");
+                throw new IOException("Nie można utworzyć pliku konfiguracyjnego!");
         } else newlyCreated = false;
 
         var refHelper = new ConfigurateHelper(CommentedConfigurationNode.root().comment(comment));
@@ -91,7 +91,7 @@ public class ConfigurateConfiguration {
         helper.configuration()
                 .node("revision")
                 .set(revision)
-                .comment("The config revision number. !!DO NOT TOUCH THIS!!");
+                .comment("Numer rewizji konfiguracji. !!NIE DOTYKAJ TEGO!!");
 
         for (var key : extractedKeys) {
             for (ConfigurationKey<?> configurationKey : key.key()) {

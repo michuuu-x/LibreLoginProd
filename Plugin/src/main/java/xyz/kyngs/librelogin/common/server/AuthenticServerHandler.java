@@ -47,10 +47,10 @@ public class AuthenticServerHandler<P, S> implements ServerHandler<P, S> {
                                             .get(ConfigurationKeys.PING_SERVERS))
                                         return Optional.of(new ServerPing(Integer.MAX_VALUE));
 
-                                    plugin.getLogger().debug("Pinging server " + server);
+                                    plugin.getLogger().debug("Pingowanie serwera " + server);
                                     var ping = plugin.getPlatformHandle().ping(server);
                                     plugin.getLogger()
-                                            .debug("Pinged server " + server + ": " + ping);
+                                            .debug("Spingowano serwer " + server + ": " + ping);
 
                                     return Optional.ofNullable(
                                             plugin.getConfiguration()
@@ -65,14 +65,14 @@ public class AuthenticServerHandler<P, S> implements ServerHandler<P, S> {
         var handle = plugin.getPlatformHandle();
 
         if (plugin.getConfiguration().get(ConfigurationKeys.PING_SERVERS))
-            plugin.getLogger().info("Pinging servers...");
+            plugin.getLogger().info("Pingowanie serwerów...");
 
         for (String limbo : plugin.getConfiguration().get(LIMBO)) {
             var server = handle.getServer(limbo, true);
             if (server != null) {
                 registerLimboServer(server);
             } else {
-                plugin.getLogger().warn("Limbo server/world " + limbo + " not found!");
+                plugin.getLogger().warn("Nie znaleziono serwera/świata limbo " + limbo + "!");
             }
         }
 
@@ -85,23 +85,26 @@ public class AuthenticServerHandler<P, S> implements ServerHandler<P, S> {
                                 registerLobbyServer(s, forced);
                             } else {
                                 plugin.getLogger()
-                                        .warn("Lobby server/world " + server + " not found!");
+                                        .warn(
+                                                "Nie znaleziono serwera/świata lobby "
+                                                        + server
+                                                        + "!");
                             }
                         });
 
-        plugin.getLogger().debug("List of registered servers: ");
+        plugin.getLogger().debug("Lista zarejestrowanych serwerów: ");
 
         for (S server : plugin.getPlatformHandle().getServers()) {
             plugin.getLogger()
                     .debug(
-                            "Server: "
+                            "Serwer: "
                                     + plugin.getPlatformHandle().getServerName(server)
                                     + " | "
                                     + server);
         }
 
         if (plugin.getConfiguration().get(ConfigurationKeys.PING_SERVERS))
-            plugin.getLogger().info("Pinged servers...");
+            plugin.getLogger().info("Serwery spingowane...");
     }
 
     @Override
@@ -145,7 +148,7 @@ public class AuthenticServerHandler<P, S> implements ServerHandler<P, S> {
         if (virtual != null)
             plugin.getLogger()
                     .debug(
-                            "Virtual host for player "
+                            "Wirtualny host gracza "
                                     + plugin.getPlatformHandle().getUsernameForPlayer(player)
                                     + ": "
                                     + virtual);

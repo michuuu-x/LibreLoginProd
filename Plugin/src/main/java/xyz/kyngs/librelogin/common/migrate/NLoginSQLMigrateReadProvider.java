@@ -57,7 +57,7 @@ public class NLoginSQLMigrateReadProvider extends SQLMigrateReadProvider {
                                     password = CryptoUtil.convertFromBCryptRaw(rawPassword);
                                 } else {
                                     logger.error(
-                                            "User %s has invalid algorithm %s, omitting"
+                                            "Użytkownik %s ma nieprawidłowy algorytm %s, pomijanie"
                                                     .formatted(lastNickname, rawPassword));
                                     continue;
                                 }
@@ -81,7 +81,7 @@ public class NLoginSQLMigrateReadProvider extends SQLMigrateReadProvider {
 
                         } catch (Exception e) {
                             e.printStackTrace();
-                            logger.error("Error while reading user from database");
+                            logger.error("Błąd podczas odczytu użytkownika z bazy danych");
                         }
                     }
 

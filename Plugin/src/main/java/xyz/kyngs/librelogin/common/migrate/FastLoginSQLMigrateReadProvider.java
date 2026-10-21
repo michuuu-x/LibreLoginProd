@@ -52,7 +52,9 @@ public class FastLoginSQLMigrateReadProvider extends SQLMigrateReadProvider {
 
                             premiumUsers.put(premiumUUID, name);
                         } catch (Exception e) {
-                            logger.error("Error while migrating user from FastLogin db, omitting");
+                            logger.error(
+                                    "Błąd podczas migracji użytkownika z bazy FastLogin,"
+                                            + " pomijanie");
                         }
                     }
 
@@ -71,7 +73,7 @@ public class FastLoginSQLMigrateReadProvider extends SQLMigrateReadProvider {
                             name = names.iterator().next();
                         } else if (names.size() > 1) {
                             logger.warn(
-                                    "Users %s share the same premium UUID %s, contacting mojang to find the owner"
+                                    "Użytkownicy %s mają ten sam UUID premium %s, kontaktowanie się z Mojang w celu ustalenia właściciela"
                                             .formatted(
                                                     Arrays.toString(names.toArray()), premiumUUID));
                             PremiumUser user = null;
@@ -83,8 +85,8 @@ public class FastLoginSQLMigrateReadProvider extends SQLMigrateReadProvider {
                                 } catch (PremiumException e) {
                                     if (e.getIssue() == PremiumException.Issue.THROTTLED) {
                                         logger.warn(
-                                                "Request to mojang throttled, waiting for 5"
-                                                        + " seconds");
+                                                "Zapytanie do Mojang zostało ograniczone,"
+                                                        + " oczekiwanie 5 sekund");
                                         try {
                                             Thread.sleep(5000);
                                         } catch (InterruptedException interruptedException) {
@@ -95,8 +97,8 @@ public class FastLoginSQLMigrateReadProvider extends SQLMigrateReadProvider {
                                         }
                                     } else {
                                         logger.error(
-                                                "Cannot contact mojang to find the owner,"
-                                                        + " omitting");
+                                                "Nie można skontaktować się z Mojang w celu"
+                                                        + " ustalenia właściciela, pomijanie");
                                         e.printStackTrace();
                                         break;
                                     }
@@ -105,7 +107,7 @@ public class FastLoginSQLMigrateReadProvider extends SQLMigrateReadProvider {
 
                             if (user == null) {
                                 logger.warn(
-                                        "No owner found for the premium UUID %s, omitting"
+                                        "Nie znaleziono właściciela UUID premium %s, pomijanie"
                                                 .formatted(premiumUUID));
                                 continue;
                             }
@@ -119,12 +121,12 @@ public class FastLoginSQLMigrateReadProvider extends SQLMigrateReadProvider {
 
                             if (name == null) {
                                 logger.error(
-                                        "Registered names with the premium UUID do not match the mojang name %s, omitting"
+                                        "Zarejestrowane nazwy z tym UUID premium nie pasują do nazwy w Mojang %s, pomijanie"
                                                 .formatted(user.name()));
                                 continue;
                             } else {
                                 logger.info(
-                                        "Found owner of the premium UUID %s, name %s"
+                                        "Znaleziono właściciela UUID premium %s, nazwa %s"
                                                 .formatted(premiumUUID, name));
                             }
                         } else {

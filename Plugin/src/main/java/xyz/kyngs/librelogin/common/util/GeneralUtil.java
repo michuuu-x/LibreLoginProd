@@ -87,10 +87,10 @@ public class GeneralUtil {
             Logger logger,
             AuthenticLibreLogin<?, ?> plugin) {
         if (configuration.get(ConfigurationKeys.MIGRATION_ON_NEXT_STARTUP)) {
-            logger.info("Performing migration...");
+            logger.info("Przeprowadzanie migracji...");
 
             try {
-                logger.info("Connecting to the OLD database...");
+                logger.info("Łączenie ze STARĄ bazą danych...");
 
                 ReadDatabaseProvider provider;
                 DatabaseConnector<?, ?> connector = null;
@@ -100,9 +100,9 @@ public class GeneralUtil {
                             plugin.getReadProviders().get(configuration.get(MIGRATION_TYPE));
                     if (registration == null) {
                         logger.error(
-                                "Migration type %s doesn't exist, please check your configuration"
+                                "Typ migracji %s nie istnieje, sprawdź swoją konfigurację"
                                         .formatted(configuration.get(MIGRATION_TYPE)));
-                        logger.error("Aborting migration");
+                        logger.error("Przerywanie migracji");
                         return;
                     }
 
@@ -112,9 +112,9 @@ public class GeneralUtil {
 
                         if (connectorRegistration == null) {
                             logger.error(
-                                    "Migration type %s is corrupted, please use a different one"
+                                    "Typ migracji %s jest uszkodzony, użyj innego"
                                             .formatted(configuration.get(DATABASE_TYPE)));
-                            logger.error("Aborting migration");
+                            logger.error("Przerywanie migracji");
                             return;
                         }
 
@@ -131,26 +131,26 @@ public class GeneralUtil {
 
                     provider = registration.create(connector);
 
-                    logger.info("Connected to the OLD database");
+                    logger.info("Połączono ze STARĄ bazą danych");
 
                 } catch (Exception e) {
                     var cause = GeneralUtil.getFurthestCause(e);
-                    logger.error("!! THIS IS NOT AN ERROR CAUSED BY LIBRELOGIN !!");
+                    logger.error("!! NIE JEST TO BŁĄD SPOWODOWANY PRZEZ LIBRELOGIN !!");
                     logger.error(
-                            "Failed to connect to the OLD database, this most likely is caused by wrong credentials. Cause: %s: %s"
+                            "Nie udało się połączyć ze STARĄ bazą danych, najprawdopodobniej przyczyną są błędne dane logowania. Przyczyna: %s: %s"
                                     .formatted(
                                             cause.getClass().getSimpleName(), cause.getMessage()));
-                    logger.error("Aborting migration");
+                    logger.error("Przerywanie migracji");
 
                     return;
                 }
 
                 try {
-                    logger.info("Starting data conversion... This may take a while!");
+                    logger.info("Rozpoczynanie konwersji danych... Może to chwilę potrwać!");
 
                     plugin.migrate(provider, plugin.getDatabaseProvider());
 
-                    logger.info("Migration complete, cleaning up!");
+                    logger.info("Migracja zakończona, porządkowanie!");
 
                 } finally {
                     if (connector != null) connector.disconnect();
@@ -159,8 +159,8 @@ public class GeneralUtil {
             } catch (Exception e) {
                 e.printStackTrace();
                 logger.error(
-                        "An unexpected exception occurred while performing database migration,"
-                                + " aborting migration");
+                        "Wystąpił nieoczekiwany wyjątek podczas migracji bazy danych, przerywanie"
+                                + " migracji");
             }
         }
     }

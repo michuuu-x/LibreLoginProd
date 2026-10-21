@@ -30,7 +30,7 @@ import xyz.kyngs.librelogin.api.provider.LibreLoginProvider;
 @Plugin(
         id = "librelogin",
         name = "LibreLogin",
-        version = "@version@",
+        version = BuildConstants.VERSION,
         // TODO: Update authors
         authors = {"vuxeim", "sapphirecode"},
         dependencies = {
@@ -80,9 +80,15 @@ public class VelocityBootstrap implements LibreLoginProvider<Player, RegisteredS
                             }
                         });
 
-        logger.info("Loading libraries...");
+        logger.info("Wczytywanie bibliotek...");
 
-        libraryManager.configureFromJSON();
+        try {
+            // The Librarian gradle plugin generates librarian.json, Libby looks for libby.json
+            libraryManager.configureFromJSON(
+                    getClass().getClassLoader().getResourceAsStream("librarian.json"));
+        } catch (Exception e) {
+            throw new IllegalStateException("Nie udało się wczytać bibliotek", e);
+        }
 
         libreLogin = new VelocityLibreLogin(this);
         injector.injectMembers(libreLogin);

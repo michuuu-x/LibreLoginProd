@@ -13,6 +13,8 @@ import java.util.Set;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.TextComponent;
 import net.kyori.adventure.text.minimessage.MiniMessage;
+import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
+import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver;
 import org.spongepowered.configurate.CommentedConfigurationNode;
 import xyz.kyngs.librelogin.api.BiHolder;
 import xyz.kyngs.librelogin.api.LibreLoginPlugin;
@@ -23,11 +25,11 @@ import xyz.kyngs.librelogin.common.config.migrate.messages.FirstMessagesMigrator
 import xyz.kyngs.librelogin.common.config.migrate.messages.SecondMessagesMigrator;
 import xyz.kyngs.librelogin.common.config.migrate.messages.ThirdMessagesMigrator;
 import xyz.kyngs.librelogin.common.util.GeneralUtil;
-import xyz.kyngs.utils.legacymessage.LegacyMessage;
 
 public class HoconMessages implements Messages {
 
     private static final MiniMessage SERIALIZER = MiniMessage.builder().build();
+    private static final String PREFIX_TAG = "prefix";
     private final Map<String, TextComponent> messages;
     private final Logger logger;
     private ConfigurateConfiguration rawMessages;
@@ -71,17 +73,20 @@ public class HoconMessages implements Messages {
                         plugin.getDataFolder(),
                         "messages.conf",
                         Set.of(new BiHolder<>(MessageKeys.class, "")),
-                        """
-  !!THIS FILE IS WRITTEN IN THE HOCON FORMAT!!
-  The hocon format is very similar to JSON, but it has some extra features.
-  You can find more information about the format on the sponge wiki:
+"""
+  !!TEN PLIK JEST ZAPISANY W FORMACIE HOCON!!
+  Format HOCON jest bardzo podobny do JSON, ale ma kilka dodatkowych funkcji.
+  Więcej informacji o tym formacie znajdziesz na wiki Sponge:
   https://docs.spongepowered.org/stable/en/server/getting-started/configuration/hocon.html
   ----------------------------------------------------------------------------------------
-  LibreLogin Messages
+  Wiadomości LibreLogin
   ----------------------------------------------------------------------------------------
-  This file contains all of the messages used by the plugin, you are welcome to fit it to your needs.
-  The messages can be written both in the legacy format and in the MiniMessage format. For example, the following message is completely valid: <bold>&aReloaded!</bold>
-  You can find more information about LibreLogin on the github page:
+  Ten plik zawiera wszystkie wiadomości używane przez wtyczkę, możesz je dowolnie dostosować do swoich potrzeb.
+  Wiadomości są zapisywane w formacie MiniMessage, na przykład: <bold><green>Przeładowano!</green></bold>
+  Więcej informacji o formacie znajdziesz tutaj: https://docs.advntr.dev/minimessage/format.html
+  Dawny format z kodami kolorów (&a, &l, &#ff8800 itp.) oraz znak § NIE są obsługiwane.
+  W każdej wiadomości możesz użyć zmiennej <prefix>, która zostanie zastąpiona wartością klucza "prefix".
+  Więcej informacji o LibreLogin znajdziesz na stronie GitHub:
   https://github.com/Navio1430/LibreLoginProd
 """,
                         logger,
@@ -89,11 +94,20 @@ public class HoconMessages implements Messages {
                         new SecondMessagesMigrator(),
                         new ThirdMessagesMigrator());
 
-        extractKeys("", adept.getHelper().configuration());
+        var rawPrefix = adept.getHelper().getString(MessageKeys.PREFIX.key());
+        var prefixResolver =
+                Placeholder.component(
+                        PREFIX_TAG,
+                        rawPrefix == null
+                                ? Component.empty()
+                                : Component.empty().append(SERIALIZER.deserialize(rawPrefix)));
+
+        extractKeys("", adept.getHelper().configuration(), prefixResolver);
         rawMessages = adept;
     }
 
-    private void extractKeys(String prefix, CommentedConfigurationNode node) {
+    private void extractKeys(
+            String prefix, CommentedConfigurationNode node, TagResolver prefixResolver) {
         node.childrenMap()
                 .forEach(
                         (key, value) -> {
@@ -109,10 +123,9 @@ public class HoconMessages implements Messages {
                                         Component.empty()
                                                 .append(
                                                         SERIALIZER.deserialize(
-                                                                LegacyMessage.fromLegacy(
-                                                                        string, "&"))));
+                                                                string, prefixResolver)));
                             } else {
-                                extractKeys(prefix + str + ".", value);
+                                extractKeys(prefix + str + ".", value, prefixResolver);
                             }
                         });
     }

@@ -46,7 +46,7 @@ public class Argon2IDCryptoProvider implements CryptoProvider {
         generator.init(params);
         generator.generateBytes(password.toCharArray(), hash);
 
-        logger.debug("Argon2ID hash took " + (System.currentTimeMillis() - start) + "ms");
+        logger.debug("Hashowanie Argon2ID zajęło " + (System.currentTimeMillis() - start) + "ms");
 
         return CryptoUtil.convertFromArgon2ID(hash, params);
     }

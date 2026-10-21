@@ -56,9 +56,9 @@ public class LogItSQLMigrateReadProvider extends SQLMigrateReadProvider {
                                         new HashedPassword(password, salt, "LOGIT-SHA-256");
                             } else {
                                 logger.warn(
-                                        "Unsupported hashing algorithm: "
+                                        "Nieobsługiwany algorytm hashowania: "
                                                 + algorithm
-                                                + ", skipping user "
+                                                + ", pomijanie użytkownika "
                                                 + nickname);
                             }
 
@@ -77,7 +77,8 @@ public class LogItSQLMigrateReadProvider extends SQLMigrateReadProvider {
                                             email));
 
                         } catch (Exception e) {
-                            logger.error("Failed to read user from LogIt db, omitting");
+                            logger.error(
+                                    "Nie udało się odczytać użytkownika z bazy LogIt, pomijanie");
                         }
                     }
 

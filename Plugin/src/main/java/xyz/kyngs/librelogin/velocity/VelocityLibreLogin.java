@@ -112,7 +112,10 @@ public class VelocityLibreLogin extends AuthenticLibreLogin<Player, RegisteredSe
                                 if (throwable != null || !result.isSuccessful()) {
                                     var reason =
                                             result.getReasonComponent()
-                                                    .orElse(Component.text("Unable to connect"));
+                                                    .orElse(
+                                                            Component.text(
+                                                                    "Nie można nawiązać"
+                                                                            + " połączenia"));
                                     player.disconnect(reason);
                                 }
                             });
@@ -161,9 +164,8 @@ public class VelocityLibreLogin extends AuthenticLibreLogin<Player, RegisteredSe
 
                     if (build < 172) {
                         logger.warn(
-                                "Detected protocolize, but in order for the integration to work"
-                                        + " properly, you must be running Velocity build 172 or"
-                                        + " newer!");
+                                "Wykryto Protocolize, ale aby integracja działała poprawnie, musisz"
+                                        + " używać Velocity w wersji build 172 lub nowszej!");
                         return null;
                     }
                 } catch (Exception e) {
@@ -174,14 +176,14 @@ public class VelocityLibreLogin extends AuthenticLibreLogin<Player, RegisteredSe
             if (!projector.compatible()) {
                 getLogger()
                         .warn(
-                                "Detected protocolize, however, with incompatible version (2.2.2),"
-                                        + " please upgrade or downgrade.");
+                                "Wykryto Protocolize, jednak w niezgodnej wersji (2.2.2),"
+                                        + " zaktualizuj lub zainstaluj starszą wersję.");
                 return null;
             }
-            getLogger().info("Detected Protocolize, enabling 2FA...");
+            getLogger().info("Wykryto Protocolize, włączanie 2FA...");
             return projector;
         } else {
-            logger.warn("Protocolize not found, some features (e.g. 2FA) will not work!");
+            logger.warn("Nie znaleziono Protocolize, niektóre funkcje (np. 2FA) nie będą działać!");
             return null;
         }
     }
@@ -192,7 +194,7 @@ public class VelocityLibreLogin extends AuthenticLibreLogin<Player, RegisteredSe
             redisBungee = new VelocityRedisBungeeIntegration();
         }
         super.enable();
-        getLogger().info("LibreLogin version " + getVersion() + " enabled!");
+        getLogger().info("LibreLogin w wersji " + getVersion() + " został włączony!");
     }
 
     @Override

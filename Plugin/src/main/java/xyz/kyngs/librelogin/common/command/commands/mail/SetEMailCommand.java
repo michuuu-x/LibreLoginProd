@@ -73,9 +73,9 @@ public class SetEMailCommand<P> extends EMailCommand<P> {
                         if (plugin.getConfiguration().get(ConfigurationKeys.DEBUG)) {
                             getLogger()
                                     .debug(
-                                            "Cannot send verification mail to "
+                                            "Nie można wysłać e-maila weryfikacyjnego na adres "
                                                     + mail
-                                                    + " for "
+                                                    + " dla gracza "
                                                     + player);
                             e.printStackTrace();
                         }

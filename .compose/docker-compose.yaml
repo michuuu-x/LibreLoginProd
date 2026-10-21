@@ -22,20 +22,20 @@ services:
     environment:
       - EULA=TRUE
       - TYPE=CUSTOM
-      - CUSTOM_SERVER=https://github.com/BoomEaro/NanoLimbo/releases/download/1.9.6/NanoLimbo-1.9.6-all.jar
+      - CUSTOM_SERVER=https://github.com/BoomEaro/NanoLimbo/releases/download/1.14.0/NanoLimbo.jar
     volumes:
       - ./data/limbo:/data/
 
   paper1:
     hostname: paper1
-    image: itzg/minecraft-server
+    image: itzg/minecraft-server:java25
     ports:
       - "25566:25565"
       - "5066:5005"
     environment:
       - EULA=TRUE
       - TYPE=PAPER
-      - VERSION=1.21.7
+      - VERSION=26.2
       - ONLINE_MODE=FALSE
       - MODRINTH_PROJECTS=luckperms:beta,viaversion:beta,viabackwards:beta
       - JVM_OPTS=-Dlog4j.configurationFile=log4j2.xml

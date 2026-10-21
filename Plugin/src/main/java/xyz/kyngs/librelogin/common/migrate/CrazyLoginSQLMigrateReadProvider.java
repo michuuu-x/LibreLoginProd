@@ -53,7 +53,9 @@ public class CrazyLoginSQLMigrateReadProvider extends SQLMigrateReadProvider {
                                     password = new HashedPassword(hash, salt, algo);
                                 } else {
                                     logger.error(
-                                            "User " + nickname + " has an invalid password hash");
+                                            "Użytkownik "
+                                                    + nickname
+                                                    + " ma nieprawidłowy hash hasła");
                                 }
                             }
 
@@ -72,7 +74,9 @@ public class CrazyLoginSQLMigrateReadProvider extends SQLMigrateReadProvider {
                                             null));
 
                         } catch (Exception e) {
-                            logger.error("Failed to read user from CrazyLogin db, omitting");
+                            logger.error(
+                                    "Nie udało się odczytać użytkownika z bazy CrazyLogin,"
+                                            + " pomijanie");
                         }
                     }
 

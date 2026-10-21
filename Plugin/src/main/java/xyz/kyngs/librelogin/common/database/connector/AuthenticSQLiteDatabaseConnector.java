@@ -58,7 +58,7 @@ public class AuthenticSQLiteDatabaseConnector
 
     @Override
     public Connection obtainInterface() throws SQLException, IllegalStateException {
-        if (!connected()) throw new IllegalStateException("Not connected to the database!");
+        if (!connected()) throw new IllegalStateException("Brak połączenia z bazą danych!");
         return dataSource.getConnection();
     }
 
@@ -72,8 +72,8 @@ public class AuthenticSQLiteDatabaseConnector
         } catch (SQLTransientConnectionException e) {
             plugin.getLogger()
                     .error(
-                            "!! LOST CONNECTION TO THE DATABASE, THE PROXY IS GOING TO SHUT DOWN TO"
-                                    + " PREVENT DAMAGE !!");
+                            "!! UTRACONO POŁĄCZENIE Z BAZĄ DANYCH, PROXY ZOSTANIE WYŁĄCZONE, ABY"
+                                    + " UNIKNĄĆ SZKÓD !!");
             e.printStackTrace();
             System.exit(1);
             // Won't return anyway
@@ -88,7 +88,7 @@ public class AuthenticSQLiteDatabaseConnector
                 new ConfigurationKey<>(
                         "path",
                         "user-data.db",
-                        "Path to SQLite database file. Relative to plugin datafolder.",
+                        "Ścieżka do pliku bazy danych SQLite. Względem folderu danych wtyczki.",
                         ConfigurateHelper::getString);
     }
 }

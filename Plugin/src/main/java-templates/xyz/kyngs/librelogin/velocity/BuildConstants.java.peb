@@ -1,0 +1,8 @@
+package xyz.kyngs.librelogin.velocity;
+
+final class BuildConstants {
+
+    static final String VERSION = "{{ version }}";
+
+    private BuildConstants() {}
+}

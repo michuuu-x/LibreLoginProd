@@ -40,7 +40,8 @@ public record ConfigurateHelper(CommentedConfigurationNode configuration) {
         return configurationFunction(
                 path,
                 node -> {
-                    if (node.isList()) throw new CorruptedConfigurationException("Node is a list!");
+                    if (node.isList())
+                        throw new CorruptedConfigurationException("Węzeł jest listą!");
                     return node.get(clazz);
                 });
     }
@@ -54,7 +55,7 @@ public record ConfigurateHelper(CommentedConfigurationNode configuration) {
                 path,
                 node -> {
                     if (!node.isList())
-                        throw new CorruptedConfigurationException("Node is not a list!");
+                        throw new CorruptedConfigurationException("Węzeł nie jest listą!");
                     return node.getList(clazz);
                 });
     }
@@ -64,19 +65,19 @@ public record ConfigurateHelper(CommentedConfigurationNode configuration) {
                 path,
                 node -> {
                     if (!node.isMap())
-                        throw new CorruptedConfigurationException("Node is not a map!");
+                        throw new CorruptedConfigurationException("Węzeł nie jest mapą!");
 
                     var map = HashMultimap.<String, String>create();
 
                     for (Map.Entry<Object, CommentedConfigurationNode> entry :
                             node.childrenMap().entrySet()) {
                         if (!entry.getValue().isList())
-                            throw new CorruptedConfigurationException("Node is not a list!");
+                            throw new CorruptedConfigurationException("Węzeł nie jest listą!");
 
                         var list = entry.getValue().getList(String.class);
 
                         if (list == null)
-                            throw new CorruptedConfigurationException("List is null!");
+                            throw new CorruptedConfigurationException("Lista jest pusta (null)!");
 
                         for (String s : list) {
                             map.put(entry.getKey().toString().replace('§', '.'), s);

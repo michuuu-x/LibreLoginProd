@@ -13,43 +13,58 @@ import xyz.kyngs.librelogin.common.config.key.ConfigurationKey;
 public class MessageKeys {
 
     /*
+    Prefix
+     */
+
+    public static final ConfigurationKey<String> PREFIX =
+            new ConfigurationKey<>(
+                    "prefix",
+                    "<b>LOGOWANIE |</b> ",
+                    "Prefiks, który można wstawić w dowolnym miejscu każdej wiadomości za pomocą"
+                            + " zmiennej <prefix>. Tutaj ustawiasz jego treść i wygląd (format"
+                            + " MiniMessage). Pamiętaj o spacji na końcu, jeśli ma oddzielać"
+                            + " prefiks od reszty wiadomości.",
+                    ConfigurateHelper::getString);
+
+    /*
     Kicks related to autologin
      */
 
     public static final ConfigurationKey<String> KICK_PREMIUM_ERROR_THROTTLED =
             new ConfigurationKey<>(
                     "kick-premium-error-throttled",
-                    "The Mojang API is rate limiting our server, please try joining again in a"
-                            + " while!",
-                    "This message is displayed when the Mojang API is rate limiting us, therefore"
-                        + " we cannot verify whether there is an account with the given username.",
+                    "<red>API Mojang ogranicza liczbę zapytań wysyłanych przez nasz serwer, spróbuj"
+                            + " dołączyć ponownie za jakiś czas!",
+                    "Ta wiadomość jest wyświetlana, gdy API Mojang ogranicza liczbę naszych"
+                            + " zapytań (rate limit), przez co nie możemy sprawdzić, czy istnieje"
+                            + " konto o podanej nazwie użytkownika.",
                     ConfigurateHelper::getString);
 
     public static final ConfigurationKey<String> KICK_PREMIUM_ERROR_UNDEFINED =
             new ConfigurationKey<>(
                     "kick-premium-error-undefined",
-                    "There was some issue while communicating with Mojang, if the problem persists,"
-                            + " contact the server administrators!",
-                    """
-This message is displayed when there was an unknown issue while communicating with Mojang, therefore we cannot verify whether there is an account with the given username.
-The error will be printed to the console\
+                    "<red>Wystąpił problem podczas komunikacji z Mojang. Jeśli problem się"
+                            + " powtarza, skontaktuj się z administracją serwera!",
+"""
+Ta wiadomość jest wyświetlana, gdy wystąpił nieznany problem podczas komunikacji z Mojang, przez co nie możemy sprawdzić, czy istnieje konto o podanej nazwie użytkownika.
+Błąd zostanie wypisany w konsoli\
 """,
                     ConfigurateHelper::getString);
 
     public static final ConfigurationKey<String> KICK_PREMIUM_INFO_ENABLED =
             new ConfigurationKey<>(
                     "kick-premium-info-enabled",
-                    "Autologin enabled!",
-                    "This message is displayed when the player enables autologin, they need to be"
-                            + " kicked.",
+                    "<gray>Autologin włączony!",
+                    "Ta wiadomość jest wyświetlana, gdy gracz włączy autologin — musi zostać"
+                            + " wtedy wyrzucony z serwera.",
                     ConfigurateHelper::getString);
 
     public static final ConfigurationKey<String> KICK_PREMIUM_INFO_DISABLED =
             new ConfigurationKey<>(
                     "kick-premium-info-disabled",
-                    "Autologin disabled!",
-                    "This message is displayed when the player disables autologin, they need to be"
-                            + " kicked.",
+                    "<gray>Autologin wyłączony!",
+                    "Ta wiadomość jest wyświetlana, gdy gracz wyłączy autologin — musi zostać"
+                            + " wtedy wyrzucony z serwera.",
                     ConfigurateHelper::getString);
 
     /*
@@ -59,52 +74,53 @@ The error will be printed to the console\
     public static final ConfigurationKey<String> KICK_INVALID_CASE_USERNAME =
             new ConfigurationKey<>(
                     "kick-invalid-case-username",
-                    "Please, change your username to &c%username%",
-                    """
-This message is displayed when the player's username is not in the correct case.
-See https://github.com/Navio1430/LibreLoginProd/wiki/Name-Validation for more information.\
+                    "<red>Zmień swoją nazwę użytkownika na <b>%username%</b>",
+"""
+Ta wiadomość jest wyświetlana, gdy wielkość liter w nazwie użytkownika gracza jest nieprawidłowa.
+Więcej informacji znajdziesz tutaj: https://github.com/Navio1430/LibreLoginProd/wiki/Name-Validation\
 """,
                     ConfigurateHelper::getString);
 
     public static final ConfigurationKey<String> KICK_OCCUPIED_USERNAME =
             new ConfigurationKey<>(
                     "kick-occupied-username",
-                    "Please, change your username to &c%username%",
+                    "<red>Zmień swoją nazwę użytkownika na <b>%username%</b>",
                     """
-                    This message is displayed when the player's username is already taken.\
+                    Ta wiadomość jest wyświetlana, gdy nazwa użytkownika gracza jest już zajęta.\
                     """,
                     ConfigurateHelper::getString);
 
     public static final ConfigurationKey<String> KICK_ILLEGAL_USERNAME =
             new ConfigurationKey<>(
                     "kick-illegal-username",
-                    "You have illegal characters in your username or/and your username is longer"
-                            + " than 16 characters!",
-                    """
-This message is displayed when the player's username is not allowed.
-See https://github.com/Navio1430/LibreLoginProd/wiki/Name-Validation for more information.\
+                    "<red>Twoja nazwa użytkownika zawiera niedozwolone znaki lub/i jest dłuższa niż"
+                            + " 16 znaków!",
+"""
+Ta wiadomość jest wyświetlana, gdy nazwa użytkownika gracza jest niedozwolona.
+Więcej informacji znajdziesz tutaj: https://github.com/Navio1430/LibreLoginProd/wiki/Name-Validation\
 """,
                     ConfigurateHelper::getString);
 
     public static final ConfigurationKey<String> KICK_NAME_MISMATCH =
             new ConfigurationKey<>(
                     "kick-name-mismatch",
-                    "Oh no! It looks like an premium user with activated auto login changed their"
-                            + " nickname to %nickname%, therefore there are 2 colliding accounts."
-                            + " Please contact support immediately.",
-                    """
-This occurs, when there is a profile conflict.
-See https://github.com/Navio1430/LibreLoginProd/wiki/Profile-Conflicts for more information.\
+                    "<red>Ups! Wygląda na to, że użytkownik premium z włączonym autologinem zmienił"
+                        + " nick na %nickname%, przez co istnieją 2 kolidujące konta. Skontaktuj"
+                        + " się natychmiast z administracją.",
+"""
+Ma to miejsce w przypadku konfliktu profili.
+Więcej informacji znajdziesz tutaj: https://github.com/Navio1430/LibreLoginProd/wiki/Profile-Conflicts\
 """,
                     ConfigurateHelper::getString);
 
     public static final ConfigurationKey<String> KICK_SHORT_USERNAME =
             new ConfigurationKey<>(
                     "kick-short-username",
-                    "Your username is too short! The minimum length is %length% letters.",
+                    "<red>Twoja nazwa użytkownika jest zbyt krótka! Minimalna długość to %length%"
+                            + " znaków.",
                     """
-                    This message is displayed when the player's username is too short.
-                    See the configuration key "minimum-username-length" for more information.\
+                    Ta wiadomość jest wyświetlana, gdy nazwa użytkownika gracza jest zbyt krótka.
+                    Więcej informacji znajdziesz przy kluczu konfiguracji "minimum-username-length".\
                     """,
                     ConfigurateHelper::getString);
 
@@ -115,59 +131,61 @@ See https://github.com/Navio1430/LibreLoginProd/wiki/Profile-Conflicts for more 
     public static final ConfigurationKey<String> KICK_IP_LIMIT =
             new ConfigurationKey<>(
                     "kick-ip-limit",
-                    "You have reached the maximum amount of accounts per IP!",
-                    """
-This message is displayed when the player's IP has reached the maximum amount of accounts.
-See the configuration key "ip-limit" for more information.\
+                    "<red>Osiągnięto maksymalną liczbę kont przypadających na jeden adres IP!",
+"""
+Ta wiadomość jest wyświetlana, gdy adres IP gracza osiągnął maksymalną liczbę kont.
+Więcej informacji znajdziesz przy kluczu konfiguracji "ip-limit".\
 """,
                     ConfigurateHelper::getString);
 
     public static final ConfigurationKey<String> KICK_NO_LOBBY =
             new ConfigurationKey<>(
                     "kick-no-lobby",
-                    "There's no available lobby to connect you to. Please try again later.",
-                    "This message is displayed when the player is kicked because there is not any"
-                            + " server available.",
+                    "<red>Brak dostępnego lobby, do którego można Cię połączyć. Spróbuj ponownie"
+                            + " później.",
+                    "Ta wiadomość jest wyświetlana, gdy gracz zostaje wyrzucony, ponieważ nie ma"
+                            + " żadnego dostępnego serwera.",
                     ConfigurateHelper::getString);
 
     public static final ConfigurationKey<String> KICK_NO_LIMBO =
             new ConfigurationKey<>(
                     "kick-no-limbo",
-                    "There's no available limbo to connect you to. Please try again later. If"
-                            + " you're the server administrator, please setup a NanoLimbo server.",
-                    "This message is displayed when the player is kicked because there is not any"
-                            + " limbo available.",
+                    "<red>Brak dostępnego limbo, do którego można Cię połączyć. Spróbuj ponownie"
+                            + " później. Jeśli jesteś administratorem serwera, skonfiguruj serwer"
+                            + " NanoLimbo.",
+                    "Ta wiadomość jest wyświetlana, gdy gracz zostaje wyrzucony, ponieważ nie ma"
+                            + " żadnego dostępnego limbo.",
                     ConfigurateHelper::getString);
 
     public static final ConfigurationKey<String> KICK_TIME_LIMIT =
             new ConfigurationKey<>(
                     "kick-time-limit",
-                    "You took too long to authorize!",
-                    "This message is displayed when the player takes too long to authorize. (You"
-                            + " can specify this time limit in the config file)",
+                    "<red>Przekroczono limit czasu na zalogowanie się!",
+                    "Ta wiadomość jest wyświetlana, gdy gracz zbyt długo się uwierzytelnia."
+                            + " (Limit czasu można ustawić w pliku konfiguracyjnym)",
                     ConfigurateHelper::getString);
 
     public static final ConfigurationKey<String> KICK_ERROR_PASSWORD_WRONG =
             new ConfigurationKey<>(
                     "kick-error-password-wrong",
-                    "Wrong password!",
-                    "This message is displayed when the player is kicked because they authorize"
-                            + " with wrong password.",
+                    "<red>Nieprawidłowe hasło!",
+                    "Ta wiadomość jest wyświetlana, gdy gracz zostaje wyrzucony, ponieważ"
+                            + " uwierzytelnia się nieprawidłowym hasłem.",
                     ConfigurateHelper::getString);
 
     public static final ConfigurationKey<String> KICK_2FA_ENABLED =
             new ConfigurationKey<>(
                     "kick-2fa-enabled",
-                    "Two-factor has been enabled! Please reconnect.",
-                    "This message is displayed when the player enables 2FA.",
+                    "<gray>Weryfikacja dwuetapowa została włączona! Połącz się ponownie.",
+                    "Ta wiadomość jest wyświetlana, gdy gracz włączy 2FA.",
                     ConfigurateHelper::getString);
 
     public static final ConfigurationKey<String> KICK_ALREADY_CONNECTED =
             new ConfigurationKey<>(
                     "kick-already-connected",
-                    "You are already connected!",
-                    "This message is displayed when the player is already connected, but tries to"
-                            + " join from another location.",
+                    "<red>Masz już aktywne połączenie z serwerem!",
+                    "Ta wiadomość jest wyświetlana, gdy gracz jest już połączony, ale próbuje"
+                            + " dołączyć z innej lokalizacji.",
                     ConfigurateHelper::getString);
 
     /*
@@ -177,302 +195,310 @@ See the configuration key "ip-limit" for more information.\
     public static final ConfigurationKey<String> ERROR_FROM_FLOODGATE =
             new ConfigurationKey<>(
                     "error-from-floodgate",
-                    "You can't use this command from Floodgate!",
-                    "This message is displayed when the player is executing a command, but they are"
-                            + " coming from Floodgate.",
+                    "<prefix><red>Nie możesz użyć tej komendy z poziomu Floodgate!",
+                    "Ta wiadomość jest wyświetlana, gdy gracz wykonuje komendę, ale łączy się"
+                            + " przez Floodgate.",
                     ConfigurateHelper::getString);
 
     public static final ConfigurationKey<String> ERROR_NO_EMAIL =
             new ConfigurationKey<>(
                     "error-no-email",
-                    "You don't have a recovery email set!",
-                    "This message is displayed when the player tries to recover their password, but"
-                            + " they don't have a recovery email set.",
+                    "<prefix><red>Nie masz ustawionego adresu e-mail do odzyskiwania hasła!",
+                    "Ta wiadomość jest wyświetlana, gdy gracz próbuje odzyskać hasło, ale nie ma"
+                            + " ustawionego adresu e-mail do odzyskiwania.",
                     ConfigurateHelper::getString);
 
     public static final ConfigurationKey<String> ERROR_ALREADY_AUTHORIZED =
             new ConfigurationKey<>(
                     "error-already-authorized",
-                    "You are already authorized!",
-                    "This message is displayed when the player tries to authorize again.",
+                    "<prefix><red>Jesteś już zalogowany!",
+                    "Ta wiadomość jest wyświetlana, gdy gracz próbuje uwierzytelnić się ponownie.",
                     ConfigurateHelper::getString);
 
     public static final ConfigurationKey<String> ERROR_ALREADY_REGISTERED =
             new ConfigurationKey<>(
                     "error-already-registered",
-                    "You are already registered!",
-                    "This message is displayed when the player tries to register again.",
+                    "<prefix><red>Jesteś już zarejestrowany!",
+                    "Ta wiadomość jest wyświetlana, gdy gracz próbuje zarejestrować się ponownie.",
                     ConfigurateHelper::getString);
 
     public static final ConfigurationKey<String> ERROR_NOT_AUTHORIZED =
             new ConfigurationKey<>(
                     "error-not-authorized",
-                    "Please authorize first!",
-                    "This message is displayed when the player tries to use a command that requires"
-                            + " authorization.",
+                    "<prefix><red>Najpierw się zaloguj!",
+                    "Ta wiadomość jest wyświetlana, gdy gracz próbuje użyć komendy wymagającej"
+                            + " uwierzytelnienia.",
                     ConfigurateHelper::getString);
 
     public static final ConfigurationKey<String> ERROR_NOT_REGISTERED =
             new ConfigurationKey<>(
                     "error-not-registered",
-                    "Please register first!",
-                    "This message is displayed when the player tries to login, when they are not"
-                            + " registered.",
+                    "<prefix><red>Najpierw się zarejestruj!",
+                    "Ta wiadomość jest wyświetlana, gdy gracz próbuje się zalogować, ale nie jest"
+                            + " zarejestrowany.",
                     ConfigurateHelper::getString);
 
     public static final ConfigurationKey<String> ERROR_NOT_PAID =
             new ConfigurationKey<>(
                     "error-not-paid",
-                    "This account does not exist in the Mojang database!",
-                    "This message is displayed when the player tries to enable autologin, but their"
-                            + " account does not exist in the Mojang database.",
+                    "<prefix><red>To konto nie istnieje w bazie danych Mojang!",
+                    "Ta wiadomość jest wyświetlana, gdy gracz próbuje włączyć autologin, ale jego"
+                            + " konto nie istnieje w bazie danych Mojang.",
                     ConfigurateHelper::getString);
 
     public static final ConfigurationKey<String> ERROR_NOT_PREMIUM =
             new ConfigurationKey<>(
                     "error-not-premium",
-                    "You do not have autologin enabled, enable it using /premium <password>!",
-                    "This message is displayed when the player tries to disable autologin, but they"
-                            + " do not have it enabled.",
+                    "<prefix><red>Nie masz włączonego autologinu, włącz go za pomocą /premium"
+                            + " <hasło>!",
+                    "Ta wiadomość jest wyświetlana, gdy gracz próbuje wyłączyć autologin, ale nie"
+                            + " ma go włączonego.",
                     ConfigurateHelper::getString);
 
     public static final ConfigurationKey<String> ERROR_NOT_CRACKED =
             new ConfigurationKey<>(
                     "error-not-cracked",
-                    "You have autologin enabled, disable it using /cracked!",
-                    "This message is displayed when the player tries to enable autologin, but they"
-                            + " already have it enabled.",
+                    "<prefix><red>Masz włączony autologin, wyłącz go za pomocą /cracked!",
+                    "Ta wiadomość jest wyświetlana, gdy gracz próbuje włączyć autologin, ale ma go"
+                            + " już włączonego.",
                     ConfigurateHelper::getString);
 
     public static final ConfigurationKey<String> ERROR_PASSWORD_WRONG =
             new ConfigurationKey<>(
                     "error-password-wrong",
-                    "Wrong password!",
-                    "This message is displayed when the player tries to authorize with wrong"
-                            + " password.",
+                    "<prefix><red>Nieprawidłowe hasło!",
+                    "Ta wiadomość jest wyświetlana, gdy gracz próbuje uwierzytelnić się"
+                            + " nieprawidłowym hasłem.",
                     ConfigurateHelper::getString);
 
     public static final ConfigurationKey<String> ERROR_NO_PASSWORD =
             new ConfigurationKey<>(
                     "error-no-password",
-                    "You don't have a password. You can try using /cracked to disable autologin,"
-                            + " and then register.",
-                    "This message is displayed when the player tries to change password without"
-                            + " having one.",
+                    "<prefix><red>Nie masz hasła. Możesz spróbować użyć /cracked, aby wyłączyć"
+                            + " autologin, a następnie się zarejestrować.",
+                    "Ta wiadomość jest wyświetlana, gdy gracz próbuje zmienić hasło, nie mając"
+                            + " go.",
                     ConfigurateHelper::getString);
 
     public static final ConfigurationKey<String> TOTP_NOT_PROVIDED =
             new ConfigurationKey<>(
                     "totp-not-provided",
-                    "You must provide a 2FA code! Use /login <password> <2FA code>, if you lost"
-                            + " your code, contact the admins.",
-                    "This message is displayed when the player tries to authorize without providing"
-                            + " a 2FA code.",
+                    "<red>Musisz podać kod 2FA! Użyj /login <hasło> <kod 2FA>. Jeśli kod został"
+                            + " utracony, skontaktuj się z administracją.",
+                    "Ta wiadomość jest wyświetlana, gdy gracz próbuje uwierzytelnić się bez podania"
+                            + " kodu 2FA.",
                     ConfigurateHelper::getString);
 
     public static final ConfigurationKey<String> TOTP_WRONG =
             new ConfigurationKey<>(
                     "totp-wrong",
-                    "Wrong 2FA code!",
-                    "This message is displayed when the player tries to authorize, or finish the"
-                            + " 2FA enablement, with a wrong 2FA code.",
+                    "<red>Nieprawidłowy kod 2FA!",
+                    "Ta wiadomość jest wyświetlana, gdy gracz próbuje uwierzytelnić się lub"
+                            + " dokończyć włączanie 2FA, podając nieprawidłowy kod 2FA.",
                     ConfigurateHelper::getString);
 
     public static final ConfigurationKey<String> TOTP_NOT_AWAITING =
             new ConfigurationKey<>(
                     "totp-not-awaiting",
-                    "You are currently not in the process of enabling 2FA! Please type /2fa to"
-                            + " begin the process.",
-                    "This message is displayed when the player attempts to finish the 2FA process,"
-                            + " but they are not in the process of enabling 2FA.",
+                    "<red>Obecnie nie trwa proces włączania 2FA! Wpisz /2fa, aby go rozpocząć.",
+                    "Ta wiadomość jest wyświetlana, gdy gracz próbuje dokończyć proces włączania"
+                            + " 2FA, ale nie jest w trakcie tego procesu.",
                     ConfigurateHelper::getString);
 
     public static final ConfigurationKey<String> ERROR_PASSWORD_NOT_MATCH =
             new ConfigurationKey<>(
                     "error-password-not-match",
-                    "Passwords do not match!",
-                    "This message is displayed when the player tries to register with different"
-                            + " passwords.",
+                    "<prefix><red>Hasła nie są takie same!",
+                    "Ta wiadomość jest wyświetlana, gdy gracz próbuje się zarejestrować, podając"
+                            + " różne hasła.",
                     ConfigurateHelper::getString);
 
     public static final ConfigurationKey<String> ERROR_FORBIDDEN_PASSWORD =
             new ConfigurationKey<>(
                     "error-forbidden-password",
-                    "The password is too short and/or is not allowed!",
-                    "This message is displayed when the player tries to register with a password"
-                            + " that is too short or forbidden.",
+                    "<prefix><red>Hasło jest zbyt krótkie i/lub niedozwolone!",
+                    "Ta wiadomość jest wyświetlana, gdy gracz próbuje się zarejestrować, podając"
+                            + " hasło, które jest zbyt krótkie lub zakazane.",
                     ConfigurateHelper::getString);
 
     public static final ConfigurationKey<String> ERROR_PASSWORD_TOO_LONG =
             new ConfigurationKey<>(
                     "error-password-too-long",
-                    "The password is too long!",
-                    "This message is displayed when the player tries to register with a password"
-                            + " that is too long.",
+                    "<prefix><red>Hasło jest zbyt długie!",
+                    "Ta wiadomość jest wyświetlana, gdy gracz próbuje się zarejestrować, podając"
+                            + " hasło, które jest zbyt długie.",
                     ConfigurateHelper::getString);
 
     public static final ConfigurationKey<String> ERROR_PASSWORD_CORRUPTED =
             new ConfigurationKey<>(
                     "error-password-corrupted",
-                    "Your password is corrupted, please contact an administrator!",
-                    "This message is displayed when the player tries to login with corrupted"
-                            + " password.",
+                    "<prefix><red>Twoje hasło jest uszkodzone, skontaktuj się z administratorem!",
+                    "Ta wiadomość jest wyświetlana, gdy gracz próbuje się zalogować z"
+                            + " uszkodzonym hasłem.",
                     ConfigurateHelper::getString);
 
     public static final ConfigurationKey<String> ERROR_PREMIUM_THROTTLED =
             new ConfigurationKey<>(
                     "error-premium-throttled",
-                    "The Mojang API is rate limiting our server, please try the command again in a"
-                            + " while!",
-                    "This message is displayed when the Mojang API is rate limiting us, therefore"
-                        + " we cannot verify whether there is an account with the given username.",
+                    "<prefix><red>API Mojang ogranicza liczbę zapytań wysyłanych przez nasz serwer,"
+                            + " spróbuj użyć komendy ponownie za jakiś czas!",
+                    "Ta wiadomość jest wyświetlana, gdy API Mojang ogranicza liczbę naszych"
+                            + " zapytań (rate limit), przez co nie możemy sprawdzić, czy istnieje"
+                            + " konto o podanej nazwie użytkownika.",
                     ConfigurateHelper::getString);
 
     public static final ConfigurationKey<String> ERROR_PREMIUM_UNKNOWN =
             new ConfigurationKey<>(
                     "error-premium-unknown",
-                    "There was an unknown error while communicating with the mojang API, please"
-                            + " check console for further details!",
-                    """
-This message is displayed when there was an unknown issue while communicating with Mojang, therefore we cannot verify whether there is an account with the given username.
-The error will be printed to the console\
+                    "<prefix><red>Wystąpił nieznany błąd podczas komunikacji z API Mojang,"
+                            + " szczegóły znajdziesz w konsoli!",
+"""
+Ta wiadomość jest wyświetlana, gdy wystąpił nieznany problem podczas komunikacji z Mojang, przez co nie możemy sprawdzić, czy istnieje konto o podanej nazwie użytkownika.
+Błąd zostanie wypisany w konsoli\
 """,
                     ConfigurateHelper::getString);
 
     public static final ConfigurationKey<String> ERROR_THROTTLE =
             new ConfigurationKey<>(
                     "error-throttle",
-                    "You are sending commands too fast! Please wait a bit.",
-                    "This message is displayed when the player tries to send commands too fast.",
+                    "<prefix><red>Wysyłasz komendy zbyt szybko! Poczekaj chwilę.",
+                    "Ta wiadomość jest wyświetlana, gdy gracz próbuje wysyłać komendy zbyt"
+                            + " szybko.",
                     ConfigurateHelper::getString);
 
     public static final ConfigurationKey<String> ERROR_NO_CONFIRM =
             new ConfigurationKey<>(
                     "error-no-confirm",
-                    "Please use /premium <password> first!",
-                    "This message is displayed when the player tries to run /premiumconfirm, before"
-                            + " running /premium.",
+                    "<prefix><red>Najpierw użyj /premium <hasło>!",
+                    "Ta wiadomość jest wyświetlana, gdy gracz próbuje użyć /premiumconfirm przed"
+                            + " użyciem /premium.",
                     ConfigurateHelper::getString);
 
     public static final ConfigurationKey<String> ERROR_NO_MAIL_CONFIRM =
             new ConfigurationKey<>(
                     "error-no-mail-confirm",
-                    "Please use /setemail <email> <password> first!",
-                    "This message is displayed when the player tries to run /mailconfirm, before"
-                            + " running /mail.",
+                    "<prefix><red>Najpierw użyj /setemail <e-mail> <hasło>!",
+                    "Ta wiadomość jest wyświetlana, gdy gracz próbuje użyć /mailconfirm przed"
+                            + " użyciem /mail.",
                     ConfigurateHelper::getString);
 
     public static final ConfigurationKey<String> ERROR_NO_PASSWORD_RESET =
             new ConfigurationKey<>(
                     "error-no-password-reset",
-                    "Please use /resetpassword first!",
-                    "This message is displayed when the player tries to run /resetpasswordconfirm,"
-                            + " before running /resetpassword.",
+                    "<prefix><red>Najpierw użyj /resetpassword!",
+                    "Ta wiadomość jest wyświetlana, gdy gracz próbuje użyć /resetpasswordconfirm"
+                            + " przed użyciem /resetpassword.",
                     ConfigurateHelper::getString);
 
     public static final ConfigurationKey<String> ERROR_MAIL_THROTTLE =
             new ConfigurationKey<>(
                     "error-mail-throttle",
-                    "You are sending emails too fast! Please wait a bit.",
-                    "This message is displayed when the player tries to send mail too fast.",
+                    "<prefix><red>Wysyłasz e-maile zbyt szybko! Poczekaj chwilę.",
+                    "Ta wiadomość jest wyświetlana, gdy gracz próbuje wysyłać e-maile zbyt"
+                            + " szybko.",
                     ConfigurateHelper::getString);
 
     public static final ConfigurationKey<String> ERROR_WRONG_MAIL_VERIFY =
             new ConfigurationKey<>(
                     "error-wrong-mail-verify",
-                    "Wrong verification code!",
-                    "This message is displayed when the player tries to verify their email with a"
-                            + " wrong verification code.",
+                    "<prefix><red>Nieprawidłowy kod weryfikacyjny!",
+                    "Ta wiadomość jest wyświetlana, gdy gracz próbuje zweryfikować swój adres"
+                            + " e-mail, podając nieprawidłowy kod weryfikacyjny.",
                     ConfigurateHelper::getString);
 
     public static final ConfigurationKey<String> ERROR_WRONG_PASSWORD_RESET =
             new ConfigurationKey<>(
                     "error-wrong-password-reset",
-                    "Wrong password reset code!",
-                    "This message is displayed when the player tries to reset their password with a"
-                            + " wrong password reset code.",
+                    "<prefix><red>Nieprawidłowy kod resetowania hasła!",
+                    "Ta wiadomość jest wyświetlana, gdy gracz próbuje zresetować swoje hasło,"
+                            + " podając nieprawidłowy kod resetowania hasła.",
                     ConfigurateHelper::getString);
 
     public static final ConfigurationKey<String> ERROR_CORRUPTED_MESSAGES =
             new ConfigurationKey<>(
                     "error-corrupted-messages",
-                    "Messages are corrupted, old ones are going to be kept. Cause: %cause%",
-                    "This message is displayed when the messages.conf file is corrupted.",
+                    "<prefix><red>Plik wiadomości jest uszkodzony, zachowana zostanie poprzednia"
+                            + " wersja. Przyczyna: %cause%",
+                    "Ta wiadomość jest wyświetlana, gdy plik messages.conf jest uszkodzony.",
                     ConfigurateHelper::getString);
 
     public static final ConfigurationKey<String> ERROR_CORRUPTED_CONFIGURATION =
             new ConfigurationKey<>(
                     "error-corrupted-configuration",
-                    "Configuration is corrupted, old one is going to be kept. Cause: %cause%",
-                    "This message is displayed when the configuration file is corrupted.",
+                    "<prefix><red>Konfiguracja jest uszkodzona, zachowana zostanie poprzednia"
+                            + " wersja. Przyczyna: %cause%",
+                    "Ta wiadomość jest wyświetlana, gdy plik konfiguracyjny jest uszkodzony.",
                     ConfigurateHelper::getString);
 
     public static final ConfigurationKey<String> ERROR_UNKNOWN =
             new ConfigurationKey<>(
                     "error-unknown",
-                    "An unknown error occurred! Check console for further information.",
-                    "This message is displayed when an unknown error occurs.",
+                    "<prefix><red>Wystąpił nieznany błąd! Szczegóły znajdziesz w konsoli.",
+                    "Ta wiadomość jest wyświetlana, gdy wystąpi nieznany błąd.",
                     ConfigurateHelper::getString);
 
     public static final ConfigurationKey<String> ERROR_UNKNOWN_USER =
             new ConfigurationKey<>(
                     "error-unknown-user",
-                    "This user does not exist!",
-                    "This message is displayed when someone attempts to refer an unknown user.",
+                    "<prefix><red>Ten użytkownik nie istnieje!",
+                    "Ta wiadomość jest wyświetlana, gdy ktoś odwołuje się do nieznanego"
+                            + " użytkownika.",
                     ConfigurateHelper::getString);
 
     public static final ConfigurationKey<String> ERROR_OCCUPIED_USER =
             new ConfigurationKey<>(
                     "error-occupied-user",
-                    "This username is already occupied!",
-                    "This message is displayed when someone tries to move account to an occupied"
-                            + " username.",
+                    "<prefix><red>Ta nazwa użytkownika jest już zajęta!",
+                    "Ta wiadomość jest wyświetlana, gdy ktoś próbuje przenieść konto na zajętą"
+                            + " nazwę użytkownika.",
                     ConfigurateHelper::getString);
 
     public static final ConfigurationKey<String> ERROR_PLAYER_ONLINE =
             new ConfigurationKey<>(
                     "error-player-online",
-                    "This player is online!",
-                    "This message is displayed when someone attempts to refer an online player.",
+                    "<prefix><red>Ten gracz jest online!",
+                    "Ta wiadomość jest wyświetlana, gdy ktoś odwołuje się do gracza, który jest"
+                            + " online.",
                     ConfigurateHelper::getString);
 
     public static final ConfigurationKey<String> ERROR_PLAYER_OFFLINE =
             new ConfigurationKey<>(
                     "error-player-offline",
-                    "This player is offline!",
-                    "This message is displayed when someone attempts to refer an offline player.",
+                    "<prefix><red>Ten gracz jest offline!",
+                    "Ta wiadomość jest wyświetlana, gdy ktoś odwołuje się do gracza, który jest"
+                            + " offline.",
                     ConfigurateHelper::getString);
 
     public static final ConfigurationKey<String> ERROR_PLAYER_AUTHORIZED =
             new ConfigurationKey<>(
                     "error-player-authorized",
-                    "This player is already authenticated!",
-                    "This message is displayed when someone attempts to refer an authenticated"
-                            + " player.",
+                    "<prefix><red>Ten gracz jest już uwierzytelniony!",
+                    "Ta wiadomość jest wyświetlana, gdy ktoś odwołuje się do gracza, który jest"
+                            + " już uwierzytelniony.",
                     ConfigurateHelper::getString);
 
     public static final ConfigurationKey<String> ERROR_PLAYER_NOT_REGISTERED =
             new ConfigurationKey<>(
                     "error-player-not-registered",
-                    "This player is not registered!",
-                    "This message is displayed when someone attempts to refer an unregistered"
-                            + " player.",
+                    "<prefix><red>Ten gracz nie jest zarejestrowany!",
+                    "Ta wiadomość jest wyświetlana, gdy ktoś odwołuje się do gracza, który nie"
+                            + " jest zarejestrowany.",
                     ConfigurateHelper::getString);
 
     public static final ConfigurationKey<String> ERROR_NOT_AVAILABLE_ON_MULTI_PROXY =
             new ConfigurationKey<>(
                     "error-not-available-on-multi-proxy",
-                    "This feature is not available on MultiProxy!",
-                    "This message is displayed when someone attempts to use a feature that is not"
-                            + " available on MultiProxy.",
+                    "<prefix><red>Ta funkcja nie jest dostępna w trybie MultiProxy!",
+                    "Ta wiadomość jest wyświetlana, gdy ktoś próbuje użyć funkcji, która nie jest"
+                            + " dostępna w trybie MultiProxy.",
                     ConfigurateHelper::getString);
 
     public static final ConfigurationKey<String> ERROR_PASSWORD_RESETTING_DISABLED =
             new ConfigurationKey<>(
                     "error-password-resetting-disabled",
-                    "Password resetting is disabled!",
-                    "This message is displayed when someone attempts to reset password while it is"
-                            + " disabled.",
+                    "<prefix><red>Resetowanie hasła jest wyłączone!",
+                    "Ta wiadomość jest wyświetlana, gdy ktoś próbuje zresetować hasło, gdy ta"
+                            + " funkcja jest wyłączona.",
                     ConfigurateHelper::getString);
 
     /*
@@ -482,32 +508,34 @@ The error will be printed to the console\
     public static final ConfigurationKey<String> ERROR_NO_PERMISSION =
             new ConfigurationKey<>(
                     "error-no-permission",
-                    "You do not have permission to use this command!",
-                    "This message is displayed when the player does not have permission to use a"
-                            + " command.",
+                    "<prefix><red>Nie masz uprawnień do użycia tej komendy!",
+                    "Ta wiadomość jest wyświetlana, gdy gracz nie ma uprawnień do użycia"
+                            + " komendy.",
                     ConfigurateHelper::getString);
 
     public static final ConfigurationKey<String> ERROR_INVALID_SYNTAX =
             new ConfigurationKey<>(
                     "error-invalid-syntax",
-                    "Usage: <c2>{command}</c2> <c3>{syntax}</c3>",
-                    "This message is displayed when the player uses a command with invalid syntax.",
+                    "<prefix><red>Użycie: <c2>{command}</c2> <c3>{syntax}</c3>",
+                    "Ta wiadomość jest wyświetlana, gdy gracz użyje komendy z nieprawidłową"
+                            + " składnią.",
                     ConfigurateHelper::getString);
 
     public static final ConfigurationKey<String> ERROR_UNKNOWN_COMMAND =
             new ConfigurationKey<>(
                     "error-unknown-command",
-                    "Unknown command!",
-                    "This message is displayed when the player uses an unknown command.",
+                    "<prefix><red>Nieznana komenda!",
+                    "Ta wiadomość jest wyświetlana, gdy gracz użyje nieznanej komendy.",
                     ConfigurateHelper::getString);
 
     public static final ConfigurationKey<String> ERROR_MAIL_NOT_SENT =
             new ConfigurationKey<>(
                     "error-mail-not-sent",
-                    "Failed to send email, perhaps you typed your address wrong? If you are sure"
-                            + " that you typed it correctly, please contact an administrator.",
-                    "This message is displayed when the player tries to send a mail, but it fails"
-                            + " to send.",
+                    "<prefix><red>Nie udało się wysłać e-maila, być może adres został wpisany"
+                            + " błędnie? Jeśli masz pewność, że jest poprawny, skontaktuj się z"
+                            + " administratorem.",
+                    "Ta wiadomość jest wyświetlana, gdy gracz próbuje wysłać e-mail, ale"
+                            + " wysyłanie się nie powiedzie.",
                     ConfigurateHelper::getString);
 
     /*
@@ -517,243 +545,267 @@ The error will be printed to the console\
     public static final ConfigurationKey<String> INFO_KICK =
             new ConfigurationKey<>(
                     "info-kick",
-                    "You have been kicked from the server for the following reason: %reason%",
-                    "This message is displayed when the player is kicked from a server.",
+                    "<gray>Wyrzucono Cię z serwera z powodu: %reason%",
+                    "Ta wiadomość jest wyświetlana, gdy gracz zostaje wyrzucony z serwera.",
                     ConfigurateHelper::getString);
 
     public static final ConfigurationKey<String> INFO_LOGGING_IN =
             new ConfigurationKey<>(
                     "info-logging-in",
-                    "Logging in...",
-                    "This message is displayed when the player attempts to log in. Set to single"
-                            + " space \" \" to disable.",
+                    "<prefix><gray>Logowanie...",
+                    "Ta wiadomość jest wyświetlana, gdy gracz próbuje się zalogować. Ustaw na"
+                            + " pojedynczą spację \" \", aby wyłączyć.",
                     ConfigurateHelper::getString);
 
     public static final ConfigurationKey<String> INFO_LOGGED_IN =
             new ConfigurationKey<>(
                     "info-logged-in",
-                    "Logged in!",
-                    "This message is displayed when the player logs in. Set to single space \" \""
-                            + " to disable.",
+                    "<prefix><gray>Zalogowano!",
+                    "Ta wiadomość jest wyświetlana, gdy gracz się zaloguje. Ustaw na pojedynczą"
+                            + " spację \" \", aby wyłączyć.",
                     ConfigurateHelper::getString);
 
     public static final ConfigurationKey<String> INFO_PREMIUM_LOGGED_IN =
             new ConfigurationKey<>(
                     "info-premium-logged-in",
-                    "You have been logged in automatically!",
-                    "This message is displayed when the player logs in automatically because they"
-                            + " have enabled /premium. Set to single space \" \" to disable.",
+                    "<prefix><gray>Zalogowano automatycznie!",
+                    "Ta wiadomość jest wyświetlana, gdy gracz zostaje zalogowany automatycznie,"
+                            + " ponieważ włączył /premium. Ustaw na pojedynczą spację \" \", aby"
+                            + " wyłączyć.",
                     ConfigurateHelper::getString);
 
     public static final ConfigurationKey<String> INFO_SESSION_LOGGED_IN =
             new ConfigurationKey<>(
                     "info-session-logged-in",
-                    "You have been logged in automatically!",
-                    "This message is displayed when the player logs in automatically because of a"
-                            + " valid session. Set to single space \" \" to disable.",
+                    "<prefix><gray>Zalogowano automatycznie!",
+                    "Ta wiadomość jest wyświetlana, gdy gracz zostaje zalogowany automatycznie"
+                            + " dzięki ważnej sesji. Ustaw na pojedynczą spację \" \", aby"
+                            + " wyłączyć.",
                     ConfigurateHelper::getString);
 
     public static final ConfigurationKey<String> INFO_REGISTERING =
             new ConfigurationKey<>(
                     "info-registering",
-                    "Registering...",
-                    "This message is displayed when the player attempts to register. Set to single"
-                            + " space \" \" to disable.",
+                    "<prefix><gray>Rejestrowanie...",
+                    "Ta wiadomość jest wyświetlana, gdy gracz próbuje się zarejestrować. Ustaw na"
+                            + " pojedynczą spację \" \", aby wyłączyć.",
                     ConfigurateHelper::getString);
 
     public static final ConfigurationKey<String> INFO_REGISTERED =
             new ConfigurationKey<>(
                     "info-registered",
-                    "Registered!",
-                    "This message is displayed when the player registers. Set to single space \" \""
-                            + " to disable.",
+                    "<prefix><gray>Zarejestrowano!",
+                    "Ta wiadomość jest wyświetlana, gdy gracz się zarejestruje. Ustaw na"
+                            + " pojedynczą spację \" \", aby wyłączyć.",
                     ConfigurateHelper::getString);
 
     public static final ConfigurationKey<String> INFO_ENABLING =
             new ConfigurationKey<>(
                     "info-enabling",
-                    "Enabling...",
-                    "This message is displayed when something is enabling.",
+                    "<prefix><gray>Włączanie...",
+                    "Ta wiadomość jest wyświetlana, gdy coś jest włączane.",
                     ConfigurateHelper::getString);
 
     public static final ConfigurationKey<String> INFO_DISABLING =
             new ConfigurationKey<>(
                     "info-disabling",
-                    "Disabling...",
-                    "This message is displayed when something is disabling.",
+                    "<prefix><gray>Wyłączanie...",
+                    "Ta wiadomość jest wyświetlana, gdy coś jest wyłączane.",
                     ConfigurateHelper::getString);
 
     public static final ConfigurationKey<String> INFO_EDITING =
             new ConfigurationKey<>(
                     "info-editing",
-                    "Editing...",
-                    "This message is displayed when something is being edited.",
+                    "<prefix><gray>Edytowanie...",
+                    "Ta wiadomość jest wyświetlana, gdy coś jest edytowane.",
                     ConfigurateHelper::getString);
 
     public static final ConfigurationKey<String> INFO_EDITED =
             new ConfigurationKey<>(
                     "info-edited",
-                    "Edited!",
-                    "This message is displayed when something has been edited.",
+                    "<prefix><gray>Zmieniono!",
+                    "Ta wiadomość jest wyświetlana, gdy coś zostało zedytowane.",
                     ConfigurateHelper::getString);
 
     public static final ConfigurationKey<String> INFO_RESETTING_PASSWORD =
             new ConfigurationKey<>(
                     "info-resetting-password",
-                    "Resetting password...",
-                    "This message is displayed when the player attempts to reset their password.",
+                    "<prefix><gray>Resetowanie hasła...",
+                    "Ta wiadomość jest wyświetlana, gdy gracz próbuje zresetować swoje hasło.",
                     ConfigurateHelper::getString);
 
     public static final ConfigurationKey<String> INFO_PASSWORD_RESET =
             new ConfigurationKey<>(
                     "info-password-reset",
-                    "Password reset! You can now log in with your new password.",
-                    "This message is displayed when the player resets their password.",
+                    "<prefix><gray>Hasło zostało zresetowane! Możesz się teraz zalogować nowym"
+                            + " hasłem.",
+                    "Ta wiadomość jest wyświetlana, gdy gracz zresetuje swoje hasło.",
                     ConfigurateHelper::getString);
 
     public static final ConfigurationKey<String> INFO_DUMPING =
             new ConfigurationKey<>(
                     "info-dumping",
-                    "Creating dump...",
-                    "This message is displayed when a user executes /librelogin dump.",
+                    "<prefix><gray>Tworzenie zrzutu...",
+                    "Ta wiadomość jest wyświetlana, gdy użytkownik wykona /librelogin dump.",
                     ConfigurateHelper::getString);
 
     public static final ConfigurationKey<String> INFO_DUMPED =
             new ConfigurationKey<>(
                     "info-dumped",
-                    "Dump saved to %file%!",
-                    "This message is displayed when a user executes /librelogin dump.",
+                    "<prefix><gray>Zrzut zapisano w %file%!",
+                    "Ta wiadomość jest wyświetlana, gdy użytkownik wykona /librelogin dump.",
                     ConfigurateHelper::getString);
 
     public static final ConfigurationKey<String> INFO_DELETING =
             new ConfigurationKey<>(
                     "info-deleting",
-                    "Deleting...",
-                    "This message is displayed when something is being deleted.",
+                    "<prefix><gray>Usuwanie...",
+                    "Ta wiadomość jest wyświetlana, gdy coś jest usuwane.",
                     ConfigurateHelper::getString);
 
     public static final ConfigurationKey<String> INFO_DELETED =
             new ConfigurationKey<>(
                     "info-deleted",
-                    "Deleted!",
-                    "This message is displayed when something has been deleted.",
+                    "<prefix><gray>Usunięto!",
+                    "Ta wiadomość jest wyświetlana, gdy coś zostało usunięte.",
                     ConfigurateHelper::getString);
 
     public static final ConfigurationKey<String> INFO_RELOADING =
             new ConfigurationKey<>(
                     "info-reloading",
-                    "Reloading...",
-                    "This message is displayed when something is being reloaded.",
+                    "<prefix><gray>Przeładowywanie...",
+                    "Ta wiadomość jest wyświetlana, gdy coś jest przeładowywane.",
                     ConfigurateHelper::getString);
 
     public static final ConfigurationKey<String> INFO_RELOADED =
             new ConfigurationKey<>(
                     "info-reloaded",
-                    "Reloaded!",
-                    "This message is displayed when something has been reloaded.",
+                    "<prefix><gray>Przeładowano!",
+                    "Ta wiadomość jest wyświetlana, gdy coś zostało przeładowane.",
+                    ConfigurateHelper::getString);
+
+    public static final ConfigurationKey<String> INFO_LOGIN_LOCATION_SET =
+            new ConfigurationKey<>(
+                    "info-login-location-set",
+                    "<prefix><gray>Ustawiono lokalizację logowania: %world% (%x%, %y%, %z%).",
+                    "Ta wiadomość jest wyświetlana, gdy administrator ustawi lokalizację, na którą"
+                            + " trafiają gracze przed zalogowaniem. Dostępne zmienne: %world%, %x%,"
+                            + " %y%, %z%, %yaw%, %pitch%.",
+                    ConfigurateHelper::getString);
+
+    public static final ConfigurationKey<String> INFO_HUB_SPAWN_SET =
+            new ConfigurationKey<>(
+                    "info-hub-spawn-set",
+                    "<prefix><gray>Ustawiono spawn huba: %world% (%x%, %y%, %z%).",
+                    "Ta wiadomość jest wyświetlana, gdy administrator ustawi lokalizację, na którą"
+                            + " trafiają gracze po zalogowaniu. Dostępne zmienne: %world%, %x%,"
+                            + " %y%, %z%, %yaw%, %pitch%.",
                     ConfigurateHelper::getString);
 
     public static final ConfigurationKey<String> INFO_SENDING_EMAIL =
             new ConfigurationKey<>(
                     "info-sending-email",
-                    "Sending email...",
-                    "This message is displayed when the user executes a command that sends an"
-                            + " email.",
+                    "<prefix><gray>Wysyłanie e-maila...",
+                    "Ta wiadomość jest wyświetlana, gdy użytkownik wykona komendę wysyłającą"
+                            + " e-mail.",
                     ConfigurateHelper::getString);
 
     public static final ConfigurationKey<String> INFO_SENT_EMAIL =
             new ConfigurationKey<>(
                     "info-sent-email",
-                    "Email sent!",
-                    "This message is displayed when the user executes a command that sends an"
-                            + " email.",
+                    "<prefix><gray>E-mail wysłany!",
+                    "Ta wiadomość jest wyświetlana, gdy użytkownik wykona komendę wysyłającą"
+                            + " e-mail.",
                     ConfigurateHelper::getString);
 
     public static final ConfigurationKey<String> INFO_USER =
             new ConfigurationKey<>(
                     "info-user",
                     """
-                    Name: %name%
+                    <prefix><gray>Nazwa: %name%
                     UUID: %uuid%
-                    Premium UUID: %premium_uuid%
-                    Last Seen: %last_seen%
-                    Joined: %joined%
+                    UUID premium: %premium_uuid%
+                    Ostatnia aktywność: %last_seen%
+                    Data dołączenia: %joined%
                     2FA: %2fa%
-                    EMail: %email%
+                    E-mail: %email%
                     IP: %ip%
-                    Last Authenticated: %last_authenticated%\
+                    Ostatnie uwierzytelnienie: %last_authenticated%\
                     """,
-                    "This message is displayed when the player's information is requested.",
+                    "Ta wiadomość jest wyświetlana, gdy zostaną zażądane informacje o graczu.",
                     ConfigurateHelper::getString);
 
     public static final ConfigurationKey<String> INFO_ABOUT =
             new ConfigurationKey<>(
                     "info-about",
                     """
-                    This server is running FOSS authentication plugin, LibreLogin.
-                    Version: %version%
-                    Authors: kyngs, and other contributors
-                    Source: https://github.com/Navio1430/LibreLoginProd
-                    License: Mozilla Public License 2.0\
+                    <prefix><gray>Ten serwer korzysta z darmowej wtyczki uwierzytelniającej LibreLogin (FOSS).
+                    Wersja: %version%
+                    Autorzy: kyngs i inni współtwórcy
+                    Kod źródłowy: https://github.com/Navio1430/LibreLoginProd
+                    Licencja: Mozilla Public License 2.0\
                     """,
-                    """
-This message is displayed when the player executes /librelogin about.
-!! Clearing this message, or somehow making the command unexecutable is not only cringe, but also considered a violation of the license. !!\
+"""
+Ta wiadomość jest wyświetlana, gdy gracz wykona /librelogin about.
+!! Usunięcie tej wiadomości lub w jakikolwiek sposób uniemożliwienie wykonania komendy jest nie tylko niegrzeczne, ale również uznawane za naruszenie licencji. !!\
 """,
                     ConfigurateHelper::getString);
 
     public static final ConfigurationKey<String> INFO_NO_ALTS =
             new ConfigurationKey<>(
                     "info-no-alts",
-                    "There are no other players with the same IP address.",
-                    "This message is displayed when the player has no alts.",
+                    "<prefix><gray>Nie ma innych graczy z takim samym adresem IP.",
+                    "Ta wiadomość jest wyświetlana, gdy gracz nie ma kont alternatywnych (altów).",
                     ConfigurateHelper::getString);
 
     public static final ConfigurationKey<String> INFO_ALTS =
             new ConfigurationKey<>(
                     "info-alts",
-                    "There are %count% players with the same IP address:",
-                    "This message is displayed when the player has alts.",
+                    "<prefix><gray>Gracze z takim samym adresem IP (%count%):",
+                    "Ta wiadomość jest wyświetlana, gdy gracz ma konta alternatywne (alty).",
                     ConfigurateHelper::getString);
 
     public static final ConfigurationKey<String> INFO_ALTS_ENTRY =
             new ConfigurationKey<>(
                     "info-alts-entry",
-                    "- %name% (last seen: %last_seen%)",
-                    "This message is displayed when the player has alts.",
+                    "<gray>- %name% (ostatnia aktywność: %last_seen%)",
+                    "Ta wiadomość jest wyświetlana, gdy gracz ma konta alternatywne (alty).",
                     ConfigurateHelper::getString);
 
     public static final ConfigurationKey<String> INFO_MAIL_SENDING =
             new ConfigurationKey<>(
                     "info-mail-sending",
-                    "Sending email...",
-                    "This message is displayed when the user executes a command that sends an"
-                            + " email.",
+                    "<prefix><gray>Wysyłanie e-maila...",
+                    "Ta wiadomość jest wyświetlana, gdy użytkownik wykona komendę wysyłającą"
+                            + " e-mail.",
                     ConfigurateHelper::getString);
 
     public static final ConfigurationKey<String> INFO_MAIL_VERIFIED =
             new ConfigurationKey<>(
                     "info-mail-verified",
-                    "Email verified! You can now reset your password if you forget it.",
-                    "This message is displayed when the user verifies their email.",
+                    "<prefix><gray>E-mail zweryfikowany! W razie zapomnienia hasła możesz je teraz"
+                            + " zresetować.",
+                    "Ta wiadomość jest wyświetlana, gdy użytkownik zweryfikuje swój adres e-mail.",
                     ConfigurateHelper::getString);
 
     public static final ConfigurationKey<String> INFO_VERIFICATION_MAIL_SENT =
             new ConfigurationKey<>(
                     "info-verification-mail-sent",
-                    "Verification email sent! If you don't see anything in your inbox, check your"
-                            + " spam folder. You have 10 minutes to verify your email.",
-                    "This message is displayed when the user executes a command that sends a"
-                            + " verification email.",
+                    "<prefix><gray>Wysłano e-mail weryfikacyjny! Jeśli nie widzisz go w skrzynce"
+                        + " odbiorczej, sprawdź folder ze spamem. Masz 10 minut na zweryfikowanie"
+                        + " adresu e-mail.",
+                    "Ta wiadomość jest wyświetlana, gdy użytkownik wykona komendę wysyłającą"
+                            + " e-mail weryfikacyjny.",
                     ConfigurateHelper::getString);
 
     public static final ConfigurationKey<String> INFO_RESET_PASSWORD_MAIL_SENT =
             new ConfigurationKey<>(
                     "info-reset-password-mail-sent",
-                    "Password reset email sent! If you don't see anything in your inbox, check your"
-                            + " spam folder. You have 10 minutes to reset your password.",
-                    "This message is displayed when the user executes a command that sends a reset"
-                            + " email.",
+                    "<prefix><gray>Wysłano e-mail z resetem hasła! Jeśli nie widzisz go w skrzynce"
+                            + " odbiorczej, sprawdź folder ze spamem. Masz 10 minut na zresetowanie"
+                            + " hasła.",
+                    "Ta wiadomość jest wyświetlana, gdy użytkownik wykona komendę wysyłającą"
+                            + " e-mail z resetem hasła.",
                     ConfigurateHelper::getString);
 
     /*
@@ -763,25 +815,29 @@ This message is displayed when the player executes /librelogin about.
     public static final ConfigurationKey<String> PROMPT_REGISTER =
             new ConfigurationKey<>(
                     "prompt-register",
-                    "Please register using: &e/register &b<password> <password>",
-                    "This message is displayed when the player is prompted to register.",
+                    "<prefix><gray>Zarejestruj się za pomocą: <yellow>/register</yellow>"
+                            + " <aqua><hasło> <hasło></aqua>",
+                    "Ta wiadomość jest wyświetlana, gdy gracz jest proszony o rejestrację.",
                     ConfigurateHelper::getString);
 
     public static final ConfigurationKey<String> PROMPT_LOGIN =
             new ConfigurationKey<>(
                     "prompt-login",
-                    "Please login using: &e/login &b<password> [2fa_code]",
-                    "This message is displayed when the player is prompted to login.",
+                    "<prefix><gray>Zaloguj się za pomocą: <yellow>/login</yellow> <aqua><hasło>"
+                            + " [kod_2fa]</aqua>",
+                    "Ta wiadomość jest wyświetlana, gdy gracz jest proszony o zalogowanie się.",
                     ConfigurateHelper::getString);
 
     public static final ConfigurationKey<String> PROMPT_CONFIRM =
             new ConfigurationKey<>(
                     "prompt-confirm",
-                    "You are about to enable premium autologin, please take note, that you &4WILL"
-                        + " NOT&r be able to connect to your account from cracked client. You can"
-                        + " turn this off later by using /cracked. To confirm this action, you have"
-                        + " 5 minutes to run /confirmpremium",
-                    "This message is displayed when the player is prompted to confirm autologin.",
+                    "<prefix><yellow>Zamierzasz włączyć autologin dla kont premium. Pamiętaj, że"
+                        + " <dark_red>NIE BĘDZIE</dark_red> możliwe połączenie z Twoim kontem za"
+                        + " pomocą klienta non-premium (cracked). Możesz to później wyłączyć"
+                        + " komendą /cracked. Aby potwierdzić tę akcję, masz 5 minut na wpisanie"
+                        + " /confirmpremium",
+                    "Ta wiadomość jest wyświetlana, gdy gracz jest proszony o potwierdzenie"
+                            + " autologinu.",
                     ConfigurateHelper::getString);
 
     /*
@@ -791,17 +847,47 @@ This message is displayed when the player executes /librelogin about.
     public static final ConfigurationKey<String> TITLE_REGISTER =
             new ConfigurationKey<>(
                     "title-register",
-                    "&6&lRegister",
-                    "This title is displayed when the player is prompted to register. Make sure"
-                            + " that you have use-titles set to true in the configuration.",
+                    "<gold><bold>Rejestracja</bold></gold>",
+                    "Ten tytuł jest wyświetlany, gdy gracz jest proszony o rejestrację. Upewnij"
+                            + " się, że w konfiguracji ustawiono use-titles na true.",
                     ConfigurateHelper::getString);
 
     public static final ConfigurationKey<String> TITLE_LOGIN =
             new ConfigurationKey<>(
                     "title-login",
-                    "&6&lLogin",
-                    "This title is displayed when the player is prompted to login. Make sure that"
-                            + " you have use-titles set to true in the configuration.",
+                    "<gold><bold>Logowanie</bold></gold>",
+                    "Ten tytuł jest wyświetlany, gdy gracz jest proszony o zalogowanie się."
+                            + " Upewnij się, że w konfiguracji ustawiono use-titles na true.",
+                    ConfigurateHelper::getString);
+
+    public static final ConfigurationKey<String> TITLE_LOGGED_IN =
+            new ConfigurationKey<>(
+                    "title-logged-in",
+                    "<green><bold>Zalogowano</bold></green>",
+                    "Ten tytuł jest wyświetlany, gdy gracz pomyślnie zaloguje się komendą /login."
+                            + " Upewnij się, że w konfiguracji ustawiono use-titles na true."
+                            + " Ustaw na pojedynczą spację \" \" oraz sub-title-logged-in na \" \","
+                            + " aby wyłączyć.",
+                    ConfigurateHelper::getString);
+
+    public static final ConfigurationKey<String> TITLE_REGISTERED =
+            new ConfigurationKey<>(
+                    "title-registered",
+                    "<green><bold>Zarejestrowano</bold></green>",
+                    "Ten tytuł jest wyświetlany, gdy gracz pomyślnie zarejestruje się komendą"
+                            + " /register. Upewnij się, że w konfiguracji ustawiono use-titles na"
+                            + " true. Ustaw na pojedynczą spację \" \" oraz sub-title-registered"
+                            + " na \" \", aby wyłączyć.",
+                    ConfigurateHelper::getString);
+
+    public static final ConfigurationKey<String> TITLE_AUTO_LOGIN =
+            new ConfigurationKey<>(
+                    "title-auto-login",
+                    "<green><bold>Zalogowano</bold></green>",
+                    "Ten tytuł jest wyświetlany, gdy gracz zostaje zalogowany automatycznie"
+                        + " (/premium lub ważna sesja). Upewnij się, że w konfiguracji ustawiono"
+                        + " use-titles na true. Ustaw na pojedynczą spację \" \" oraz"
+                        + " sub-title-auto-login na \" \", aby wyłączyć.",
                     ConfigurateHelper::getString);
 
     /*
@@ -811,17 +897,44 @@ This message is displayed when the player executes /librelogin about.
     public static final ConfigurationKey<String> SUB_TITLE_REGISTER =
             new ConfigurationKey<>(
                     "sub-title-register",
-                    "&e/register &b<password> <password>",
-                    "This subtitle is displayed when the player is prompted to register. Make sure"
-                            + " that you have use-titles set to true in the configuration.",
+                    "<yellow>/register</yellow> <aqua><hasło> <hasło></aqua>",
+                    "Ten podtytuł jest wyświetlany, gdy gracz jest proszony o rejestrację."
+                            + " Upewnij się, że w konfiguracji ustawiono use-titles na true.",
                     ConfigurateHelper::getString);
 
     public static final ConfigurationKey<String> SUB_TITLE_LOGIN =
             new ConfigurationKey<>(
                     "sub-title-login",
-                    "&e/login &b<password>",
-                    "This subtitle is displayed when the player is prompted to login. Make sure"
-                            + " that you have use-titles set to true in the configuration.",
+                    "<yellow>/login</yellow> <aqua><hasło></aqua>",
+                    "Ten podtytuł jest wyświetlany, gdy gracz jest proszony o zalogowanie się."
+                            + " Upewnij się, że w konfiguracji ustawiono use-titles na true.",
+                    ConfigurateHelper::getString);
+
+    public static final ConfigurationKey<String> SUB_TITLE_LOGGED_IN =
+            new ConfigurationKey<>(
+                    "sub-title-logged-in",
+                    "<gray>Pomyślnie zalogowano!</gray>",
+                    "Ten podtytuł jest wyświetlany, gdy gracz pomyślnie zaloguje się komendą"
+                            + " /login. Upewnij się, że w konfiguracji ustawiono use-titles na"
+                            + " true.",
+                    ConfigurateHelper::getString);
+
+    public static final ConfigurationKey<String> SUB_TITLE_REGISTERED =
+            new ConfigurationKey<>(
+                    "sub-title-registered",
+                    "<gray>Pomyślnie zarejestrowano!</gray>",
+                    "Ten podtytuł jest wyświetlany, gdy gracz pomyślnie zarejestruje się komendą"
+                            + " /register. Upewnij się, że w konfiguracji ustawiono use-titles na"
+                            + " true.",
+                    ConfigurateHelper::getString);
+
+    public static final ConfigurationKey<String> SUB_TITLE_AUTO_LOGIN =
+            new ConfigurationKey<>(
+                    "sub-title-auto-login",
+                    "<gray>Zalogowano automatycznie!</gray>",
+                    "Ten podtytuł jest wyświetlany, gdy gracz zostaje zalogowany automatycznie"
+                            + " (/premium lub ważna sesja). Upewnij się, że w konfiguracji"
+                            + " ustawiono use-titles na true.",
                     ConfigurateHelper::getString);
 
     /*
@@ -831,17 +944,17 @@ This message is displayed when the player executes /librelogin about.
     public static final ConfigurationKey<String> ACTION_BAR_REGISTER =
             new ConfigurationKey<>(
                     "action-bar-register",
-                    "&e/register &b<password> <password>",
-                    "This actionbar is displayed when the player is prompted to register. Make sure"
-                            + " that you have use-action-bar set to true in the configuration.",
+                    "<yellow>/register</yellow> <aqua><hasło> <hasło></aqua>",
+                    "Ten actionbar jest wyświetlany, gdy gracz jest proszony o rejestrację."
+                            + " Upewnij się, że w konfiguracji ustawiono use-action-bar na true.",
                     ConfigurateHelper::getString);
 
     public static final ConfigurationKey<String> ACTION_BAR_LOGIN =
             new ConfigurationKey<>(
                     "action-bar-login",
-                    "&e/login &b<password>",
-                    "This actionbar is displayed when the player is prompted to login. Make sure"
-                            + " that you have use-action-bar set to true in the configuration.",
+                    "<yellow>/login</yellow> <aqua><hasło></aqua>",
+                    "Ten actionbar jest wyświetlany, gdy gracz jest proszony o zalogowanie się."
+                            + " Upewnij się, że w konfiguracji ustawiono use-action-bar na true.",
                     ConfigurateHelper::getString);
 
     /*
@@ -851,29 +964,29 @@ This message is displayed when the player executes /librelogin about.
     public static final ConfigurationKey<String> TOTP_SHOW_INFO =
             new ConfigurationKey<>(
                     "totp-show-info",
-                    """
-Please scan the QR code on the map into your 2FA app. For example, Google Authenticator or Authy.
-When you are complete, please execute the /2faconfirm <code> command to finish the process.
-Disconnect to abort.\
+"""
+<gray>Zeskanuj kod QR z mapy w swojej aplikacji 2FA, np. Google Authenticator lub Authy.
+Gdy skończysz, wpisz komendę /2faconfirm <kod>, aby zakończyć proces.
+Rozłącz się, aby przerwać.\
 """,
-                    "This message is displayed when the player is prompted to scan the 2FA QR"
-                            + " code.",
+                    "Ta wiadomość jest wyświetlana, gdy gracz jest proszony o zeskanowanie kodu QR"
+                            + " 2FA.",
                     ConfigurateHelper::getString);
 
     public static final ConfigurationKey<String> TOTP_GENERATING =
             new ConfigurationKey<>(
                     "totp-generating",
-                    "Generating 2FA code...",
-                    "This message is displayed when player has begun the 2FA enable procedure.",
+                    "<gray>Generowanie kodu 2FA...",
+                    "Ta wiadomość jest wyświetlana, gdy gracz rozpoczął procedurę włączania 2FA.",
                     ConfigurateHelper::getString);
 
     public static final ConfigurationKey<String> TOTP_WRONG_VERSION =
             new ConfigurationKey<>(
                     "totp-wrong-version",
-                    "You must connect with client version %low% - %high%, in order to enable 2FA."
-                            + " You can then connect back with old version again.",
-                    "This message is displayed when the player attempts to enable 2FA with an old"
-                            + " client.",
+                    "<yellow>Aby włączyć 2FA, musisz połączyć się klientem w wersji %low% - %high%."
+                            + " Potem możesz znów połączyć się starszą wersją.",
+                    "Ta wiadomość jest wyświetlana, gdy gracz próbuje włączyć 2FA za pomocą"
+                            + " starego klienta.",
                     ConfigurateHelper::getString);
 
     /*
@@ -884,44 +997,45 @@ Disconnect to abort.\
             new ConfigurationKey<>(
                     "email-verification-content",
                     """
-                    Hello %name%!<br>
-                    You have requested to add a recovery email on %server%.<br>
-                    If you did not request this, please ignore this email.<br>
-                    To confirm this action, please <b>run the following command in-game: </b><br>
+                    Cześć %name%!<br>
+                    Otrzymaliśmy prośbę o dodanie adresu e-mail do odzyskiwania hasła na serwerze %server%.<br>
+                    Jeśli to nie Ty, zignoruj tę wiadomość.<br>
+                    Aby potwierdzić tę akcję, <b>wpisz w grze następującą komendę: </b><br>
                     <b><code><h1>/verifyemail %code%</h1></code></b><br>
                     """,
-                    "This email is sent to the player when they request to add a recovery email."
-                            + " You can insert any HTML code into this message.",
+                    "Ten e-mail jest wysyłany do gracza, gdy poprosi on o dodanie adresu e-mail do"
+                            + " odzyskiwania hasła. W tej wiadomości możesz użyć dowolnego kodu"
+                            + " HTML.",
                     ConfigurateHelper::getString);
 
     public static final ConfigurationKey<String> EMAIL_VERIFICATION_SUBJECT =
             new ConfigurationKey<>(
                     "email-verification-subject",
-                    "Verify your email on %server%",
-                    "This is the subject of the email sent to the player when they request to add a"
-                            + " recovery email.",
+                    "Zweryfikuj swój adres e-mail na serwerze %server%",
+                    "To jest temat e-maila wysyłanego do gracza, gdy poprosi on o dodanie adresu"
+                            + " e-mail do odzyskiwania hasła.",
                     ConfigurateHelper::getString);
 
     public static final ConfigurationKey<String> EMAIL_PASSWORD_RESET_CONTENT =
             new ConfigurationKey<>(
                     "email-password-reset-content",
                     """
-                    Hello %name%!<br>
-                    You (from IP %ip%) have requested to reset your password on %server%.<br>
-                    If you did not request this, please ignore this email.<br>
-                    To confirm this action, please <b>run the following command in-game: </b><br>
+                    Cześć %name%!<br>
+                    Otrzymaliśmy prośbę (z adresu IP %ip%) o zresetowanie hasła na serwerze %server%.<br>
+                    Jeśli to nie Ty, zignoruj tę wiadomość.<br>
+                    Aby potwierdzić tę akcję, <b>wpisz w grze następującą komendę: </b><br>
                     <b><code><h1>/confirmpasswordreset %code%</h1></code></b><br>
                     """,
-                    "This email is sent to the player when they request to reset their password."
-                            + " You can insert any HTML code into this message.",
+                    "Ten e-mail jest wysyłany do gracza, gdy poprosi on o zresetowanie hasła. W tej"
+                            + " wiadomości możesz użyć dowolnego kodu HTML.",
                     ConfigurateHelper::getString);
 
     public static final ConfigurationKey<String> EMAIL_PASSWORD_RESET_SUBJECT =
             new ConfigurationKey<>(
                     "email-password-reset-subject",
-                    "Reset your password on %server%",
-                    "This is the subject of the email sent to the player when they request to reset"
-                            + " their password.",
+                    "Zresetuj swoje hasło na serwerze %server%",
+                    "To jest temat e-maila wysyłanego do gracza, gdy poprosi on o zresetowanie"
+                            + " hasła.",
                     ConfigurateHelper::getString);
 
     /*
@@ -931,191 +1045,192 @@ Disconnect to abort.\
     public static final ConfigurationKey<?> SYNTAX =
             ConfigurationKey.getComment(
                     "syntax",
-                    "This section contains syntax for commands. It is pretty large, so most people"
-                            + " leave the defaults.");
+                    "Ta sekcja zawiera składnię komend. Jest dość obszerna, więc większość osób"
+                            + " zostawia ustawienia domyślne.");
 
     public static final ConfigurationKey<String> SYNTAX_LOGIN =
             new ConfigurationKey<>(
                     "syntax.login",
-                    "<password> [2fa_code]",
-                    "This message is displayed when the player attempts to login with wrong"
-                            + " syntax.",
+                    "<hasło> [kod_2fa]",
+                    "Ta wiadomość jest wyświetlana, gdy gracz próbuje się zalogować, używając"
+                            + " nieprawidłowej składni.",
                     ConfigurateHelper::getString);
 
     public static final ConfigurationKey<String> SYNTAX_REGISTER =
             new ConfigurationKey<>(
                     "syntax.register",
-                    "<password> <passwordRepeat>",
-                    "This message is displayed when the player attempts to register with wrong"
-                            + " syntax.",
+                    "<hasło> <powtórzHasło>",
+                    "Ta wiadomość jest wyświetlana, gdy gracz próbuje się zarejestrować, używając"
+                            + " nieprawidłowej składni.",
                     ConfigurateHelper::getString);
 
     public static final ConfigurationKey<String> SYNTAX_PREMIUM =
             new ConfigurationKey<>(
                     "syntax.premium",
-                    "<password>",
-                    "This message is displayed when the player attempts to enable premium autologin"
-                            + " with wrong syntax.",
+                    "<hasło>",
+                    "Ta wiadomość jest wyświetlana, gdy gracz próbuje włączyć autologin, używając"
+                            + " nieprawidłowej składni.",
                     ConfigurateHelper::getString);
 
     public static final ConfigurationKey<String> SYNTAX_USER_INFO =
             new ConfigurationKey<>(
                     "syntax.user-info",
-                    "<name>",
-                    "This message is displayed when the player attempts to get user info with wrong"
-                            + " syntax.",
+                    "<nick>",
+                    "Ta wiadomość jest wyświetlana, gdy gracz próbuje pobrać informacje o"
+                            + " użytkowniku, używając nieprawidłowej składni.",
                     ConfigurateHelper::getString);
 
     public static final ConfigurationKey<String> SYNTAX_USER_MIGRATE =
             new ConfigurationKey<>(
                     "syntax.user-migrate",
-                    "<name> <newName>",
-                    "This message is displayed when the player attempts to migrate user with wrong"
-                            + " syntax.",
+                    "<nick> <nowyNick>",
+                    "Ta wiadomość jest wyświetlana, gdy gracz próbuje zmigrować użytkownika,"
+                            + " używając nieprawidłowej składni.",
                     ConfigurateHelper::getString);
 
     public static final ConfigurationKey<String> SYNTAX_USER_UNREGISTER =
             new ConfigurationKey<>(
                     "syntax.user-unregister",
-                    "<name>",
-                    "This message is displayed when the player attempts to unregister user with"
-                            + " wrong syntax.",
+                    "<nick>",
+                    "Ta wiadomość jest wyświetlana, gdy gracz próbuje wyrejestrować użytkownika,"
+                            + " używając nieprawidłowej składni.",
                     ConfigurateHelper::getString);
 
     public static final ConfigurationKey<String> SYNTAX_USER_DELETE =
             new ConfigurationKey<>(
                     "syntax.user-delete",
-                    "<name>",
-                    "This message is displayed when the player attempts to delete user with wrong"
-                            + " syntax.",
+                    "<nick>",
+                    "Ta wiadomość jest wyświetlana, gdy gracz próbuje usunąć użytkownika,"
+                            + " używając nieprawidłowej składni.",
                     ConfigurateHelper::getString);
 
     public static final ConfigurationKey<String> SYNTAX_USER_PREMIUM =
             new ConfigurationKey<>(
                     "syntax.user-premium",
-                    "<name>",
-                    "This message is displayed when the player attempts to enable premium autologin"
-                            + " for other user with wrong syntax.",
+                    "<nick>",
+                    "Ta wiadomość jest wyświetlana, gdy gracz próbuje włączyć autologin innemu"
+                            + " użytkownikowi, używając nieprawidłowej składni.",
                     ConfigurateHelper::getString);
 
     public static final ConfigurationKey<String> SYNTAX_USER_CRACKED =
             new ConfigurationKey<>(
                     "syntax.user-cracked",
-                    "<name>",
-                    "This message is displayed when the player attempts to disable premium"
-                            + " autologin for other user with wrong syntax.",
+                    "<nick>",
+                    "Ta wiadomość jest wyświetlana, gdy gracz próbuje wyłączyć autologin innemu"
+                            + " użytkownikowi, używając nieprawidłowej składni.",
                     ConfigurateHelper::getString);
 
     public static final ConfigurationKey<String> SYNTAX_USER_REGISTER =
             new ConfigurationKey<>(
                     "syntax.user-register",
-                    "<name> <password>",
-                    "This message is displayed when the player attempts to register other user with"
-                            + " wrong syntax.",
+                    "<nick> <hasło>",
+                    "Ta wiadomość jest wyświetlana, gdy gracz próbuje zarejestrować innego"
+                            + " użytkownika, używając nieprawidłowej składni.",
                     ConfigurateHelper::getString);
 
     public static final ConfigurationKey<String> SYNTAX_USER_LOGIN =
             new ConfigurationKey<>(
                     "syntax.user-login",
-                    "<name>",
-                    "This message is displayed when the player attempts to login other user with"
-                            + " wrong syntax.",
+                    "<nick>",
+                    "Ta wiadomość jest wyświetlana, gdy gracz próbuje zalogować innego"
+                            + " użytkownika, używając nieprawidłowej składni.",
                     ConfigurateHelper::getString);
 
     public static final ConfigurationKey<String> SYNTAX_USER_2FA_OFF =
             new ConfigurationKey<>(
                     "syntax.user-2fa-off",
-                    "<name>",
-                    "This message is displayed when the player attempts to disable 2FA for other"
-                            + " user with wrong syntax.",
+                    "<nick>",
+                    "Ta wiadomość jest wyświetlana, gdy gracz próbuje wyłączyć 2FA innemu"
+                            + " użytkownikowi, używając nieprawidłowej składni.",
                     ConfigurateHelper::getString);
 
     public static final ConfigurationKey<String> SYNTAX_USER_EMAIL_OFF =
             new ConfigurationKey<>(
                     "syntax.user-email-off",
-                    "<name>",
-                    "This message is displayed when the player attempts to disable EMail for other"
-                            + " user with wrong syntax.",
+                    "<nick>",
+                    "Ta wiadomość jest wyświetlana, gdy gracz próbuje wyłączyć e-mail innemu"
+                            + " użytkownikowi, używając nieprawidłowej składni.",
                     ConfigurateHelper::getString);
 
     public static final ConfigurationKey<String> SYNTAX_USER_SET_EMAIL =
             new ConfigurationKey<>(
                     "syntax.user-set-email",
-                    "<name> <email>",
-                    "This message is displayed when the player attempts to set EMail for other user"
-                            + " with wrong syntax.",
+                    "<nick> <email>",
+                    "Ta wiadomość jest wyświetlana, gdy gracz próbuje ustawić e-mail innemu"
+                            + " użytkownikowi, używając nieprawidłowej składni.",
                     ConfigurateHelper::getString);
 
     public static final ConfigurationKey<String> SYNTAX_USER_ALTS =
             new ConfigurationKey<>(
                     "syntax.user-alts",
-                    "<name>",
-                    "This message is displayed when the player attempts to get alts of other user"
-                            + " with wrong syntax.",
+                    "<nick>",
+                    "Ta wiadomość jest wyświetlana, gdy gracz próbuje sprawdzić konta"
+                            + " alternatywne (alty) innego użytkownika, używając nieprawidłowej"
+                            + " składni.",
                     ConfigurateHelper::getString);
 
     public static final ConfigurationKey<String> SYNTAX_USER_CHANGE_PASSWORD =
             new ConfigurationKey<>(
                     "syntax.user-pass-change",
-                    "<name> <newPassword>",
-                    "This message is displayed when the player attempts to change password for"
-                            + " other user with wrong syntax.",
+                    "<nick> <noweHasło>",
+                    "Ta wiadomość jest wyświetlana, gdy gracz próbuje zmienić hasło innemu"
+                            + " użytkownikowi, używając nieprawidłowej składni.",
                     ConfigurateHelper::getString);
 
     public static final ConfigurationKey<String> SYNTAX_2FA_CONFIRM =
             new ConfigurationKey<>(
                     "syntax.2fa-confirm",
-                    "<code>",
-                    "This message is displayed when the player attempts to confirm 2FA with wrong"
-                            + " syntax.",
+                    "<kod>",
+                    "Ta wiadomość jest wyświetlana, gdy gracz próbuje potwierdzić 2FA, używając"
+                            + " nieprawidłowej składni.",
                     ConfigurateHelper::getString);
 
     public static final ConfigurationKey<String> SYNTAX_CHANGE_PASSWORD =
             new ConfigurationKey<>(
                     "syntax.change-password",
-                    "<oldPassword> <newPassword>",
-                    "This message is displayed when the player attempts to change password with"
-                            + " wrong syntax.",
+                    "<stareHasło> <noweHasło>",
+                    "Ta wiadomość jest wyświetlana, gdy gracz próbuje zmienić hasło, używając"
+                            + " nieprawidłowej składni.",
                     ConfigurateHelper::getString);
 
     public static final ConfigurationKey<String> SYNTAX_EMAIL_TEST =
             new ConfigurationKey<>(
                     "syntax.email-test",
-                    "<address>",
-                    "This message is displayed when the player attempts to test email with wrong"
-                            + " syntax.",
+                    "<adres>",
+                    "Ta wiadomość jest wyświetlana, gdy gracz próbuje przetestować wysyłanie"
+                            + " e-maili, używając nieprawidłowej składni.",
                     ConfigurateHelper::getString);
 
     public static final ConfigurationKey<String> SYNTAX_SET_EMAIL =
             new ConfigurationKey<>(
                     "syntax.set-email",
-                    "<address> <password>",
-                    "This message is displayed when the player attempts to set email with wrong"
-                            + " syntax.",
+                    "<adres> <hasło>",
+                    "Ta wiadomość jest wyświetlana, gdy gracz próbuje ustawić e-mail, używając"
+                            + " nieprawidłowej składni.",
                     ConfigurateHelper::getString);
 
     public static final ConfigurationKey<String> SYNTAX_VERIFY_EMAIL =
             new ConfigurationKey<>(
                     "syntax.verify-email",
-                    "<code>",
-                    "This message is displayed when the player attempts to verify email with wrong"
-                            + " syntax.",
+                    "<kod>",
+                    "Ta wiadomość jest wyświetlana, gdy gracz próbuje zweryfikować e-mail,"
+                            + " używając nieprawidłowej składni.",
                     ConfigurateHelper::getString);
 
     public static final ConfigurationKey<String> SYNTAX_RESET_PASSWORD =
             new ConfigurationKey<>(
                     "syntax.reset-password",
                     "",
-                    "This message is displayed when the player attempts to reset password with"
-                            + " wrong syntax.",
+                    "Ta wiadomość jest wyświetlana, gdy gracz próbuje zresetować hasło, używając"
+                            + " nieprawidłowej składni.",
                     ConfigurateHelper::getString);
 
     public static final ConfigurationKey<String> SYNTAX_CONFIRM_PASSWORD_RESET =
             new ConfigurationKey<>(
                     "syntax.confirm-password-reset",
-                    "<code> <password> <passwordRepeat>",
-                    "This message is displayed when the player attempts to confirm password reset"
-                            + " with wrong syntax.",
+                    "<kod> <hasło> <powtórzHasło>",
+                    "Ta wiadomość jest wyświetlana, gdy gracz próbuje potwierdzić reset hasła,"
+                            + " używając nieprawidłowej składni.",
                     ConfigurateHelper::getString);
 
     /*
@@ -1125,188 +1240,191 @@ Disconnect to abort.\
     public static final ConfigurationKey<?> AUTOCOMPLETE =
             ConfigurationKey.getComment(
                     "autocomplete",
-                    """
-This section contains autocompletes for commands. It is pretty large, so most people leave the defaults.
-!!DO NOT TRANSLATE @players!! It is used to hint out all players online.
+"""
+Ta sekcja zawiera podpowiedzi (autouzupełnianie) dla komend. Jest dość obszerna, więc większość osób zostawia ustawienia domyślne.
+!!NIE TŁUMACZ @players!! Ta wartość służy do podpowiadania wszystkich graczy online.
 """);
 
     public static final ConfigurationKey<String> AUTOCOMPLETE_LOGIN =
             new ConfigurationKey<>(
                     "autocomplete.login",
-                    "password",
-                    "This hint is displayed when the player starts typing the /login command.",
+                    "hasło",
+                    "Ta podpowiedź jest wyświetlana, gdy gracz zaczyna wpisywać komendę /login.",
                     ConfigurateHelper::getString);
 
     public static final ConfigurationKey<String> AUTOCOMPLETE_REGISTER =
             new ConfigurationKey<>(
                     "autocomplete.register",
-                    "password password",
-                    "This hint is displayed when the player starts typing the /register command.",
+                    "hasło hasło",
+                    "Ta podpowiedź jest wyświetlana, gdy gracz zaczyna wpisywać komendę"
+                            + " /register.",
                     ConfigurateHelper::getString);
 
     public static final ConfigurationKey<String> AUTOCOMPLETE_PREMIUM =
             new ConfigurationKey<>(
                     "autocomplete.premium",
-                    "password",
-                    "This hint is displayed when the player starts typing the /premium command.",
+                    "hasło",
+                    "Ta podpowiedź jest wyświetlana, gdy gracz zaczyna wpisywać komendę"
+                            + " /premium.",
                     ConfigurateHelper::getString);
 
     public static final ConfigurationKey<String> AUTOCOMPLETE_USER_INFO =
             new ConfigurationKey<>(
                     "autocomplete.user-info",
                     "@players",
-                    "This hint is displayed when the player starts typing the /librelogin user info"
-                            + " command.",
+                    "Ta podpowiedź jest wyświetlana, gdy gracz zaczyna wpisywać komendę"
+                            + " /librelogin user info.",
                     ConfigurateHelper::getString);
 
     public static final ConfigurationKey<String> AUTOCOMPLETE_USER_MIGRATE =
             new ConfigurationKey<>(
                     "autocomplete.user-migrate",
-                    "@players newName",
-                    "This hint is displayed when the player starts typing the /librelogin user"
-                            + " migrate command.",
+                    "@players nowyNick",
+                    "Ta podpowiedź jest wyświetlana, gdy gracz zaczyna wpisywać komendę"
+                            + " /librelogin user migrate.",
                     ConfigurateHelper::getString);
 
     public static final ConfigurationKey<String> AUTOCOMPLETE_USER_UNREGISTER =
             new ConfigurationKey<>(
                     "autocomplete.user-unregister",
                     "@players",
-                    "This hint is displayed when the player starts typing the /librelogin user"
-                            + " unregister command.",
+                    "Ta podpowiedź jest wyświetlana, gdy gracz zaczyna wpisywać komendę"
+                            + " /librelogin user unregister.",
                     ConfigurateHelper::getString);
 
     public static final ConfigurationKey<String> AUTOCOMPLETE_USER_DELETE =
             new ConfigurationKey<>(
                     "autocomplete.user-delete",
                     "@players",
-                    "This hint is displayed when the player starts typing the /librelogin user"
-                            + " delete command.",
+                    "Ta podpowiedź jest wyświetlana, gdy gracz zaczyna wpisywać komendę"
+                            + " /librelogin user delete.",
                     ConfigurateHelper::getString);
 
     public static final ConfigurationKey<String> AUTOCOMPLETE_USER_PREMIUM =
             new ConfigurationKey<>(
                     "autocomplete.user-premium",
                     "@players",
-                    "This hint is displayed when the player starts typing the /librelogin user"
-                            + " premium command.",
+                    "Ta podpowiedź jest wyświetlana, gdy gracz zaczyna wpisywać komendę"
+                            + " /librelogin user premium.",
                     ConfigurateHelper::getString);
 
     public static final ConfigurationKey<String> AUTOCOMPLETE_USER_CRACKED =
             new ConfigurationKey<>(
                     "autocomplete.user-cracked",
                     "@players",
-                    "This hint is displayed when the player starts typing the /librelogin user"
-                            + " cracked command.",
+                    "Ta podpowiedź jest wyświetlana, gdy gracz zaczyna wpisywać komendę"
+                            + " /librelogin user cracked.",
                     ConfigurateHelper::getString);
 
     public static final ConfigurationKey<String> AUTOCOMPLETE_USER_REGISTER =
             new ConfigurationKey<>(
                     "autocomplete.user-register",
-                    "@players password",
-                    "This hint is displayed when the player starts typing the /librelogin user"
-                            + " register command.",
+                    "@players hasło",
+                    "Ta podpowiedź jest wyświetlana, gdy gracz zaczyna wpisywać komendę"
+                            + " /librelogin user register.",
                     ConfigurateHelper::getString);
 
     public static final ConfigurationKey<String> AUTOCOMPLETE_USER_LOGIN =
             new ConfigurationKey<>(
                     "autocomplete.user-login",
                     "@players",
-                    "This hint is displayed when the player starts typing the /librelogin user"
-                            + " login command.",
+                    "Ta podpowiedź jest wyświetlana, gdy gracz zaczyna wpisywać komendę"
+                            + " /librelogin user login.",
                     ConfigurateHelper::getString);
 
     public static final ConfigurationKey<String> AUTOCOMPLETE_USER_2FA_OFF =
             new ConfigurationKey<>(
                     "autocomplete.user-2fa-off",
                     "@players",
-                    "This hint is displayed when the player starts typing the /librelogin user"
-                            + " 2fa-off command.",
+                    "Ta podpowiedź jest wyświetlana, gdy gracz zaczyna wpisywać komendę"
+                            + " /librelogin user 2fa-off.",
                     ConfigurateHelper::getString);
 
     public static final ConfigurationKey<String> AUTOCOMPLETE_USER_EMAIL_OFF =
             new ConfigurationKey<>(
                     "autocomplete.user-email-off",
                     "@players",
-                    "This hint is displayed when the player starts typing the /librelogin user"
-                            + " emailoff command.",
+                    "Ta podpowiedź jest wyświetlana, gdy gracz zaczyna wpisywać komendę"
+                            + " /librelogin user emailoff.",
                     ConfigurateHelper::getString);
 
     public static final ConfigurationKey<String> AUTOCOMPLETE_USER_SET_EMAIL =
             new ConfigurationKey<>(
                     "autocomplete.user-set-email",
                     "@players email",
-                    "This hint is displayed when the player starts typing the /librelogin user"
-                            + " setemail command.",
+                    "Ta podpowiedź jest wyświetlana, gdy gracz zaczyna wpisywać komendę"
+                            + " /librelogin user setemail.",
                     ConfigurateHelper::getString);
 
     public static final ConfigurationKey<String> AUTOCOMPLETE_USER_ALTS =
             new ConfigurationKey<>(
                     "autocomplete.user-alts",
                     "@players",
-                    "This hint is displayed when the player starts typing the /librelogin user alts"
-                            + " command.",
+                    "Ta podpowiedź jest wyświetlana, gdy gracz zaczyna wpisywać komendę"
+                            + " /librelogin user alts.",
                     ConfigurateHelper::getString);
 
     public static final ConfigurationKey<String> AUTOCOMPLETE_USER_CHANGE_PASSWORD =
             new ConfigurationKey<>(
                     "autocomplete.user-pass-change",
-                    "@players newPassword",
-                    "This hint is displayed when the player starts typing the /librelogin user"
-                            + " pass-change command.",
+                    "@players noweHasło",
+                    "Ta podpowiedź jest wyświetlana, gdy gracz zaczyna wpisywać komendę"
+                            + " /librelogin user pass-change.",
                     ConfigurateHelper::getString);
 
     public static final ConfigurationKey<String> AUTOCOMPLETE_2FA_CONFIRM =
             new ConfigurationKey<>(
                     "autocomplete.2fa-confirm",
-                    "code",
-                    "This hint is displayed when the player starts typing the /2fa-confirm"
-                            + " command.",
+                    "kod",
+                    "Ta podpowiedź jest wyświetlana, gdy gracz zaczyna wpisywać komendę"
+                            + " /2fa-confirm.",
                     ConfigurateHelper::getString);
 
     public static final ConfigurationKey<String> AUTOCOMPLETE_CHANGE_PASSWORD =
             new ConfigurationKey<>(
                     "autocomplete.change-password",
-                    "oldPassword newPassword",
-                    "This hint is displayed when the player starts typing the /changepassword"
-                            + " command.",
+                    "stareHasło noweHasło",
+                    "Ta podpowiedź jest wyświetlana, gdy gracz zaczyna wpisywać komendę"
+                            + " /changepassword.",
                     ConfigurateHelper::getString);
 
     public static final ConfigurationKey<String> AUTOCOMPLETE_EMAIL_TEST =
             new ConfigurationKey<>(
                     "autocomplete.email-test",
-                    "address",
-                    "This hint is displayed when the player starts typing the /librelogin email"
-                            + " test command.",
+                    "adres",
+                    "Ta podpowiedź jest wyświetlana, gdy gracz zaczyna wpisywać komendę"
+                            + " /librelogin email test.",
                     ConfigurateHelper::getString);
 
     public static final ConfigurationKey<String> AUTOCOMPLETE_SET_EMAIL =
             new ConfigurationKey<>(
                     "autocomplete.set-email",
-                    "address password",
-                    "This hint is displayed when the player starts typing the /setemail command.",
+                    "adres hasło",
+                    "Ta podpowiedź jest wyświetlana, gdy gracz zaczyna wpisywać komendę"
+                            + " /setemail.",
                     ConfigurateHelper::getString);
 
     public static final ConfigurationKey<String> AUTOCOMPLETE_VERIFY_EMAIL =
             new ConfigurationKey<>(
                     "autocomplete.verify-email",
-                    "code",
-                    "This hint is displayed when the player starts typing the /verifyemail"
-                            + " command.",
+                    "kod",
+                    "Ta podpowiedź jest wyświetlana, gdy gracz zaczyna wpisywać komendę"
+                            + " /verifyemail.",
                     ConfigurateHelper::getString);
 
     public static final ConfigurationKey<String> AUTOCOMPLETE_RESET_PASSWORD =
             new ConfigurationKey<>(
                     "autocomplete.reset-password",
                     "",
-                    "This hint is displayed when the player starts typing the /resetpassword"
-                            + " command.",
+                    "Ta podpowiedź jest wyświetlana, gdy gracz zaczyna wpisywać komendę"
+                            + " /resetpassword.",
                     ConfigurateHelper::getString);
 
     public static final ConfigurationKey<String> AUTOCOMPLETE_CONFIRM_PASSWORD_RESET =
             new ConfigurationKey<>(
                     "autocomplete.confirm-password-reset",
-                    "code newPassword newPassword",
-                    "This hint is displayed when the player starts typing the /confirmpasswordreset"
-                            + " command.",
+                    "kod noweHasło noweHasło",
+                    "Ta podpowiedź jest wyświetlana, gdy gracz zaczyna wpisywać komendę"
+                            + " /confirmpasswordreset.",
                     ConfigurateHelper::getString);
 }

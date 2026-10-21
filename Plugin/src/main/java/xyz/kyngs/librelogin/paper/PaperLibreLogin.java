@@ -37,8 +37,11 @@ import xyz.kyngs.librelogin.paper.protocol.PacketListener;
 
 public class PaperLibreLogin extends AuthenticLibreLogin<Player, World> {
 
+    private static final ServerVersion MINIMUM_SERVER_VERSION = ServerVersion.V_26_2;
+
     private final PaperBootstrap bootstrap;
     private PaperListeners listeners;
+    private PaperLocationStorage locationStorage;
     private boolean started;
 
     public PaperLibreLogin(PaperBootstrap bootstrap) {
@@ -58,6 +61,10 @@ public class PaperLibreLogin extends AuthenticLibreLogin<Player, World> {
 
     public PaperBootstrap getBootstrap() {
         return bootstrap;
+    }
+
+    public PaperLocationStorage getLocationStorage() {
+        return locationStorage;
     }
 
     @Override
@@ -106,6 +113,11 @@ public class PaperLibreLogin extends AuthenticLibreLogin<Player, World> {
     }
 
     @Override
+    public void registerPlatformCommands(CommandManager<?, ?, ?, ?, ?, ?> manager) {
+        manager.registerCommand(new PaperLocationCommand(this));
+    }
+
+    @Override
     protected boolean mainThread() {
         return Bukkit.isPrimaryThread() && started;
     }
@@ -133,28 +145,31 @@ public class PaperLibreLogin extends AuthenticLibreLogin<Player, World> {
         if (Bukkit.getOnlineMode()) {
             getLogger()
                     .error(
-                            "!!!The server is running in online mode! LibreLogin won't start unless"
-                                    + " you set it to false!!!");
+                            "!!!Serwer działa w trybie online! LibreLogin nie uruchomi się, dopóki"
+                                    + " nie ustawisz online-mode na false!!!");
             disable();
             return;
         }
 
-        boolean isBehindProxy;
-        if (getServerVersion().isNewerThanOrEquals(ServerVersion.V_1_21_4))
-            isBehindProxy = Bukkit.getServer().getServerConfig().isProxyEnabled();
-        else
-            isBehindProxy =
-                    Bukkit.spigot().getSpigotConfig().getBoolean("settings.bungeecord")
-                            || Bukkit.spigot()
-                                    .getPaperConfig()
-                                    .getBoolean("settings.velocity-support.enabled");
-
-        if (isBehindProxy) {
-            getLogger().error("!!!This server is running under a proxy, LibreLogin won't start!!!");
+        if (getServerVersion().isOlderThan(MINIMUM_SERVER_VERSION)) {
             getLogger()
                     .error(
-                            "If you want to use LibreLogin under a proxy, place it on the proxy and"
-                                    + " remove it from the server.");
+                            "!!!LibreLogin wymaga Minecrafta "
+                                    + MINIMUM_SERVER_VERSION.getReleaseName()
+                                    + " lub nowszego, ale ten serwer działa na wersji "
+                                    + getServerVersion().getReleaseName()
+                                    + "!!!");
+            disable();
+            return;
+        }
+
+        if (Bukkit.getServer().getServerConfig().isProxyEnabled()) {
+            getLogger()
+                    .error("!!!Ten serwer działa za proxy, LibreLogin nie zostanie uruchomiony!!!");
+            getLogger()
+                    .error(
+                            "Jeśli chcesz używać LibreLogin za proxy, umieść go na proxy i usuń z"
+                                    + " serwera.");
             disable();
             return;
         }
@@ -164,6 +179,8 @@ public class PaperLibreLogin extends AuthenticLibreLogin<Player, World> {
         } catch (ShutdownException e) {
             return;
         }
+
+        locationStorage = new PaperLocationStorage(getDataFolder(), getLogger());
 
         var provider = getEventProvider();
 
@@ -198,7 +215,9 @@ public class PaperLibreLogin extends AuthenticLibreLogin<Player, World> {
                     return;
                 }
 
-                location = world.getSpawnLocation();
+                var hub = locationStorage.get(PaperLocationStorage.Type.HUB);
+
+                location = hub != null ? hub : world.getSpawnLocation();
             } else {
                 listeners.getSpawnLocationCache().invalidate(player.getUniqueId());
             }

@@ -249,11 +249,11 @@ public abstract class AuthenticLibreLogin<P, S> implements LibreLoginPlugin<P, S
         try {
             new Log4JFilter().inject();
         } catch (Throwable ignored) {
-            logger.info("LogFilter is not supported on this platform");
+            logger.info("LogFilter nie jest obsługiwany na tej platformie");
             var simpleLogger = getSimpleLogger();
 
             if (simpleLogger != null) {
-                logger.info("Using SimpleLogFilter");
+                logger.info("Używanie SimpleLogFilter");
                 new SimpleLogFilter(simpleLogger).inject();
             }
         }
@@ -267,10 +267,10 @@ public abstract class AuthenticLibreLogin<P, S> implements LibreLoginPlugin<P, S
                                     ? "librepremium"
                                     : "LibrePremium");
             if (oldFolder.exists()) {
-                logger.info("Migrating configuration and messages from old folder...");
+                logger.info("Migrowanie konfiguracji i wiadomości ze starego folderu...");
                 if (!oldFolder.renameTo(folder)) {
                     throw new RuntimeException(
-                            "Can't migrate configuration and messages from old folder!");
+                            "Nie można zmigrować konfiguracji i wiadomości ze starego folderu!");
                 }
             }
         }
@@ -308,19 +308,19 @@ public abstract class AuthenticLibreLogin<P, S> implements LibreLoginPlugin<P, S
 
         loadConfigs();
 
-        logger.info("Loading forbidden passwords...");
+        logger.info("Wczytywanie zakazanych haseł...");
 
         try {
             loadForbiddenPasswords();
         } catch (IOException e) {
             e.printStackTrace();
             logger.info(
-                    "An unknown exception occurred while attempting to load the forbidden"
-                            + " passwords, this most likely isn't your fault");
+                    "Wystąpił nieznany wyjątek podczas próby wczytania zakazanych haseł,"
+                            + " najprawdopodobniej nie jest to Twoja wina");
             shutdownProxy(1);
         }
 
-        logger.info("Loaded %s forbidden passwords".formatted(forbiddenPasswords.size()));
+        logger.info("Wczytano zakazane hasła: %s".formatted(forbiddenPasswords.size()));
 
         connectToDB();
 
@@ -336,7 +336,7 @@ public abstract class AuthenticLibreLogin<P, S> implements LibreLoginPlugin<P, S
         if (imageProjector != null) {
             if (!configuration.get(TOTP_ENABLED)) {
                 imageProjector = null;
-                logger.warn("2FA is disabled in the configuration, aborting...");
+                logger.warn("2FA jest wyłączone w konfiguracji, przerywanie...");
             } else {
                 imageProjector.enable();
             }
@@ -349,10 +349,10 @@ public abstract class AuthenticLibreLogin<P, S> implements LibreLoginPlugin<P, S
         commandProvider = new CommandProvider<>(this);
 
         if (version.dev()) {
-            logger.warn("!! YOU ARE RUNNING A DEVELOPMENT BUILD OF LIBRELOGIN !!");
+            logger.warn("!! UŻYWASZ WERSJI DEWELOPERSKIEJ LIBRELOGIN !!");
             logger.warn(
-                    "!! THIS IS NOT A RELEASE, USE THIS ONLY IF YOU WERE INSTRUCTED TO DO SO. DO"
-                            + " NOT USE THIS IN PRODUCTION !!");
+                    "!! TO NIE JEST WERSJA WYDANIOWA, UŻYWAJ JEJ TYLKO WTEDY, GDY ZOSTAŁO TO"
+                            + " WYRAŹNIE ZALECONE. NIE UŻYWAJ JEJ NA SERWERZE PRODUKCYJNYM !!");
         } else {
             initMetrics();
         }
@@ -360,17 +360,17 @@ public abstract class AuthenticLibreLogin<P, S> implements LibreLoginPlugin<P, S
         delay(this::checkForUpdates, 1000);
 
         if (pluginPresent("floodgate")) {
-            logger.info("Floodgate detected, enabling bedrock support...");
+            logger.info("Wykryto Floodgate, włączanie obsługi Bedrock...");
             floodgateApi = new FloodgateIntegration();
         }
 
         if (pluginPresent("luckperms")) {
-            logger.info("LuckPerms detected, enabling context provider");
+            logger.info("Wykryto LuckPerms, włączanie dostawcy kontekstów");
             luckpermsApi = new LuckPermsIntegration<>(this);
         }
 
         if (multiProxyEnabled()) {
-            logger.info("Detected MultiProxy setup, enabling MultiProxy support...");
+            logger.info("Wykryto konfigurację MultiProxy, włączanie obsługi MultiProxy...");
         }
     }
 
@@ -380,13 +380,13 @@ public abstract class AuthenticLibreLogin<P, S> implements LibreLoginPlugin<P, S
     }
 
     private void connectToDB() {
-        logger.info("Connecting to the database...");
+        logger.info("Łączenie z bazą danych...");
 
         try {
             var registration = readProviders.get(configuration.get(DATABASE_TYPE));
             if (registration == null) {
                 logger.error(
-                        "Database type %s doesn't exist, please check your configuration"
+                        "Typ bazy danych %s nie istnieje, sprawdź swoją konfigurację"
                                 .formatted(configuration.get(DATABASE_TYPE)));
                 shutdownProxy(1);
             }
@@ -398,7 +398,7 @@ public abstract class AuthenticLibreLogin<P, S> implements LibreLoginPlugin<P, S
 
                 if (connectorRegistration == null) {
                     logger.error(
-                            "Database type %s is corrupted, please use a different one"
+                            "Typ bazy danych %s jest uszkodzony, użyj innego"
                                     .formatted(configuration.get(DATABASE_TYPE)));
                     shutdownProxy(1);
                 }
@@ -418,42 +418,42 @@ public abstract class AuthenticLibreLogin<P, S> implements LibreLoginPlugin<P, S
                 databaseConnector = connector;
             } else {
                 logger.error(
-                        "Database type %s cannot be used for writing, please use a different one"
+                        "Typu bazy danych %s nie można używać do zapisu, użyj innego"
                                 .formatted(configuration.get(DATABASE_TYPE)));
                 shutdownProxy(1);
             }
 
         } catch (Exception e) {
             var cause = GeneralUtil.getFurthestCause(e);
-            logger.error("!! THIS IS MOST LIKELY NOT AN ERROR CAUSED BY LIBRELOGIN !!");
+            logger.error("!! NAJPRAWDOPODOBNIEJ NIE JEST TO BŁĄD SPOWODOWANY PRZEZ LIBRELOGIN !!");
             logger.error(
-                    "Failed to connect to the database, this most likely is caused by wrong credentials. Cause: %s: %s"
+                    "Nie udało się połączyć z bazą danych, najprawdopodobniej przyczyną są błędne dane logowania. Przyczyna: %s: %s"
                             .formatted(cause.getClass().getSimpleName(), cause.getMessage()));
             shutdownProxy(1);
         }
 
-        logger.info("Successfully connected to the database");
+        logger.info("Pomyślnie połączono z bazą danych");
 
         if (databaseProvider instanceof AuthenticDatabaseProvider<?> casted) {
-            logger.info("Validating schema");
+            logger.info("Sprawdzanie poprawności schematu");
 
             try {
                 casted.validateSchema();
             } catch (Exception e) {
                 var cause = GeneralUtil.getFurthestCause(e);
                 logger.error(
-                        "Failed to validate schema! Cause: %s: %s"
+                        "Nie udało się zweryfikować schematu! Przyczyna: %s: %s"
                                 .formatted(cause.getClass().getSimpleName(), cause.getMessage()));
-                logger.error("Please open an issue on our GitHub, or visit Discord support");
+                logger.error("Zgłoś problem na naszym GitHubie lub odwiedź wsparcie na Discordzie");
                 shutdownProxy(1);
             }
 
-            logger.info("Schema validated");
+            logger.info("Schemat zweryfikowany");
         }
     }
 
     private void loadConfigs() {
-        logger.info("Loading messages...");
+        logger.info("Wczytywanie wiadomości...");
 
         messages = new HoconMessages(logger);
 
@@ -462,19 +462,19 @@ public abstract class AuthenticLibreLogin<P, S> implements LibreLoginPlugin<P, S
         } catch (IOException e) {
             e.printStackTrace();
             logger.info(
-                    "An unknown exception occurred while attempting to load the messages, this most"
-                            + " likely isn't your fault");
+                    "Wystąpił nieznany wyjątek podczas próby wczytania wiadomości,"
+                            + " najprawdopodobniej nie jest to Twoja wina");
             shutdownProxy(1);
         } catch (CorruptedConfigurationException e) {
             var cause = GeneralUtil.getFurthestCause(e);
-            logger.error("!! THIS IS MOST LIKELY NOT AN ERROR CAUSED BY LIBRELOGIN !!");
+            logger.error("!! NAJPRAWDOPODOBNIEJ NIE JEST TO BŁĄD SPOWODOWANY PRZEZ LIBRELOGIN !!");
             logger.error(
-                    "!!The messages are corrupted, please look below for further clues. If you are clueless, delete the messages and a new ones will be created for you. Cause: %s: %s"
+                    "!!Plik wiadomości jest uszkodzony, wskazówek szukaj poniżej. Jeśli nie wiesz, co zrobić, usuń plik wiadomości, a zostanie utworzony nowy. Przyczyna: %s: %s"
                             .formatted(cause.getClass().getSimpleName(), cause.getMessage()));
             shutdownProxy(1);
         }
 
-        logger.info("Loading configuration...");
+        logger.info("Wczytywanie konfiguracji...");
 
         var defaults = new ArrayList<BiHolder<Class<?>, String>>();
 
@@ -492,8 +492,8 @@ public abstract class AuthenticLibreLogin<P, S> implements LibreLoginPlugin<P, S
         try {
             if (configuration.reload(this)) {
                 logger.warn(
-                        "!! A new configuration was generated, please fill it out, if in doubt, see"
-                                + " the wiki !!");
+                        "!! Wygenerowano nową konfigurację, uzupełnij ją; w razie wątpliwości"
+                                + " zajrzyj na wiki !!");
                 shutdownProxy(0);
             }
 
@@ -503,21 +503,21 @@ public abstract class AuthenticLibreLogin<P, S> implements LibreLoginPlugin<P, S
             for (String value : lobby.values()) {
                 if (limbos.contains(value)) {
                     throw new CorruptedConfigurationException(
-                            "Lobby server/world %s is also a limbo server/world, this is not allowed"
+                            "Serwer/świat lobby %s jest jednocześnie serwerem/światem limbo, jest to niedozwolone"
                                     .formatted(value));
                 }
             }
         } catch (IOException e) {
             e.printStackTrace();
             logger.info(
-                    "An unknown exception occurred while attempting to load the configuration, this"
-                            + " most likely isn't your fault");
+                    "Wystąpił nieznany wyjątek podczas próby wczytania konfiguracji,"
+                            + " najprawdopodobniej nie jest to Twoja wina");
             shutdownProxy(1);
         } catch (CorruptedConfigurationException e) {
             var cause = GeneralUtil.getFurthestCause(e);
-            logger.error("!! THIS IS MOST LIKELY NOT AN ERROR CAUSED BY LIBRELOGIN !!");
+            logger.error("!! NAJPRAWDOPODOBNIEJ NIE JEST TO BŁĄD SPOWODOWANY PRZEZ LIBRELOGIN !!");
             logger.error(
-                    "!!The configuration is corrupted, please look below for further clues. If you are clueless, delete the config and a new one will be created for you. Cause: %s: %s"
+                    "!!Konfiguracja jest uszkodzona, wskazówek szukaj poniżej. Jeśli nie wiesz, co zrobić, usuń plik konfiguracyjny, a zostanie utworzony nowy. Przyczyna: %s: %s"
                             .formatted(cause.getClass().getSimpleName(), cause.getMessage()));
             shutdownProxy(1);
         }
@@ -697,14 +697,14 @@ public abstract class AuthenticLibreLogin<P, S> implements LibreLoginPlugin<P, S
         var file = new File(getDataFolder(), "forbidden-passwords.txt");
 
         if (!file.exists()) {
-            logger.info("Forbidden passwords list doesn't exist, downloading...");
+            logger.info("Lista zakazanych haseł nie istnieje, pobieranie...");
             try (BufferedInputStream in =
                     new BufferedInputStream(
                             new URL(
                                             "https://raw.githubusercontent.com/kyngs/LibreLogin/dev/forbidden-passwords.txt")
                                     .openStream())) {
                 if (!file.createNewFile()) {
-                    throw new IOException("Failed to create file");
+                    throw new IOException("Nie udało się utworzyć pliku");
                 }
                 try (var fos = new FileOutputStream(file)) {
                     var dataBuffer = new byte[1024];
@@ -713,10 +713,10 @@ public abstract class AuthenticLibreLogin<P, S> implements LibreLoginPlugin<P, S
                         fos.write(dataBuffer, 0, bytesRead);
                     }
                 }
-                logger.info("Successfully downloaded forbidden passwords list");
+                logger.info("Pomyślnie pobrano listę zakazanych haseł");
             } catch (IOException e) {
                 e.printStackTrace();
-                logger.warn("Failed to download forbidden passwords list, using template instead");
+                logger.warn("Nie udało się pobrać listy zakazanych haseł, używanie szablonu");
                 Files.copy(getResourceAsStream("forbidden-passwords-template.txt"), file.toPath());
             }
         }
@@ -733,7 +733,7 @@ public abstract class AuthenticLibreLogin<P, S> implements LibreLoginPlugin<P, S
     }
 
     private void checkForUpdates() {
-        logger.info("Checking for updates...");
+        logger.info("Sprawdzanie aktualizacji...");
 
         try {
             var connection =
@@ -773,20 +773,20 @@ public abstract class AuthenticLibreLogin<P, S> implements LibreLoginPlugin<P, S
             }
 
             if (behind.isEmpty()) {
-                logger.info("You are running the latest version of LibreLogin");
+                logger.info("Używasz najnowszej wersji LibreLogin");
             } else {
                 Collections.reverse(behind);
-                logger.warn("!! YOU ARE RUNNING AN OUTDATED VERSION OF LIBRELOGIN !!");
+                logger.warn("!! UŻYWASZ NIEAKTUALNEJ WERSJI LIBRELOGIN !!");
                 logger.info(
-                        "You are running version %s, the latest version is %s. You are running %s versions behind. Newer versions:"
+                        "Używasz wersji %s, najnowsza wersja to %s. Liczba nowszych wersji: %s. Nowsze wersje:"
                                 .formatted(getVersion(), latest, behind.size()));
                 for (Release release : behind) {
                     logger.info("- %s".formatted(release.name()));
                 }
-                logger.warn("!! PLEASE UPDATE TO THE LATEST VERSION !!");
+                logger.warn("!! ZAKTUALIZUJ DO NAJNOWSZEJ WERSJI !!");
             }
         } catch (Exception e) {
-            logger.warn("Failed to check for updates", e);
+            logger.warn("Nie udało się sprawdzić aktualizacji", e);
         }
     }
 
@@ -804,7 +804,7 @@ public abstract class AuthenticLibreLogin<P, S> implements LibreLoginPlugin<P, S
                 databaseConnector.disconnect();
             } catch (Exception e) {
                 e.printStackTrace();
-                logger.error("Failed to disconnect from database, ignoring...");
+                logger.error("Nie udało się rozłączyć z bazą danych, ignorowanie...");
             }
         }
         if (luckpermsApi != null) {
@@ -831,7 +831,8 @@ public abstract class AuthenticLibreLogin<P, S> implements LibreLoginPlugin<P, S
         var folder = getDataFolder();
 
         if (!folder.exists())
-            if (!folder.mkdir()) throw new RuntimeException("Failed to create datafolder");
+            if (!folder.mkdir())
+                throw new RuntimeException("Nie udało się utworzyć folderu danych");
     }
 
     protected abstract Logger provideLogger();
@@ -889,9 +890,9 @@ public abstract class AuthenticLibreLogin<P, S> implements LibreLoginPlugin<P, S
 
     @Override
     public void migrate(ReadDatabaseProvider from, WriteDatabaseProvider to) {
-        logger.info("Reading data...");
+        logger.info("Odczytywanie danych...");
         var users = from.getAllUsers();
-        logger.info("Data read, inserting into database...");
+        logger.info("Dane odczytane, wstawianie do bazy danych...");
         to.insertUsers(users);
     }
 
@@ -945,6 +946,9 @@ public abstract class AuthenticLibreLogin<P, S> implements LibreLoginPlugin<P, S
 
     public abstract Audience getAudienceFromIssuer(CommandIssuer issuer);
 
+    /** Pozwala platformie zarejestrować dodatkowe komendy, które nie istnieją na innych. */
+    public void registerPlatformCommands(CommandManager<?, ?, ?, ?, ?, ?> manager) {}
+
     protected boolean mainThread() {
         return false;
     }
@@ -952,9 +956,9 @@ public abstract class AuthenticLibreLogin<P, S> implements LibreLoginPlugin<P, S
     public void reportMainThread() {
         if (mainThread()) {
             logger.error(
-                    "AN IO OPERATION IS BEING PERFORMED ON THE MAIN THREAD! THIS IS A SERIOUS BUG!,"
-                            + " PLEASE REPORT IT TO THE DEVELOPER OF THE PLUGIN AND ATTACH THE"
-                            + " STACKTRACE BELOW!");
+                    "OPERACJA WEJŚCIA/WYJŚCIA (IO) JEST WYKONYWANA W GŁÓWNYM WĄTKU! TO POWAŻNY"
+                            + " BŁĄD! ZGŁOŚ GO DEWELOPEROWI WTYCZKI I DOŁĄCZ PONIŻSZY"
+                            + " STACKTRACE!");
             new Throwable().printStackTrace();
         }
     }

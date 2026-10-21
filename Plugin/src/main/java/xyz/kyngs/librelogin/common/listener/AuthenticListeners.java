@@ -53,15 +53,7 @@ public class AuthenticListeners<Plugin extends AuthenticLibreLogin<P, S>, P, S> 
                         plugin.getConfiguration().get(ConfigurationKeys.SESSION_TIMEOUT));
 
         if (user.autoLoginEnabled()) {
-            if (!plugin.getMessages().isEmpty("info-premium-logged-in"))
-                plugin.delay(
-                        () ->
-                                plugin.getPlatformHandle()
-                                        .getAudienceForPlayer(player)
-                                        .sendMessage(
-                                                plugin.getMessages()
-                                                        .getMessage("info-premium-logged-in")),
-                        500);
+            notifyAutoLogin(player, "info-premium-logged-in");
             plugin.getEventProvider()
                     .fire(
                             plugin.getEventTypes().authenticated,
@@ -77,15 +69,7 @@ public class AuthenticListeners<Plugin extends AuthenticLibreLogin<P, S>, P, S> 
                         .toLocalDateTime()
                         .plus(sessionTime)
                         .isAfter(LocalDateTime.now())) {
-            if (!plugin.getMessages().isEmpty("info-session-logged-in"))
-                plugin.delay(
-                        () ->
-                                plugin.getPlatformHandle()
-                                        .getAudienceForPlayer(player)
-                                        .sendMessage(
-                                                plugin.getMessages()
-                                                        .getMessage("info-session-logged-in")),
-                        500);
+            notifyAutoLogin(player, "info-session-logged-in");
             plugin.getEventProvider()
                     .fire(
                             plugin.getEventTypes().authenticated,
@@ -102,6 +86,21 @@ public class AuthenticListeners<Plugin extends AuthenticLibreLogin<P, S>, P, S> 
 
         var finalUser = user;
         plugin.delay(() -> plugin.getDatabaseProvider().updateUser(finalUser), 0);
+    }
+
+    private void notifyAutoLogin(P player, String messageKey) {
+        plugin.delay(
+                () -> {
+                    var audience = plugin.getPlatformHandle().getAudienceForPlayer(player);
+                    if (audience == null) return;
+
+                    if (!plugin.getMessages().isEmpty(messageKey))
+                        audience.sendMessage(plugin.getMessages().getMessage(messageKey));
+
+                    plugin.getAuthorizationProvider()
+                            .showSuccessTitle(audience, "title-auto-login", "sub-title-auto-login");
+                },
+                500);
     }
 
     protected void onPlayerDisconnect(P player) {
@@ -128,9 +127,7 @@ public class AuthenticListeners<Plugin extends AuthenticLibreLogin<P, S>, P, S> 
                                 plugin.getMessages().getMessage("kick-premium-error-throttled");
                         default -> {
                             plugin.getLogger()
-                                    .error(
-                                            "Encountered an exception while communicating with the"
-                                                    + " Mojang API!");
+                                    .error("Wystąpił wyjątek podczas komunikacji z API Mojang!");
                             e.printStackTrace();
                             yield plugin.getMessages().getMessage("kick-premium-error-undefined");
                         }
@@ -191,7 +188,7 @@ public class AuthenticListeners<Plugin extends AuthenticLibreLogin<P, S>, P, S> 
                 if (!mojangData.reliable()) {
                     plugin.getLogger()
                             .warn(
-                                    "User %s has probably changed their name. Data returned from Mojang API is not reliable, faking a new one using the current nickname."
+                                    "Użytkownik %s prawdopodobnie zmienił nazwę. Dane zwrócone przez API Mojang nie są wiarygodne, tworzenie nowych na podstawie obecnego nicku."
                                             .formatted(username));
                     mojangData = new PremiumUser(mojangData.uuid(), username, false);
                 }
@@ -333,7 +330,7 @@ public class AuthenticListeners<Plugin extends AuthenticLibreLogin<P, S>, P, S> 
                 if (premiumUser != null && !premiumUser.reliable()) {
                     plugin.getLogger()
                             .warn(
-                                    "The premium data for %s is not reliable, the user may not have the same name capitalization as the premium one. It is not safe to auto-register this user. Switching to offline registration!"
+                                    "Dane premium dla %s nie są wiarygodne, użytkownik może mieć inną wielkość liter w nazwie niż konto premium. Automatyczna rejestracja tego użytkownika nie jest bezpieczna. Przełączanie na rejestrację offline!"
                                             .formatted(username));
                 }
                 user =
