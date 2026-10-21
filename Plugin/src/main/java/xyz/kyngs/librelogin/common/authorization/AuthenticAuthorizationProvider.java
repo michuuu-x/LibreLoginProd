@@ -230,7 +230,6 @@ public class AuthenticAuthorizationProvider<P, S> extends AuthenticHandler<P, S>
         var toRefresh =
                 plugin.getConfiguration()
                         .get(ConfigurationKeys.MILLISECONDS_TO_REFRESH_NOTIFICATION);
-        //noinspection UnstableApiUsage
         audience.showTitle(
                 Title.title(
                         plugin.getMessages()
