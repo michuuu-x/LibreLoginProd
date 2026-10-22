@@ -139,21 +139,25 @@ public class HoconMessages implements Messages {
         migrateLegacyFile(plugin.getDataFolder(), langFolder);
 
         var newLanguage = resolveLanguage(langFolder);
-        var file = new File(langFolder, newLanguage + ".conf");
-        var translation = loadTranslation(plugin, newLanguage, file);
-        var header = translation == null ? null : translation.options().header();
+        var adept = loadLanguage(plugin, langFolder, newLanguage);
 
-        var adept =
-                new ConfigurateConfiguration(
-                        langFolder,
-                        file.getName(),
-                        Set.of(new BiHolder<>(MessageKeys.class, "")),
-                        key -> translation == null ? key : translate(key, translation),
-                        header == null ? HEADER : header,
-                        logger,
-                        new FirstMessagesMigrator(),
-                        new SecondMessagesMigrator(),
-                        new ThirdMessagesMigrator());
+        // The bundled languages are always written out, so they can be edited before switching
+        for (var bundled : BUNDLED_LANGUAGES) {
+            if (bundled.equals(newLanguage)) continue;
+
+            try {
+                loadLanguage(plugin, langFolder, bundled);
+            } catch (CorruptedConfigurationException e) {
+                var cause = GeneralUtil.getFurthestCause(e);
+                logger.warn(
+                        "Could not update %s/%s.conf, it is corrupted. Cause: %s: %s"
+                                .formatted(
+                                        LANG_FOLDER,
+                                        bundled,
+                                        cause.getClass().getSimpleName(),
+                                        cause.getMessage()));
+            }
+        }
 
         var rawPrefix = adept.getHelper().getString(MessageKeys.PREFIX.key());
         var prefixResolver =
@@ -170,6 +174,29 @@ public class HoconMessages implements Messages {
         language = newLanguage;
 
         logger.info("Loaded messages in language: " + language);
+    }
+
+    /**
+     * Creates or updates {@code lang/<language>.conf}, filling missing keys with the translated
+     * defaults.
+     */
+    private ConfigurateConfiguration loadLanguage(
+            LibreLoginPlugin<?, ?> plugin, File langFolder, String language)
+            throws IOException, CorruptedConfigurationException {
+        var file = new File(langFolder, language + ".conf");
+        var translation = loadTranslation(plugin, language, file);
+        var header = translation == null ? null : translation.options().header();
+
+        return new ConfigurateConfiguration(
+                langFolder,
+                file.getName(),
+                Set.of(new BiHolder<>(MessageKeys.class, "")),
+                key -> translation == null ? key : translate(key, translation),
+                header == null ? HEADER : header,
+                logger,
+                new FirstMessagesMigrator(),
+                new SecondMessagesMigrator(),
+                new ThirdMessagesMigrator());
     }
 
     /**

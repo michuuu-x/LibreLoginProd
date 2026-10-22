@@ -26,7 +26,8 @@ public class ConfigurationKeys {
 Ustawia język wtyczki.
 Określa, z którego pliku konfiguracyjnego (znajdującego się w podfolderze „/lang/”) wtyczka ma pobierać komunikaty.
 Jeśli wybrany język nie jest dostępny, użyty zostanie język domyślny (polski).
-Wbudowane języki: pl (polski), en (angielski). Możesz dodać własny, tworząc plik lang/<kod>.conf (np. kopię lang/en.conf).
+Wbudowane języki: pl (polski), en (angielski). Ich pliki są zawsze tworzone w folderze lang/, więc możesz je edytować przed przełączeniem języka.
+Możesz dodać własny język, tworząc plik lang/<kod>.conf (np. kopię lang/en.conf).
 Po zmianie użyj /librelogin reload configuration.
 [Domyślnie: ustawienia regionalne systemu]
 """,
