@@ -8,6 +8,7 @@ package xyz.kyngs.librelogin.common.command.commands.staff;
 
 import static xyz.kyngs.librelogin.common.AuthenticLibreLogin.DATE_TIME_FORMATTER;
 import static xyz.kyngs.librelogin.common.AuthenticLibreLogin.GSON;
+import static xyz.kyngs.librelogin.common.config.ConfigurationKeys.LANGUAGE;
 
 import co.aikar.commands.annotation.*;
 import com.google.gson.JsonArray;
@@ -176,6 +177,8 @@ public class LibreLoginCommand<P> extends StaffCommand<P> {
                 () -> {
                     audience.sendMessage(getMessage("info-reloading"));
 
+                    var language = plugin.getConfiguration().get(LANGUAGE);
+
                     try {
                         plugin.getConfiguration().reload(plugin);
                     } catch (IOException e) {
@@ -193,6 +196,11 @@ public class LibreLoginCommand<P> extends StaffCommand<P> {
                                                         cause.getMessage())));
                     }
 
+                    // The language of the messages is part of the configuration
+                    if (!language.equals(plugin.getConfiguration().get(LANGUAGE))) {
+                        reloadMessages();
+                    }
+
                     audience.sendMessage(getMessage("info-reloaded"));
                 });
     }
@@ -204,27 +212,30 @@ public class LibreLoginCommand<P> extends StaffCommand<P> {
                 () -> {
                     audience.sendMessage(getMessage("info-reloading"));
 
-                    try {
-                        plugin.getMessages().reload(plugin);
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                        throw new InvalidCommandArgument(getMessage("error-unknown"));
-                    } catch (CorruptedConfigurationException e) {
-                        var cause = GeneralUtil.getFurthestCause(e);
-                        throw new InvalidCommandArgument(
-                                getMessage(
-                                        "error-corrupted-messages",
-                                        "%cause%",
-                                        "%s: %s"
-                                                .formatted(
-                                                        cause.getClass().getSimpleName(),
-                                                        cause.getMessage())));
-                    }
-
-                    plugin.getCommandProvider().injectMessages();
+                    reloadMessages();
 
                     audience.sendMessage(getMessage("info-reloaded"));
                 });
+    }
+
+    private void reloadMessages() {
+        try {
+            plugin.getMessages().reload(plugin);
+        } catch (IOException e) {
+            e.printStackTrace();
+            throw new InvalidCommandArgument(getMessage("error-unknown"));
+        } catch (CorruptedConfigurationException e) {
+            var cause = GeneralUtil.getFurthestCause(e);
+            throw new InvalidCommandArgument(
+                    getMessage(
+                            "error-corrupted-messages",
+                            "%cause%",
+                            "%s: %s"
+                                    .formatted(
+                                            cause.getClass().getSimpleName(), cause.getMessage())));
+        }
+
+        plugin.getCommandProvider().injectMessages();
     }
 
     @Subcommand("user info")

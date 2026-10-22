@@ -47,6 +47,7 @@ alt="Contributors listed"></img>
 - Name validation (including case sensitivity check)
 - Automatic data migration for premium players
 - Migration of a player's data by using one command
+- Multi-language messages - Polish and English built in, set with the `language` option in `config.conf`; add your own as `lang/<code>.conf`
 
 ## Platforms ⚙️
 - [✔️] Velocity - up to 26.3

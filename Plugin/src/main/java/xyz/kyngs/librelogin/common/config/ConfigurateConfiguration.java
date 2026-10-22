@@ -9,6 +9,7 @@ package xyz.kyngs.librelogin.common.config;
 import java.io.File;
 import java.io.IOException;
 import java.util.Collection;
+import java.util.function.UnaryOperator;
 import org.spongepowered.configurate.CommentedConfigurationNode;
 import org.spongepowered.configurate.ConfigurateException;
 import org.spongepowered.configurate.ConfigurationOptions;
@@ -34,6 +35,22 @@ public class ConfigurateConfiguration {
             Logger logger,
             ConfigurationMigrator... migrators)
             throws IOException, CorruptedConfigurationException {
+        this(dataFolder, name, defaultKeys, UnaryOperator.identity(), comment, logger, migrators);
+    }
+
+    /**
+     * @param keyTransformer applied to every extracted key before its default value and comment are
+     *     used, e.g. to translate them
+     */
+    public ConfigurateConfiguration(
+            File dataFolder,
+            String name,
+            Collection<BiHolder<Class<?>, String>> defaultKeys,
+            UnaryOperator<ConfigurationKey<?>> keyTransformer,
+            String comment,
+            Logger logger,
+            ConfigurationMigrator... migrators)
+            throws IOException, CorruptedConfigurationException {
         var revision = migrators.length;
         var file = new File(dataFolder, name);
 
@@ -50,7 +67,10 @@ public class ConfigurateConfiguration {
                         .map(
                                 data ->
                                         new BiHolder<>(
-                                                GeneralUtil.extractKeys(data.key()), data.value()))
+                                                GeneralUtil.extractKeys(data.key()).stream()
+                                                        .map(keyTransformer)
+                                                        .toList(),
+                                                data.value()))
                         .toList();
 
         for (var key : extractedKeys) {

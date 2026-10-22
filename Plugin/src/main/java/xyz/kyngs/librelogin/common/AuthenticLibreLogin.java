@@ -453,27 +453,6 @@ public abstract class AuthenticLibreLogin<P, S> implements LibreLoginPlugin<P, S
     }
 
     private void loadConfigs() {
-        logger.info("Wczytywanie wiadomości...");
-
-        messages = new HoconMessages(logger);
-
-        try {
-            messages.reload(this);
-        } catch (IOException e) {
-            e.printStackTrace();
-            logger.info(
-                    "Wystąpił nieznany wyjątek podczas próby wczytania wiadomości,"
-                            + " najprawdopodobniej nie jest to Twoja wina");
-            shutdownProxy(1);
-        } catch (CorruptedConfigurationException e) {
-            var cause = GeneralUtil.getFurthestCause(e);
-            logger.error("!! NAJPRAWDOPODOBNIEJ NIE JEST TO BŁĄD SPOWODOWANY PRZEZ LIBRELOGIN !!");
-            logger.error(
-                    "!!Plik wiadomości jest uszkodzony, wskazówek szukaj poniżej. Jeśli nie wiesz, co zrobić, usuń plik wiadomości, a zostanie utworzony nowy. Przyczyna: %s: %s"
-                            .formatted(cause.getClass().getSimpleName(), cause.getMessage()));
-            shutdownProxy(1);
-        }
-
         logger.info("Wczytywanie konfiguracji...");
 
         var defaults = new ArrayList<BiHolder<Class<?>, String>>();
@@ -489,13 +468,10 @@ public abstract class AuthenticLibreLogin<P, S> implements LibreLoginPlugin<P, S
 
         configuration = new HoconPluginConfiguration(logger, defaults);
 
+        var newConfiguration = false;
+
         try {
-            if (configuration.reload(this)) {
-                logger.warn(
-                        "!! Wygenerowano nową konfigurację, uzupełnij ją; w razie wątpliwości"
-                                + " zajrzyj na wiki !!");
-                shutdownProxy(0);
-            }
+            newConfiguration = configuration.reload(this);
 
             var limbos = configuration.get(LIMBO);
             var lobby = configuration.get(LOBBY);
@@ -520,6 +496,35 @@ public abstract class AuthenticLibreLogin<P, S> implements LibreLoginPlugin<P, S
                     "!!Konfiguracja jest uszkodzona, wskazówek szukaj poniżej. Jeśli nie wiesz, co zrobić, usuń plik konfiguracyjny, a zostanie utworzony nowy. Przyczyna: %s: %s"
                             .formatted(cause.getClass().getSimpleName(), cause.getMessage()));
             shutdownProxy(1);
+        }
+
+        // The messages are loaded after the configuration, as it decides their language
+        logger.info("Wczytywanie wiadomości...");
+
+        messages = new HoconMessages(logger, configuration);
+
+        try {
+            messages.reload(this);
+        } catch (IOException e) {
+            e.printStackTrace();
+            logger.info(
+                    "Wystąpił nieznany wyjątek podczas próby wczytania wiadomości,"
+                            + " najprawdopodobniej nie jest to Twoja wina");
+            shutdownProxy(1);
+        } catch (CorruptedConfigurationException e) {
+            var cause = GeneralUtil.getFurthestCause(e);
+            logger.error("!! NAJPRAWDOPODOBNIEJ NIE JEST TO BŁĄD SPOWODOWANY PRZEZ LIBRELOGIN !!");
+            logger.error(
+                    "!!Plik wiadomości jest uszkodzony, wskazówek szukaj poniżej. Jeśli nie wiesz, co zrobić, usuń plik wiadomości, a zostanie utworzony nowy. Przyczyna: %s: %s"
+                            .formatted(cause.getClass().getSimpleName(), cause.getMessage()));
+            shutdownProxy(1);
+        }
+
+        if (newConfiguration) {
+            logger.warn(
+                    "!! Wygenerowano nową konfigurację, uzupełnij ją; w razie wątpliwości"
+                            + " zajrzyj na wiki !!");
+            shutdownProxy(0);
         }
     }
 

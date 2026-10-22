@@ -18,6 +18,20 @@ import xyz.kyngs.librelogin.common.config.key.ConfigurationKey;
  */
 public class ConfigurationKeys {
 
+    public static final ConfigurationKey<String> LANGUAGE =
+            new ConfigurationKey<>(
+                    "language",
+                    HoconMessages.systemLanguage(),
+"""
+Ustawia język wtyczki.
+Określa, z którego pliku konfiguracyjnego (znajdującego się w podfolderze „/lang/”) wtyczka ma pobierać komunikaty.
+Jeśli wybrany język nie jest dostępny, użyty zostanie język domyślny (polski).
+Wbudowane języki: pl (polski), en (angielski). Możesz dodać własny, tworząc plik lang/<kod>.conf (np. kopię lang/en.conf).
+Po zmianie użyj /librelogin reload configuration.
+[Domyślnie: ustawienia regionalne systemu]
+""",
+                    ConfigurateHelper::getString);
+
     public static final ConfigurationKey<List<String>> ALLOWED_COMMANDS_WHILE_UNAUTHORIZED =
             new ConfigurationKey<>(
                     "allowed-commands-while-unauthorized",

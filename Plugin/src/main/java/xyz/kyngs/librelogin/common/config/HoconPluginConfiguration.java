@@ -69,7 +69,8 @@ public class HoconPluginConfiguration {
                         new FifthConfigurationMigrator(),
                         new SixthConfigurationMigrator(),
                         new SeventhConfigurationMigrator(),
-                        new EightConfigurationMigrator());
+                        new EightConfigurationMigrator(),
+                        new NinthConfigurationMigrator());
 
         var helperAdept = adept.getHelper();
 

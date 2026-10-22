@@ -419,7 +419,8 @@ Błąd zostanie wypisany w konsoli\
                     "error-corrupted-messages",
                     "<prefix><red>Plik wiadomości jest uszkodzony, zachowana zostanie poprzednia"
                             + " wersja. Przyczyna: %cause%",
-                    "Ta wiadomość jest wyświetlana, gdy plik messages.conf jest uszkodzony.",
+                    "Ta wiadomość jest wyświetlana, gdy plik wiadomości (lang/<język>.conf) jest"
+                            + " uszkodzony.",
                     ConfigurateHelper::getString);
 
     public static final ConfigurationKey<String> ERROR_CORRUPTED_CONFIGURATION =
