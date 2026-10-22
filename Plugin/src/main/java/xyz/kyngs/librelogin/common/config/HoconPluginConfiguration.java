@@ -76,7 +76,7 @@ public class HoconPluginConfiguration {
 
         if (!adept.isNewlyCreated()
                 && plugin.getCryptoProvider(helperAdept.get(DEFAULT_CRYPTO_PROVIDER)) == null) {
-            throw new CorruptedConfigurationException("Nie znaleziono dostawcy szyfrowania");
+            throw new CorruptedConfigurationException("Crypto provider not found");
         }
 
         helper = helperAdept;

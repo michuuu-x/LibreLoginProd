@@ -59,7 +59,7 @@ public class AuthenticMySQLDatabaseConnector
 
     @Override
     public Connection obtainInterface() throws SQLException, IllegalStateException {
-        if (!connected()) throw new IllegalStateException("Brak połączenia z bazą danych!");
+        if (!connected()) throw new IllegalStateException("Not connected to the database!");
         return dataSource.getConnection();
     }
 
@@ -73,8 +73,8 @@ public class AuthenticMySQLDatabaseConnector
         } catch (SQLTransientConnectionException e) {
             plugin.getLogger()
                     .error(
-                            "!! UTRACONO POŁĄCZENIE Z BAZĄ DANYCH, PROXY ZOSTANIE WYŁĄCZONE, ABY"
-                                    + " UNIKNĄĆ SZKÓD !!");
+                            "!! LOST CONNECTION TO THE DATABASE, THE PROXY IS GOING TO SHUT DOWN TO"
+                                    + " PREVENT DAMAGE !!");
             e.printStackTrace();
             System.exit(1);
             // Won't return anyway

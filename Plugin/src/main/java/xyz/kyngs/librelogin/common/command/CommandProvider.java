@@ -96,8 +96,8 @@ public class CommandProvider<P, S> extends AuthenticHandler<P, S> {
                         var logger = plugin.getLogger();
 
                         logger.error(
-                                "Wystąpił nieoczekiwany wyjątek podczas wykonywania komendy, dołącz"
-                                        + " poniższy stacktrace i zgłoś ten problem.");
+                                "An unexpected exception occurred while performing command, please"
+                                        + " attach the stacktrace below and report this issue.");
 
                         t.printStackTrace();
 

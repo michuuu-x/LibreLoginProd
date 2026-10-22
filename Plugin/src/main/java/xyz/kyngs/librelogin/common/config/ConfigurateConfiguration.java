@@ -57,7 +57,7 @@ public class ConfigurateConfiguration {
         if (!file.exists()) {
             newlyCreated = true;
             if (!file.createNewFile())
-                throw new IOException("Nie można utworzyć pliku konfiguracyjnego!");
+                throw new IOException("Could not create configuration file!");
         } else newlyCreated = false;
 
         var refHelper = new ConfigurateHelper(CommentedConfigurationNode.root().comment(comment));

@@ -58,9 +58,7 @@ public class AuthMeSQLMigrateReadProvider extends SQLMigrateReadProvider {
                                     password = CryptoUtil.convertFromBCryptRaw(passwordRaw);
                                 } else {
                                     logger.error(
-                                            "Użytkownik "
-                                                    + nickname
-                                                    + " ma nieprawidłowy hash hasła");
+                                            "User " + nickname + " has an invalid password hash");
                                 }
                             }
 
@@ -79,8 +77,7 @@ public class AuthMeSQLMigrateReadProvider extends SQLMigrateReadProvider {
                                             null));
 
                         } catch (Exception e) {
-                            logger.error(
-                                    "Nie udało się odczytać użytkownika z bazy AuthMe, pomijanie");
+                            logger.error("Failed to read user from AuthMe db, omitting");
                         }
                     }
 

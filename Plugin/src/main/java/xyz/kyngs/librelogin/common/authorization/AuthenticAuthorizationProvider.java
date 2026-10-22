@@ -151,8 +151,7 @@ public class AuthenticAuthorizationProvider<P, S> extends AuthenticHandler<P, S>
         try {
             audience.playSound(Sound.sound(Key.key(name.trim()), Sound.Source.MASTER, 1f, 1f));
         } catch (InvalidKeyException e) {
-            plugin.getLogger()
-                    .warn("Nieprawidłowa nazwa dźwięku w konfiguracji: \"" + name + "\"!");
+            plugin.getLogger().warn("Invalid sound name in the configuration: \"" + name + "\"!");
         }
     }
 

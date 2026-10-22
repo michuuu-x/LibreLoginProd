@@ -120,7 +120,7 @@ OVERWRITE - Nadpisuje dane profilu offline danymi profilu online. Spowoduje to n
     public static final ConfigurationKey<Integer> MAX_LOGIN_ATTEMPTS =
             new ConfigurationKey<>(
                     "max-login-attempts",
-                    -1,
+                    3,
                     "Wyrzuca gracza, jeśli hasło było nieprawidłowe tyle razy lub więcej. -1"
                             + " oznacza wyłączone",
                     ConfigurateHelper::getInt);
@@ -172,7 +172,7 @@ OVERWRITE - Nadpisuje dane profilu offline danymi profilu online. Spowoduje to n
     public static final ConfigurationKey<String> NEW_UUID_CREATOR =
             new ConfigurationKey<>(
                     "new-uuid-creator",
-                    "CRACKED",
+                    "MOJANG",
 """
 Określa, jakiej metody użyć do tworzenia stałego UUID podczas tworzenia nowego gracza.
 Więcej informacji znajdziesz na wiki: https://github.com/Navio1430/LibreLoginProd/wiki/UUID-Creators
@@ -197,7 +197,7 @@ Ustaw na zero lub mniej, aby wyłączyć.
     public static final ConfigurationKey<Boolean> AUTO_REGISTER =
             new ConfigurationKey<>(
                     "auto-register",
-                    false,
+                    true,
                     """
                     Czy automatycznie rejestrować wszystkich graczy z nickiem premium?
                     !!GRACZE NON-PREMIUM (CRACKED) NIE BĘDĄ MOGLI ZAREJESTROWAĆ NAZW UŻYTKOWNIKÓW PREMIUM!!
@@ -219,7 +219,7 @@ Obejmuje to (między innymi):
     public static final ConfigurationKey<Integer> SECONDS_TO_AUTHORIZE =
             new ConfigurationKey<>(
                     "seconds-to-authorize",
-                    -1,
+                    300,
                     "Ustawia limit czasu na logowanie/rejestrację w sekundach. Ustaw na wartość"
                             + " ujemną, aby wyłączyć.",
                     ConfigurateHelper::getInt);

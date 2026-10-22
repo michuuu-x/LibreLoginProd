@@ -134,7 +134,7 @@ public class HoconMessages implements Messages {
         var langFolder = new File(plugin.getDataFolder(), LANG_FOLDER);
 
         if (!langFolder.isDirectory() && !langFolder.mkdirs())
-            throw new IOException("Nie można utworzyć folderu " + LANG_FOLDER + "!");
+            throw new IOException("Could not create the " + LANG_FOLDER + " folder!");
 
         migrateLegacyFile(plugin.getDataFolder(), langFolder);
 
@@ -169,7 +169,7 @@ public class HoconMessages implements Messages {
         rawMessages = adept;
         language = newLanguage;
 
-        logger.info("Wczytano wiadomości w języku: " + language);
+        logger.info("Loaded messages in language: " + language);
     }
 
     /**
@@ -182,7 +182,7 @@ public class HoconMessages implements Messages {
 
         if (!LANGUAGE_PATTERN.matcher(requested).matches()) {
             logger.warn(
-                    "Nieprawidłowy język \"%s\", używam języka domyślnego (%s)"
+                    "Invalid language \"%s\", using the default language (%s)"
                             .formatted(requested, DEFAULT_LANGUAGE));
             return DEFAULT_LANGUAGE;
         }
@@ -193,7 +193,7 @@ public class HoconMessages implements Messages {
         }
 
         logger.warn(
-                "Język \"%s\" nie jest dostępny (brak pliku %s/%s.conf), używam języka domyślnego (%s)"
+                "Language \"%s\" is not available (missing file %s/%s.conf), using the default language (%s)"
                         .formatted(requested, LANG_FOLDER, requested, DEFAULT_LANGUAGE));
         return DEFAULT_LANGUAGE;
     }
@@ -215,7 +215,7 @@ public class HoconMessages implements Messages {
             var stream = plugin.getResourceAsStream(resource);
 
             if (stream == null)
-                throw new IOException("Brak zasobu " + resource + " w pliku wtyczki!");
+                throw new IOException("Resource " + resource + " is missing in the plugin jar!");
 
             builder.source(
                     () ->
@@ -254,8 +254,7 @@ public class HoconMessages implements Messages {
         if (!legacy.exists() || target.exists()) return;
 
         Files.move(legacy.toPath(), target.toPath());
-        logger.info(
-                "Przeniesiono %s do %s/%s".formatted(LEGACY_FILE, LANG_FOLDER, target.getName()));
+        logger.info("Moved %s to %s/%s".formatted(LEGACY_FILE, LANG_FOLDER, target.getName()));
     }
 
     private void extractKeys(

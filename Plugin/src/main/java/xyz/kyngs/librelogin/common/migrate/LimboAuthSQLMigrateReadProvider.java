@@ -81,9 +81,9 @@ public class LimboAuthSQLMigrateReadProvider extends SQLMigrateReadProvider {
                                     password = new HashedPassword(hash, salt, algo);
                                 } else {
                                     logger.error(
-                                            "Użytkownik "
+                                            "User "
                                                     + lastNickname
-                                                    + " ma nieprawidłowy hash hasła");
+                                                    + " has an invalid password hash");
                                 }
                             }
 
@@ -105,8 +105,7 @@ public class LimboAuthSQLMigrateReadProvider extends SQLMigrateReadProvider {
 
                         } catch (Exception e) {
                             logger.error(
-                                    "Nie udało się odczytać użytkownika z bazy LimboAuth,"
-                                            + " pomijanie. Błąd: "
+                                    "Failed to read user from LimboAuth db, omitting. Error: "
                                             + e.getMessage());
                         }
                     }

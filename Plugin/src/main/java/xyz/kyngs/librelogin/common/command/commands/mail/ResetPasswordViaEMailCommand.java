@@ -59,9 +59,9 @@ public class ResetPasswordViaEMailCommand<P> extends EMailCommand<P> {
                         if (plugin.getConfiguration().get(ConfigurationKeys.DEBUG)) {
                             getLogger()
                                     .debug(
-                                            "Nie można wysłać e-maila weryfikacyjnego na adres "
+                                            "Cannot send verification mail to "
                                                     + user.getEmail()
-                                                    + " dla gracza "
+                                                    + " for "
                                                     + player);
                             e.printStackTrace();
                         }

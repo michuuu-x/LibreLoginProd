@@ -80,14 +80,14 @@ public class VelocityBootstrap implements LibreLoginProvider<Player, RegisteredS
                             }
                         });
 
-        logger.info("Wczytywanie bibliotek...");
+        logger.info("Loading libraries...");
 
         try {
             // The Librarian gradle plugin generates librarian.json, Libby looks for libby.json
             libraryManager.configureFromJSON(
                     getClass().getClassLoader().getResourceAsStream("librarian.json"));
         } catch (Exception e) {
-            throw new IllegalStateException("Nie udało się wczytać bibliotek", e);
+            throw new IllegalStateException("Failed to load libraries", e);
         }
 
         libreLogin = new VelocityLibreLogin(this);

@@ -62,8 +62,7 @@ public class DBASQLMigrateReadProvider extends SQLMigrateReadProvider {
 
                         } catch (Exception e) {
                             e.printStackTrace();
-                            logger.error(
-                                    "Nie udało się odczytać użytkownika z bazy DBA, pomijanie");
+                            logger.error("Failed to read user from DBA db, omitting");
                         }
                     }
 

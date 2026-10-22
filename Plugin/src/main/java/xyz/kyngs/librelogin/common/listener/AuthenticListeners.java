@@ -127,7 +127,9 @@ public class AuthenticListeners<Plugin extends AuthenticLibreLogin<P, S>, P, S> 
                                 plugin.getMessages().getMessage("kick-premium-error-throttled");
                         default -> {
                             plugin.getLogger()
-                                    .error("Wystąpił wyjątek podczas komunikacji z API Mojang!");
+                                    .error(
+                                            "Encountered an exception while communicating with the"
+                                                    + " Mojang API!");
                             e.printStackTrace();
                             yield plugin.getMessages().getMessage("kick-premium-error-undefined");
                         }
@@ -188,7 +190,7 @@ public class AuthenticListeners<Plugin extends AuthenticLibreLogin<P, S>, P, S> 
                 if (!mojangData.reliable()) {
                     plugin.getLogger()
                             .warn(
-                                    "Użytkownik %s prawdopodobnie zmienił nazwę. Dane zwrócone przez API Mojang nie są wiarygodne, tworzenie nowych na podstawie obecnego nicku."
+                                    "User %s has probably changed their name. Data returned from Mojang API is not reliable, faking a new one using the current nickname."
                                             .formatted(username));
                     mojangData = new PremiumUser(mojangData.uuid(), username, false);
                 }
@@ -330,7 +332,7 @@ public class AuthenticListeners<Plugin extends AuthenticLibreLogin<P, S>, P, S> 
                 if (premiumUser != null && !premiumUser.reliable()) {
                     plugin.getLogger()
                             .warn(
-                                    "Dane premium dla %s nie są wiarygodne, użytkownik może mieć inną wielkość liter w nazwie niż konto premium. Automatyczna rejestracja tego użytkownika nie jest bezpieczna. Przełączanie na rejestrację offline!"
+                                    "The premium data for %s is not reliable, the user may not have the same name capitalization as the premium one. It is not safe to auto-register this user. Switching to offline registration!"
                                             .formatted(username));
                 }
                 user =

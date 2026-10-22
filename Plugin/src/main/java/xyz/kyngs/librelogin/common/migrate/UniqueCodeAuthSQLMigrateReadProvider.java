@@ -64,23 +64,20 @@ public class UniqueCodeAuthSQLMigrateReadProvider extends SQLMigrateReadProvider
                             UUID premiumUUID = null;
 
                             if (premium) {
-                                logger.info("Próba pobrania UUID premium dla " + name);
+                                logger.info("Attempting to get premium UUID for " + name);
                                 try {
                                     var premiumUser =
                                             plugin.getPremiumProvider().getUserForName(name);
                                     if (premiumUser == null) {
                                         logger.warn(
-                                                "Użytkownik "
-                                                        + name
-                                                        + " nie jest już premium, pomijanie");
+                                                "User " + name + " is no longer premium, skipping");
                                     } else {
                                         premiumUUID = premiumUser.uuid();
-                                        logger.info(
-                                                "Pobrano UUID premium dla " + name + ": " + uuid);
+                                        logger.info("Got premium UUID for " + name + ": " + uuid);
                                     }
                                 } catch (PremiumException e) {
                                     logger.error(
-                                            "Błąd podczas pobierania UUID premium dla "
+                                            "Error while getting premium UUID for "
                                                     + name
                                                     + ": "
                                                     + e.getMessage());
@@ -102,7 +99,7 @@ public class UniqueCodeAuthSQLMigrateReadProvider extends SQLMigrateReadProvider
                                             null));
                         } catch (Exception e) {
                             e.printStackTrace();
-                            logger.error("Błąd podczas odczytu użytkownika z bazy danych");
+                            logger.error("Error while reading user from database");
                         }
                     }
 

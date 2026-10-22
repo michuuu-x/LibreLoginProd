@@ -63,7 +63,7 @@ public class JPremiumSQLMigrateReadProvider extends SQLMigrateReadProvider {
                                                                         "BCRYPT", "$2a"));
                                                 default -> {
                                                     logger.error(
-                                                            "Użytkownik %s ma nieprawidłowy algorytm %s, pomijanie"
+                                                            "User %s has invalid algorithm %s, omitting"
                                                                     .formatted(
                                                                             lastNickname,
                                                                             split[0]));
@@ -88,9 +88,7 @@ public class JPremiumSQLMigrateReadProvider extends SQLMigrateReadProvider {
                                             null));
 
                         } catch (Exception e) {
-                            logger.error(
-                                    "Nie udało się odczytać użytkownika z bazy JPremium,"
-                                            + " pomijanie");
+                            logger.error("Failed to read user from JPremium db, omitting");
                         }
                     }
 

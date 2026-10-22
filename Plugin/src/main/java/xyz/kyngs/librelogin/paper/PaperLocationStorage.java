@@ -57,7 +57,7 @@ public class PaperLocationStorage {
             var world = section.getString("world");
             if (world == null) {
                 logger.warn(
-                        "Lokalizacja %s w pliku %s nie ma ustawionego świata, pomijanie."
+                        "Location %s in file %s has no world set, skipping."
                                 .formatted(type.key, file.getName()));
                 continue;
             }
@@ -85,7 +85,7 @@ public class PaperLocationStorage {
         var world = Bukkit.getWorld(stored.world());
         if (world == null) {
             logger.warn(
-                    "Świat %s zapisanej lokalizacji (%s) nie jest załadowany, używanie spawnu"
+                    "World %s of the saved location (%s) is not loaded, using the spawn instead"
                             .formatted(stored.world(), type.key));
             return null;
         }
@@ -133,7 +133,7 @@ public class PaperLocationStorage {
 
         var parent = file.getParentFile();
         if (parent != null && !parent.exists() && !parent.mkdirs()) {
-            throw new IOException("Nie można utworzyć folderu " + parent);
+            throw new IOException("Could not create folder " + parent);
         }
 
         yaml.save(file);

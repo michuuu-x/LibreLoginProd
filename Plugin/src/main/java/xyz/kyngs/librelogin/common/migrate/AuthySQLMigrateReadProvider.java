@@ -58,8 +58,7 @@ public class AuthySQLMigrateReadProvider extends SQLMigrateReadProvider {
                                             null,
                                             null));
                         } catch (Exception e) {
-                            logger.error(
-                                    "Błąd podczas migracji użytkownika z bazy Authy, pomijanie");
+                            logger.error("Error while migrating user from Authy db, omitting");
                         }
                     }
 

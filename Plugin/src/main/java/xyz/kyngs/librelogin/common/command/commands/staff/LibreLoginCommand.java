@@ -179,22 +179,7 @@ public class LibreLoginCommand<P> extends StaffCommand<P> {
 
                     var language = plugin.getConfiguration().get(LANGUAGE);
 
-                    try {
-                        plugin.getConfiguration().reload(plugin);
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                        throw new InvalidCommandArgument(getMessage("error-unknown"));
-                    } catch (CorruptedConfigurationException e) {
-                        var cause = GeneralUtil.getFurthestCause(e);
-                        throw new InvalidCommandArgument(
-                                getMessage(
-                                        "error-corrupted-configuration",
-                                        "%cause%",
-                                        "%s: %s"
-                                                .formatted(
-                                                        cause.getClass().getSimpleName(),
-                                                        cause.getMessage())));
-                    }
+                    reloadConfiguration();
 
                     // The language of the messages is part of the configuration
                     if (!language.equals(plugin.getConfiguration().get(LANGUAGE))) {
@@ -216,6 +201,40 @@ public class LibreLoginCommand<P> extends StaffCommand<P> {
 
                     audience.sendMessage(getMessage("info-reloaded"));
                 });
+    }
+
+    @Subcommand("reload all")
+    @CommandPermission("librepremium.reload.all")
+    public CompletionStage<Void> onReloadAll(Audience audience) {
+        return runAsync(
+                () -> {
+                    audience.sendMessage(getMessage("info-reloading"));
+
+                    // The configuration must be reloaded first, as it decides the language of
+                    // the messages
+                    reloadConfiguration();
+                    reloadMessages();
+
+                    audience.sendMessage(getMessage("info-reloaded"));
+                });
+    }
+
+    private void reloadConfiguration() {
+        try {
+            plugin.getConfiguration().reload(plugin);
+        } catch (IOException e) {
+            e.printStackTrace();
+            throw new InvalidCommandArgument(getMessage("error-unknown"));
+        } catch (CorruptedConfigurationException e) {
+            var cause = GeneralUtil.getFurthestCause(e);
+            throw new InvalidCommandArgument(
+                    getMessage(
+                            "error-corrupted-configuration",
+                            "%cause%",
+                            "%s: %s"
+                                    .formatted(
+                                            cause.getClass().getSimpleName(), cause.getMessage())));
+        }
     }
 
     private void reloadMessages() {
@@ -286,7 +305,7 @@ public class LibreLoginCommand<P> extends StaffCommand<P> {
         if (onlyValid && id != null && !id.reliable()) {
             plugin.getLogger()
                     .warn(
-                            "Dane pobrane od dostawcy premium nie są wiarygodne dla użytkownika %s, nie można bezpiecznie włączyć logowania premium. \nSprawdź poprawną wielkość liter za pomocą strony takiej jak NameMC, a następnie włącz je ręcznie komendą /librelogin user premium."
+                            "Data retrieved from premium provider is not reliable for user %s, can not safely enable premium login. \nPlease verify the correct capitalization using site such as NameMC and then enable it manually using the /librelogin user premium command."
                                     .formatted(user.getLastNickname()));
             throw new InvalidCommandArgument(plugin.getMessages().getMessage("error-not-paid"));
         }

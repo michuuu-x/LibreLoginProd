@@ -29,7 +29,7 @@ public class PaperBootstrap extends JavaPlugin implements LibreLoginProvider<Pla
 
     @Override
     public void onLoad() {
-        getLogger().info("Analizowanie konfiguracji serwera...");
+        getLogger().info("Analyzing server setup...");
 
         try {
             var adventureClass = Class.forName("net.kyori.adventure.audience.Audience");
@@ -43,7 +43,7 @@ public class PaperBootstrap extends JavaPlugin implements LibreLoginProvider<Pla
 
         getLogger()
                 .info(
-                        "Wykryto dystrybucję serwera zgodną z Adventure - "
+                        "Detected Adventure-compatible server distribution - "
                                 + getServer().getName()
                                 + " "
                                 + getServer().getVersion());
@@ -57,17 +57,14 @@ public class PaperBootstrap extends JavaPlugin implements LibreLoginProvider<Pla
             libraryManager = new BukkitLibraryManager(this);
         }
 
-        getSLF4JLogger().info("Wczytywanie bibliotek...");
+        getSLF4JLogger().info("Loading libraries...");
 
         try {
             // The Librarian gradle plugin generates librarian.json, Libby looks for libby.json
             libraryManager.configureFromJSON(getResource("librarian.json"));
         } catch (Exception e) {
             getSLF4JLogger()
-                    .error(
-                            "Nie udało się wczytać bibliotek, zatrzymywanie serwera, aby uniknąć"
-                                    + " szkód",
-                            e);
+                    .error("Failed to load libraries, stopping server to prevent damage", e);
             stopServer();
         }
 
@@ -76,7 +73,7 @@ public class PaperBootstrap extends JavaPlugin implements LibreLoginProvider<Pla
 
     @Override
     public void onEnable() {
-        getLogger().info("Uruchamianie LibreLogin...");
+        getLogger().info("Bootstrapping LibreLogin...");
         libreLogin.enable();
     }
 
@@ -85,8 +82,8 @@ public class PaperBootstrap extends JavaPlugin implements LibreLoginProvider<Pla
 
         getLogger()
                 .severe(
-                        "Wykryto nieobsługiwaną dystrybucję serwera. Użyj Papera lub jego forków."
-                                + " SPIGOT NIE JEST OBSŁUGIWANY!");
+                        "Detected an unsupported server distribution. Please use Paper or its"
+                                + " forks. SPIGOT IS NOT SUPPORTED!");
 
         getLogger().severe("***********************************************************");
 

@@ -50,14 +50,14 @@ public class VelocityPlatformHandle implements PlatformHandle<Player, Registered
                                 : reason.map(
                                                 component ->
                                                         new RuntimeException(
-                                                                "Nie udało się przenieść gracza: "
+                                                                "Failed to move player: "
                                                                         + Component.empty()
                                                                                 .append(component)
                                                                                 .content()))
                                         .orElseGet(
                                                 () ->
                                                         new RuntimeException(
-                                                                "Nie udało się przenieść gracza"));
+                                                                "Failed to move player"));
                     } catch (InterruptedException ignored) {
                         return null;
                     } catch (ExecutionException e) {
@@ -109,7 +109,7 @@ public class VelocityPlatformHandle implements PlatformHandle<Player, Registered
                     .orElse(null);
 
         } catch (InterruptedException | ExecutionException e) {
-            plugin.getLogger().debug("Nie udało się spingować serwera " + e.getMessage());
+            plugin.getLogger().debug("Failed to ping server " + e.getMessage());
             return null;
         }
     }

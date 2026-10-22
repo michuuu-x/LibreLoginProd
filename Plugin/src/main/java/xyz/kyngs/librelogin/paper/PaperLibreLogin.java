@@ -145,8 +145,8 @@ public class PaperLibreLogin extends AuthenticLibreLogin<Player, World> {
         if (Bukkit.getOnlineMode()) {
             getLogger()
                     .error(
-                            "!!!Serwer działa w trybie online! LibreLogin nie uruchomi się, dopóki"
-                                    + " nie ustawisz online-mode na false!!!");
+                            "!!!The server is running in online mode! LibreLogin won't start unless"
+                                    + " you set it to false!!!");
             disable();
             return;
         }
@@ -154,9 +154,9 @@ public class PaperLibreLogin extends AuthenticLibreLogin<Player, World> {
         if (getServerVersion().isOlderThan(MINIMUM_SERVER_VERSION)) {
             getLogger()
                     .error(
-                            "!!!LibreLogin wymaga Minecrafta "
+                            "!!!LibreLogin requires Minecraft "
                                     + MINIMUM_SERVER_VERSION.getReleaseName()
-                                    + " lub nowszego, ale ten serwer działa na wersji "
+                                    + " or newer, but this server is running "
                                     + getServerVersion().getReleaseName()
                                     + "!!!");
             disable();
@@ -164,12 +164,11 @@ public class PaperLibreLogin extends AuthenticLibreLogin<Player, World> {
         }
 
         if (Bukkit.getServer().getServerConfig().isProxyEnabled()) {
-            getLogger()
-                    .error("!!!Ten serwer działa za proxy, LibreLogin nie zostanie uruchomiony!!!");
+            getLogger().error("!!!This server is running under a proxy, LibreLogin won't start!!!");
             getLogger()
                     .error(
-                            "Jeśli chcesz używać LibreLogin za proxy, umieść go na proxy i usuń z"
-                                    + " serwera.");
+                            "If you want to use LibreLogin under a proxy, place it on the proxy and"
+                                    + " remove it from the server.");
             disable();
             return;
         }

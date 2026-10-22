@@ -40,7 +40,7 @@ public class PaperPlatformHandle implements PlatformHandle<Player, World> {
     @Override
     public CompletableFuture<Throwable> movePlayer(Player player, World to) {
         return player.teleportAsync(to.getSpawnLocation())
-                .thenApply(success -> success ? null : new RuntimeException("Nieznana przyczyna"));
+                .thenApply(success -> success ? null : new RuntimeException("Unknown cause"));
     }
 
     @Override
@@ -58,9 +58,9 @@ public class PaperPlatformHandle implements PlatformHandle<Player, World> {
         var exists = file.exists();
 
         if (exists) {
-            plugin.getLogger().info("Znaleziono plik świata " + name + ", wczytywanie...");
+            plugin.getLogger().info("Found world file for " + name + ", loading...");
         } else {
-            plugin.getLogger().info("Nie znaleziono pliku świata " + name + ", tworzenie...");
+            plugin.getLogger().info("World file for " + name + " not found, creating...");
         }
 
         var creator = new WorldCreator(name);

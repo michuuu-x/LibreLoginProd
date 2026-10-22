@@ -157,8 +157,8 @@ public class PaperListeners extends AuthenticListeners<PaperLibreLogin, Player, 
                                     plugin.getPlayerForUUID(puuid)
                                             .kick(
                                                     Component.text(
-                                                            "Wewnętrzny błąd, spróbuj ponownie"
-                                                                    + " później.")));
+                                                            "Internal error, please try again"
+                                                                    + " later.")));
             return;
         }
 
@@ -231,9 +231,9 @@ public class PaperListeners extends AuthenticListeners<PaperLibreLogin, Player, 
 
         plugin.getLogger()
                 .debug(
-                        "Odebrano pakiet "
+                        "Packet received "
                                 + type
-                                + " od "
+                                + " from "
                                 + user.getName()
                                 + " ("
                                 + user.getAddress().toString()
@@ -293,10 +293,9 @@ public class PaperListeners extends AuthenticListeners<PaperLibreLogin, Player, 
                     } catch (Exception e) {
                         plugin.getLogger()
                                 .error(
-                                        "Nie udało się wysłać pakietu rozpoczęcia szyfrowania dla"
-                                                + " gracza "
+                                        "Failed to send encryption begin packet for player "
                                                 + username
-                                                + "! Wyrzucanie gracza.");
+                                                + "! Kicking player.");
                         e.printStackTrace();
                         kickPlayer("Wewnętrzny błąd", user);
                     }
@@ -360,7 +359,7 @@ public class PaperListeners extends AuthenticListeners<PaperLibreLogin, Player, 
             } catch (IOException e) {
                 if (e instanceof SocketTimeoutException) {
                     plugin.getLogger()
-                            .warn("Przekroczono czas weryfikacji sesji (5 sekund) dla " + username);
+                            .warn("Session verification timed out (5 seconds) for " + username);
                 }
                 kickPlayer("Nie można zweryfikować sesji", user);
             }
